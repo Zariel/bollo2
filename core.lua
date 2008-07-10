@@ -151,5 +151,12 @@ bollo.PLAYER_AURAS_CHANGED = function()
 end
 
 bollo.PLAYER_ENTERING_WORLD = function()
+	-- Break blizzards stuff.
+	local bf = _G["BuffFrame"]
+	bf:UnregisterAllEvents()
+	bf:Hide()
+	bf:SetScript("OnUpdate", nil)
+	bf:SetScript("OnEvent", nil)
+
 	bollo.PLAYER_AURAS_CHANGED()
 end
