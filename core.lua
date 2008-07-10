@@ -17,19 +17,24 @@ local print = function(...)
 end
 
 local SortFunc = function(a, b)
-	print(a, b)
-	return b.timeLeft or 0 > a.timeLeft or 0
+	if a and b then
+		return b.timeLeft > a.timeLeft
+	else
+		print(a, b)
+		return false
+	end
 end
 
 local SortBuffs = function()
-	table.sort(icons, SortFunc)
+	--table.sort(icons, SortFunc)
 	for i, buff in ipairs(icons) do
+		print(buff:GetBuff(), buff.timeLeft)
 		if buff:IsShown() then
 			local index = buff:GetID()
 			buff:ClearAllPoints()
-			buff:SetPoint("TOP", UIParent, "TOP")
+			buff:SetPoint("TOP", UIParent, "TOP", 0, -5)
 			if i > 1 then
-				buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 10, 0)
+				buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 4, 0)
 			else
 				buff:SetPoint("RIGHT", UIParent, "RIGHT", - 5, - 5)
 			end
@@ -52,7 +57,7 @@ local OnLeave = function(self)
 	GameTooltip:Hide()
 end
 
-local SetBuff
+local SetBuff, GetBuff
 do
 	local name, rank, texture, count, debuffType, duration, timeLeft
 	SetBuff = function(self, index)
@@ -76,12 +81,19 @@ do
 				self.border:SetVertexColor(0.8, 0.8, 0.8)
 			end
 			self.timeLeft = timeLeft
+			self.buff = name
+			self.texture = texture
+
 			self:Show()
 			return true
 		else
 			self:Hide()
 			return false
 		end
+	end
+
+	GetBuff = function(self)
+		return self.buff, self.texture
 	end
 end
 
@@ -114,8 +126,10 @@ local CreateIcon = function(index, debuff)
 	button.duration = duration
 	button.debuff = debuff
 	button.border = border
+	button.timeLeft = 0
 
 	button.SetBuff = SetBuff
+	button.GetBuff = GetBuff
 
 	table.insert(icons, button)
 
