@@ -8,6 +8,14 @@ bollo:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 local icons = {}
 
+local print = function(...)
+	local str
+	for i = 1, select("#", ...) do
+		str = str .. tostring(select(i, ...))
+	end
+	return ChatFrame1:AddMessage(str)
+end
+
 local SortFunc = function(a, b)
 	return b.timeLeft or 0 > a.timeLeft or 0
 end
