@@ -18,17 +18,16 @@ end
 
 local SortFunc = function(a, b)
 	if a and b then
-		return b.timeLeft > a.timeLeft
+		return b.timeLeft < a.timeLeft
 	else
-		print(a, b)
 		return false
 	end
 end
 
 local SortBuffs = function()
-	--table.sort(icons, SortFunc)
+	table.sort(icons, SortFunc)
 	for i, buff in ipairs(icons) do
-		print(buff:GetBuff(), buff.timeLeft)
+	--	print(buff:GetBuff(), buff.timeLeft)
 		if buff:IsShown() then
 			local index = buff:GetID()
 			buff:ClearAllPoints()
@@ -80,7 +79,7 @@ do
 			else
 				self.border:SetVertexColor(0.8, 0.8, 0.8)
 			end
-			self.timeLeft = timeLeft
+			self.timeLeft = timeLeft or 0
 			self.buff = name
 			self.texture = texture
 
