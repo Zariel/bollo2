@@ -129,5 +129,5 @@ bollo.PLAYER_AURAS_CHANGED = function()
 end
 
 bollo.PLAYER_ENTERING_WORLD = function()
-	
+	bollo.PLAYER_AURAS_CHANGED()
 end
