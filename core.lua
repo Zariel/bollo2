@@ -28,6 +28,7 @@ end
 
 bollo:SetScript("OnUpdate", UpdateDurations)
 
+
 --
 local print = function(...)
 	local str = ""
@@ -39,7 +40,9 @@ end
 
 local SortFunc = function(a, b)
 	if a and b then
-		return b:GetTimeLeft() > a:GetTimeLeft()
+		a:ClearAllPoints()
+		b:ClearAllPoints()
+		return b:GetTimeLeft() < a:GetTimeLeft()
 	else
 		return false
 	end
@@ -48,12 +51,14 @@ end
 local SortBuffs = function()
 	table.sort(icons, SortFunc)
 	for i, buff in ipairs(icons) do
+		buff:ClearAllPoints()
 		if buff:IsShown() then
 			local index = buff:GetID()
-			buff:ClearAllPoints()
 			buff:SetPoint("TOP", UIParent, "TOP", 0, -5)
 			if i > 1 then
-				buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 4, 0)
+				if icons[i - 1]:IsShown() then
+					buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 4, 0)
+				else
 			else
 				buff:SetPoint("RIGHT", UIParent, "RIGHT", - 5, - 5)
 			end
@@ -109,10 +114,6 @@ do
 			self.texture = texture
 
 			self:Show()
-			return true
-		else
-			self:Hide()
-			return false
 		end
 	end
 
@@ -121,7 +122,7 @@ do
 	end
 
 	GetTimeLeft = function(self)
-		return math.floor(GetPlayerBuffTimeLeft(self:GetID())/60) or 0
+		return math.floor(GetPlayerBuffTimeLeft(self:GetID())*100/60)/100 or 0
 	end
 end
 
@@ -146,6 +147,7 @@ local CreateIcon = function(index, debuff)
 	count:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
 
 	local duration = button:CreateFontString(nil, "OVERLAY")
+	duration:SetFontObject(NumberFontNormal)
 	duration:SetPoint("TOP", button, "BOTTOM", 0, -2)
 
 	local border = button:CreateTexture(nil, "OVERLAY")
@@ -175,7 +177,8 @@ local UpdateIcons = function(index)
 	local icon = icons[index]
 	if name then
 		icon = icon or CreateIcon(index, false)
-		icon:SetBuff(index, false)
+		icon.debuff = false
+		icon:SetBuff(index)
 		return true
 	elseif icon then
 		icon:Hide()
