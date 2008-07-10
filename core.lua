@@ -11,7 +11,7 @@ local icons = {}
 local print = function(...)
 	local str = ""
 	for i = 1, select("#", ...) do
-		str = str .. tostring(select(i, ...))
+		str = str .. " " .. tostring(select(i, ...))
 	end
 	return ChatFrame1:AddMessage(str)
 end
