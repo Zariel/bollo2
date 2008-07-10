@@ -27,6 +27,7 @@ end
 local SortBuffs = function()
 	table.sort(icons, SortFunc)
 	for i, buff in ipairs(icons) do
+		print(i, buff:GetBuff())
 		if buff:IsShown() then
 			local index = buff:GetID()
 			buff:ClearAllPoints()
@@ -53,6 +54,12 @@ end
 
 local OnLeave = function(self)
 	GameTooltip:Hide()
+end
+
+local OnMouseUp = function(self, button)
+	if button == "RightButton" then
+		CancelPlayerBuff(self:GetID())
+	end
 end
 
 local SetBuff, GetBuff, GetTimeLeft
@@ -106,6 +113,10 @@ local CreateIcon = function(index, debuff)
 	button:SetID(index)
 	button:SetScript("OnEnter", OnEnter)
 	button:SetScript("OnLeave", OnLeave)
+
+	if not debuff then
+		button:SetScript("OnMouseUp", OnMouseUp)
+	end
 
 	local icon = button:CreateTexture(nil, "BACKGROUND")
 	icon:SetAllPoints(button)
