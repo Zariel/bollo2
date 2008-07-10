@@ -1,13 +1,34 @@
+local icons = {}
 local bollo = CreateFrame("Frame")
 bollo:SetScript("OnEvent", function(self, event, ...)
 	return self[event](...)
 end)
 bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
 bollo:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+local UpdateDurations
+do
+	local timer = 0
+	UpdateDurations = function(self, elapsed)
+		timer = timer + elapsed
+		if timer > 0.5 then
+			for index, buff in ipairs(icons) do
+				local timeLeft = buff:GetTimeLeft()
+				if timeLeft > 0 then
+					buff.duration:SetText(timeLeft)
+					buff.duration:Show()
+				else
+					buff.duration:Hide()
+				end
+			end
+			timer = 0
+		end
+	end
+end
+
+bollo:SetScript("OnUpdate", UpdateDurations)
+
 --
-
-local icons = {}
-
 local print = function(...)
 	local str = ""
 	for i = 1, select("#", ...) do
@@ -18,7 +39,7 @@ end
 
 local SortFunc = function(a, b)
 	if a and b then
-		return b:GetTimeLeft() < a:GetTimeLeft()
+		return b:GetTimeLeft() > a:GetTimeLeft()
 	else
 		return false
 	end
@@ -27,7 +48,6 @@ end
 local SortBuffs = function()
 	table.sort(icons, SortFunc)
 	for i, buff in ipairs(icons) do
-		print(i, buff:GetBuff())
 		if buff:IsShown() then
 			local index = buff:GetID()
 			buff:ClearAllPoints()
@@ -151,15 +171,24 @@ end
 
 local UpdateIcons = function(index)
 	-- Buff
-	local icon = icons[index] or CreateIcon(index, false)
-	local buff = icon:SetBuff(index)
-	return buff
+	local name = UnitBuff("player", index)
+	local icon = icons[index]
+	if name then
+		icon = icon or CreateIcon(index, false)
+		icon:SetBuff(index, false)
+		return true
+	elseif icon then
+		icon:Hide()
+		return false
+	end
 end
+
 
 bollo.PLAYER_AURAS_CHANGED = function()
 	for i = 1, 40 do
-		local fin = UpdateIcons(i)
-		if not fin then break end
+		if not UpdateIcons(i) then
+			break
+		end
 	end
 	SortBuffs()
 end
