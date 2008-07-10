@@ -1,0 +1,5 @@
+## Title: Bollo
+## Version: 1
+## Interface: 20400
+
+core.lua
