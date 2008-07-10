@@ -9,7 +9,7 @@ bollo:RegisterEvent("PLAYER_ENTERING_WORLD")
 local icons = {}
 
 local print = function(...)
-	local str
+	local str = ""
 	for i = 1, select("#", ...) do
 		str = str .. tostring(select(i, ...))
 	end
@@ -17,6 +17,7 @@ local print = function(...)
 end
 
 local SortFunc = function(a, b)
+	print(a, b)
 	return b.timeLeft or 0 > a.timeLeft or 0
 end
 
