@@ -18,7 +18,7 @@ local SortBuffs = function()
 			local index = buff:GetID()
 			buff:ClearAllPoints()
 			if i > 1 then
-				buff:SetPoint("RIGHT", icons[i + 1], "LEFT", - 10, 0)
+				buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 10, 0)
 			else
 				buff:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", - 5, - 5)
 			end
