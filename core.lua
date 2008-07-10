@@ -3,6 +3,7 @@ bollo:SetScript("OnEvent", function(self, event, ...)
 	return self[event](...)
 end)
 bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
+bollo:RegisterEvent("PLAYER_ENTERING_WORLD")
 --
 
 local icons = {}
@@ -17,10 +18,11 @@ local SortBuffs = function()
 		if buff:IsShown() then
 			local index = buff:GetID()
 			buff:ClearAllPoints()
+			buff:SetPoint("TOP", UIParent, "TOP")
 			if i > 1 then
 				buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 10, 0)
 			else
-				buff:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", - 5, - 5)
+				buff:SetPoint("RIGHT", UIParent, "RIGHT", - 5, - 5)
 			end
 		end
 	end
@@ -76,8 +78,8 @@ end
 
 local CreateIcon = function(index, debuff)
 	local button = CreateFrame("Button")
-	button:SetHeight(32)
-	button:SetWidth(32)
+	button:SetHeight(20)
+	button:SetWidth(20)
 	button:EnableMouse(true)
 	button:SetID(index)
 	button:SetScript("OnEnter", OnEnter)
@@ -113,8 +115,7 @@ end
 
 local UpdateIcons = function(index)
 	-- Buff
-	local icon = icons[index]
-	icon = icon or CreateIcon(index, false)
+	local icon = icons[index] or CreateIcon(index, false)
 	local buff = icon:SetBuff(index)
 	return buff
 end
@@ -125,4 +126,8 @@ bollo.PLAYER_AURAS_CHANGED = function()
 		if not fin then break end
 	end
 	SortBuffs()
+end
+
+bollo.PLAYER_ENTERING_WORLD = function()
+	
 end
