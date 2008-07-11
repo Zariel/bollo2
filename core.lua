@@ -36,10 +36,9 @@ function bollo:Enable()
 	self.frame = CreateFrame("Frame")
 	local timer = 0
 	self.frame:SetScript("OnUpdate", function(self, elapsed)
-	--	timer = timer + elapsed
-	--	if timer > 0.25 then
-			for k, v in ipairs(bollo.buffs) do
-				local buff = v
+		timer = timer + elapsed
+		if timer > 0.25 then
+			for i, buff in ipairs(bollo.buffs) do
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
 
@@ -51,8 +50,7 @@ function bollo:Enable()
 				end
 
 			end
-			for k, v in ipairs(bollo.debuffs) do
-				local buff = v
+			for i, buff in ipairs(bollo.debuffs) do
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
 
@@ -64,7 +62,7 @@ function bollo:Enable()
 				end
 			end
 			timer = 0
-		--end
+		end
 	end)
 
 	local bbg = CreateFrame("Frame")
@@ -215,16 +213,18 @@ function bollo:SortBuffs(icons, max)
 	local perCol = math.floor(icons.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(icons.bg:GetHeight() / size + 0.5)
 	local rows = 0
-	for i = 1, max do
-		local buff = icons[i]
-		buff:ClearAllPoints()
+	--for i = 1, max do
+	for i, buff in ipairs(icons) do
+		if buff:IsShown() then
+			buff:ClearAllPoints()
 
-		if offset == perCol then
-			row = row + 1
+			if offset == perCol then
+				row = row + 1
+			end
+
+			buff:SetPoint("TOPRIGHT", icons.bg, "TOPRIGHT", (offset * size * growthx), rows * size * growthy)
+			offset = offset + 1
 		end
-
-		buff:SetPoint("TOPRIGHT", icons.bg, "TOPRIGHT", (offset * size * growthx), rows * size * growthy)
-		offset = offset + 1
 	end
 end
 
