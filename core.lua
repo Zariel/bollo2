@@ -17,6 +17,7 @@ function bollo:Initialize()
 			["growth-y"] = "DOWN",
 			["size"] = 20,
 			["spacing"] = 2,
+			["modules"] = {},
 		},
 	}
 	self.db = self:InitializeDB("BolloDB", defaults, profile)
@@ -77,8 +78,16 @@ function bollo:Enable()
 	dbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -60)
 	self.debuffs.bg = dbg
 
+	self.callbacks = {}
+
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
+end
+
+function bollo:RegisterCallback(when, func)
+	if not self.callbacks[when] then self.callbacks[when] = {} end
+
+	table.insert(self.callbacks[when], func)
 end
 
 do
@@ -116,6 +125,10 @@ do
 			self.info.count = count or 0
 
 			self:Show()
+
+			for _, func in ipairs(bollo.callbacks["SetBuff"]) do
+				func(self)
+			end
 		end
 	end
 
@@ -191,6 +204,10 @@ do
 
 		table.insert(parent, button)
 
+		for _, func in ipairs(bollo.callbacks["CreateIcon"]) do
+			func(parent, button)
+		end
+
 		return button
 	end
 end
@@ -210,7 +227,7 @@ local SortFunc = function(a, b)
 end
 
 function bollo:SortBuffs(icons, max)
-	table.sort(icons, SortFunc)
+--	table.sort(icons, SortFunc)
 	local offset = 0
 	local growthx = self.db.profile["growth-x"] == "LEFT" and -1 or 1
 	local growthy = self.db.profile["growth-y"] == "DOWN" and -1 or 1
