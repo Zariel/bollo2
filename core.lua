@@ -186,8 +186,8 @@ end
 function bollo:SortBuffs(icons, max)
 	table.sort(icons, SortFunc)
 	local offset = 0
-	local growthx = self.profile["growth-x"] == "LEFT" and -1 or 1
-	local growthy = self.profile["growth-y"] == "DOWN" and -1 or 1
+	local growthx = self.db.profile["growth-x"] == "LEFT" and -1 or 1
+	local growthy = self.db.profile["growth-y"] == "DOWN" and -1 or 1
 	local size = self.db.profile.size + (self.db.profile.spacing or 0)
 	local perCol = math.floor(self.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(self.bg:GetHeight() / size + 0.5)
