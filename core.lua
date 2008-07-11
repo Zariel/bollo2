@@ -1,4 +1,4 @@
-local bollo = DongleStub("Dongle-1.2"):New("Bollo")
+bollo = DongleStub("Dongle-1.2"):New("Bollo")
 
 local ipairs = ipairs
 local pairs = pairs
@@ -48,8 +48,8 @@ function bollo:Enable()
 				else
 					buff.duration:Hide()
 				end
-
 			end
+
 			for i, buff in ipairs(bollo.debuffs) do
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
@@ -113,7 +113,7 @@ do
 			self.info = self.info or {}
 			self.info.buff = name
 			self.info.rank = rank
-			self.info.ount = count or 0
+			self.info.count = count or 0
 
 			self:Show()
 		end
@@ -124,7 +124,12 @@ do
 	end
 
 	local GetTimeLeft = function(self)
-		return GetPlayerBuffTimeLeft(self:GetID()) or 0
+		local id = self:GetID()
+		if select(2, GetPlayerBuff(id)) > 0 then
+			return 0
+		else
+			return GetPlayerBuffTimeLeft(id) or 0
+		end
 	end
 
 	local OnEnter = function(self)
