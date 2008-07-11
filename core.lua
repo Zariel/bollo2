@@ -247,5 +247,5 @@ function bollo:PLAYER_AURAS_CHANGED()
 		end
 		max = max + 1
 	end
-	self:SortBuffs(self.debuff, max - 1)
+	self:SortBuffs(self.debuffs, max - 1)
 end
