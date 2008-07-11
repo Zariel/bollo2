@@ -25,8 +25,8 @@ function bollo:Enable()
 	self.frame = CreateFrame("Frame")
 	local timer = 0
 	self.frame:SetScript("OnUpdate", function(self, elapsed)
-		timer = timer + elapsed
-		if timer > 0.25 then
+	--	timer = timer + elapsed
+	--	if timer > 0.25 then
 			for index = 1, #bollo.buffs do
 				local buff = bollo.buffs[index]
 				if not buff:IsShown() then break end
@@ -53,7 +53,7 @@ function bollo:Enable()
 				end
 			end
 			timer = 0
-		end
+		--end
 	end)
 
 	local bbg = CreateFrame("Frame")
@@ -243,9 +243,8 @@ function bollo:PLAYER_AURAS_CHANGED()
 	local max = 1
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, self.buffs, "HELPFUL") then
-			while self.buffs[i] do
-				self.buffs[i]:Hide()
-				i = i + 1
+			for a = i,  #self.buffs do
+				self.buffs[a]:Hide()
 			end
 			break
 		end
@@ -255,9 +254,8 @@ function bollo:PLAYER_AURAS_CHANGED()
 	max = 0
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, self.debuffs, "HARMFUL") then
-			while self.debuffs[i] do
-				self.debuffs[i]:Hide()
-				i = 1 + 1
+			for a = i,  #self.debuffs do
+				self.debuffs[a]:Hide()
 			end
 			break
 		end
