@@ -27,8 +27,7 @@ function bollo:Enable()
 	self.frame:SetScript("OnUpdate", function(self, elapsed)
 		timer = timer + elapsed
 		if timer > 0.5 then
-			local index = 1
-			while bollo.buffs[index] do
+			for index = 1, #bollo.buffs do
 				local buff = bollo.buffs[index]
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
@@ -40,10 +39,8 @@ function bollo:Enable()
 					buff.duration:Hide()
 				end
 
-				index = index + 1
 			end
-			index = 1
-			while bollo.debuffs[index] do
+			for index = 1, #bollo.debuffs do
 				local buff = bollo.debuffs[index]
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
@@ -54,8 +51,6 @@ function bollo:Enable()
 				else
 					buff.duration:Hide()
 				end
-
-				index = index + 1
 			end
 			timer = 0
 		end
@@ -88,8 +83,6 @@ do
 		name, rank = GetPlayerBuffName(index)
 		texture = GetPlayerBuffTexture(index)
 		count = GetPlayerBuffApplications(index)
-
-		bollo:Print(index, name)
 
 		if name then
 			self.icon:SetTexture(texture)
