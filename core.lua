@@ -46,11 +46,14 @@ end
 do
 	local name, rank, texture, count, debuffType, duration, timeLeft
 	local SetBuff = function(self, index)
+		bollo:Print(index)
 		self:SetID(index)
 		if self.debuff then
 			name, rank, texture, count, debuffType, duration, timeLeft = UnitDeBuff("player", index)
 		else
-			name, rank, texture, count, duration, timeLeft = UnitBuff("player", index)
+			name, rank = GetPlayerBuffName(index)
+			texture = GetPlayerBuffTexture(index)
+			count = GetPlayerBuffApplications(index)
 		end
 		if name then
 			self.icon:SetTexture(texture)
@@ -60,6 +63,7 @@ do
 			else
 				self.count:Hide()
 			end
+
 			if self.debuff and debuffType then
 				local col = DebuffTypeColor[debuffType or "none"]
 				self.border:SetVertexColor(col.r, col.g, col.b)
@@ -172,12 +176,13 @@ function bollo:SortBuffs(max)
 	end
 end
 
-function bollo:UpdateIcons(index)
+function bollo:UpdateIcons(i)
+	local index = GetPlayerBuff(i)
 	-- Buff
-	local name = UnitBuff("player", index)
+	local name = GetPlayerBuffName(index)
 	local icon = self.icons[index]
 	if name then
-		icon = icon or self:CreateIcon(index, false)
+		icon = icon or self:CreateIcon(index)
 		icon.debuff = false
 		icon:SetBuff(index)
 		return true
