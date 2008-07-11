@@ -196,7 +196,7 @@ function bollo:SortBuffs(icons, max)
 		local buff = icons[i]
 		buff:ClearAllPoints()
 
-		if offset = perCol then
+		if offset == perCol then
 			row = row + 1
 		end
 
@@ -242,7 +242,7 @@ function bollo:PLAYER_AURAS_CHANGED()
 		max = max + 1
 	end
 	self:SortBuffs(self.buffs, max - 1)
-	local max = 0
+	max = 0
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, "HARMFUL") then
 			while self.debuffs[i] do
