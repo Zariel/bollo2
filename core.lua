@@ -60,12 +60,13 @@ do
 	local SetBuff = function(self, index)
 		self:SetID(index)
 		if self.debuff then
-			name, rank, texture, count, debuffType, duration, timeLeft = UnitDeBuff("player", index)
-		else
-			name, rank = GetPlayerBuffName(index)
-			texture = GetPlayerBuffTexture(index)
-			count = GetPlayerBuffApplications(index)
+			debuffType = GetPlayerBuffDispelType(index)
 		end
+
+		name, rank = GetPlayerBuffName(index)
+		texture = GetPlayerBuffTexture(index)
+		count = GetPlayerBuffApplications(index)
+
 		if name then
 			self.icon:SetTexture(texture)
 			if count and count > 1 then
@@ -82,6 +83,7 @@ do
 			else
 				self.border:Hide()
 			end
+
 			self.info = self.info or {}
 			self.info.buff = name
 			self.info.rank = rank
@@ -196,14 +198,14 @@ function bollo:SortBuffs(max)
 	end
 end
 
-function bollo:UpdateIcons(i)
-	local index = GetPlayerBuff(i, "HELPFUL")
+function bollo:UpdateIcons(i, filter)
+	local index = GetPlayerBuff(i, filter)
 	-- Buff
 	local name = GetPlayerBuffName(index)
 	local icon = self.icons[index]
 	if name then
 		icon = icon or self:CreateIcon(index)
-		icon.debuff = false
+		icon.debuff = filter == "HELPFUL" and false or true
 		icon:SetBuff(index)
 		return true
 	elseif icon then
@@ -214,16 +216,26 @@ end
 
 -- Blatently copied from oUF
 function bollo:PLAYER_AURAS_CHANGED()
-	local max = 1
+	local max = 0
 	for i = 1, 40 do
-		if not self:UpdateIcons(i) then
+		if not self:UpdateIcons(i, "HELPFUL") then
 			while self.icons[i] do
 				self.icons[i]:Hide()
 				i = i + 1
 			end
 			break
 		end
-		max = i
+		max = max + 1
+	end
+	for i = 1, 40 do
+		if not self:UpdateIcons(i, "HARMFUL") then
+			while self.icons[i] do
+				self.icons[i]:Hide()
+				i = 1 + 1
+			end
+			break
+		end
+		max = max + 1
 	end
 	self:SortBuffs(max - 1)
 end
