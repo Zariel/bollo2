@@ -1,6 +1,6 @@
 local bollo = DongleStub("Dongle-1.2"):New("Bollo")
 
-function bollo:Initilize()
+function bollo:Initialize()
 	defaults = {
 		profile = {
 			["growth-x"] = "LEFT",
@@ -129,7 +129,7 @@ do
 		end
 	end
 
-	function bollo:CreateIcon(index, debuff)
+	function bollo:CreateIcon(index, parent, debuff)
 		local button = CreateFrame("Button")
 		button:SetHeight(bollo.db.profile.size)
 		button:SetWidth(bollo.db.profile.size)
@@ -169,7 +169,7 @@ do
 		button.GetBuff = GetBuff
 		button.GetTimeLeft = GetTimeLeft
 
-		table.insert(self.icons, button)
+		table.insert(parent, button)
 
 		return button
 	end
@@ -184,7 +184,7 @@ local SortFunc = function(a, b)
 end
 
 function bollo:SortBuffs(icons, max)
-	table.sort(self.icons, SortFunc)
+	table.sort(icons, SortFunc)
 	local offset = 0
 	local growthx = self.profile["growth-x"] == "LEFT" and -1 or 1
 	local growthy = self.profile["growth-y"] == "DOWN" and -1 or 1
@@ -205,20 +205,14 @@ function bollo:SortBuffs(icons, max)
 	end
 end
 
-function bollo:UpdateIcons(i, filter)
+function bollo:UpdateIcons(i, parent, filter)
 	local index = GetPlayerBuff(i, filter)
 	-- Buff
 	local name = GetPlayerBuffName(index)
-	local icon
-
-	if filter == "HARMFUL" then
-		icon = self.debuffs[index]
-	else
-		icon = self.buffs[index]
-	end
+	local icon = parent[index]
 
 	if name then
-		icon = icon or self:CreateIcon(index)
+		icon = icon or self:CreateIcon(index, parent)
 		icon.debuff = filter == "HELPFUL" and false or true
 		icon:SetBuff(index)
 		return true
@@ -232,9 +226,9 @@ end
 function bollo:PLAYER_AURAS_CHANGED()
 	local max = 0
 	for i = 1, 40 do
-		if not self:UpdateIcons(i, "HELPFUL") then
-			while self.icons[i] do
-				self.icons[i]:Hide()
+		if not self:UpdateIcons(i, self.buffs, "HELPFUL") then
+			while self.buffs[i] do
+				self.buffs[i]:Hide()
 				i = i + 1
 			end
 			break
@@ -244,7 +238,7 @@ function bollo:PLAYER_AURAS_CHANGED()
 	self:SortBuffs(self.buffs, max - 1)
 	max = 0
 	for i = 1, 40 do
-		if not self:UpdateIcons(i, "HARMFUL") then
+		if not self:UpdateIcons(i, self.debuffs, "HARMFUL") then
 			while self.debuffs[i] do
 				self.debuffs[i]:Hide()
 				i = 1 + 1
