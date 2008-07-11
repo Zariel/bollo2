@@ -26,7 +26,7 @@ function bollo:Enable()
 	local timer = 0
 	self.frame:SetScript("OnUpdate", function(self, elapsed)
 		timer = timer + elapsed
-		if timer > 0.5 then
+		if timer > 0.25 then
 			for index = 1, #bollo.buffs do
 				local buff = bollo.buffs[index]
 				if not buff:IsShown() then break end
@@ -186,15 +186,22 @@ do
 end
 
 local SortFunc = function(a, b)
-	if a and b then
-		return a:GetTimeLeft() > b:GetTimeLeft()
+	local c, d
+	if not a then
+		c = 0
 	else
-		return false
+		c = a:GetTimeLeft()
 	end
+	if not b then
+		d = 0
+	else
+		d = b:GetTimeLeft()
+	end
+	return c > d
 end
 
 function bollo:SortBuffs(icons, max)
-	--table.sort(icons, SortFunc)
+	table.sort(icons, SortFunc)
 	local offset = 0
 	local growthx = self.db.profile["growth-x"] == "LEFT" and -1 or 1
 	local growthy = self.db.profile["growth-y"] == "DOWN" and -1 or 1
