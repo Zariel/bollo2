@@ -67,13 +67,13 @@ function bollo:Enable()
 
 	local bbg = CreateFrame("Frame")
 	bbg:SetWidth(250)
-	bbg:SetHeight(50)
+	bbg:SetHeight(75)
 	bbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
 	self.buffs.bg = bbg
 
 	local dbg = CreateFrame("Frame")
 	dbg:SetWidth(250)
-	dbg:SetHeight(50)
+	dbg:SetHeight(75)
 	dbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -60)
 	self.debuffs.bg = dbg
 
@@ -161,7 +161,7 @@ do
 		icon:SetAllPoints(button)
 
 		local count = button:CreateFontString(nil, "OVERLAY")
-		count:SetFontObject(NumberFontNormal)
+		count:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
 		count:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
 
 		local duration = button:CreateFontString(nil, "OVERLAY")
@@ -239,6 +239,7 @@ function bollo:UpdateIcons(i, parent, filter)
 		icon:SetBuff(index)
 		return true
 	elseif icon then
+		icon:SetID(0)
 		icon:Hide()
 		return false
 	end
