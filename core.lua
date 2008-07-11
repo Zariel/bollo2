@@ -121,11 +121,7 @@ do
 	local OnEnter = function(self)
 		if self:IsVisible() then
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-			if self.debuff then
-				GameTooltip:SetUnitDebuff("player", self:GetID())
-			else
-				GameTooltip:SetPlayerBuff(self:GetID())
-			end
+			GameTooltip:SetPlayerBuff(self:GetID())
 		end
 	end
 
@@ -186,18 +182,17 @@ do
 end
 
 local SortFunc = function(a, b)
-	local c, d
 	if not a then
-		c = 0
+		a = 0
 	else
-		c = a:GetTimeLeft()
+		a = a:GetTimeLeft()
 	end
 	if not b then
-		d = 0
+		b = 0
 	else
-		d = b:GetTimeLeft()
+		b = b:GetTimeLeft()
 	end
-	return c > d
+	return a > b
 end
 
 function bollo:SortBuffs(icons, max)
