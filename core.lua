@@ -18,7 +18,9 @@ function bollo:Enable()
 		timer = timer + elapsed
 		if timer > 0.5 then
 			local index = 1
-			while icons[index]:IsShown() do
+			while bollo.icons[index] do
+				local buff = bollo.icons[index]
+				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
 
 				if timeLeft and timeLeft > 0 then
@@ -37,7 +39,7 @@ function bollo:Enable()
 	local bg = CreateFrame("Frame")
 	bg:SetWidth(200)
 	bg:SetHeight(50)
-	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
+	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -20)
 	self.bg = bg
 end
 
@@ -65,16 +67,17 @@ do
 			else
 				self.border:Hide()
 			end
-			self.buff = name
-			self.rank = rank
-			self.count = count or 0
+			self.info = {}
+			self.info.buff = name
+			self.info.rank = rank
+			self.info.ount = count or 0
 
 			self:Show()
 		end
 	end
 
 	local GetBuff = function(self)
-		return self.buff, self.rank, self.count
+		return self.info.buff, self.info.rank, self.info.count
 	end
 
 	local GetTimeLeft = function(self)
@@ -123,7 +126,7 @@ do
 		count:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
 
 		local duration = button:CreateFontString(nil, "OVERLAY")
-		duration:SetFontObject(NumberFontNormal)
+		duration:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
 		duration:SetPoint("TOP", button, "BOTTOM", 0, -2)
 
 		local border = button:CreateTexture(nil, "OVERLAY")
@@ -142,7 +145,7 @@ do
 		button.GetBuff = GetBuff
 		button.GetTimeLeft = GetTimeLeft
 
-		table.insert(icons, button)
+		table.insert(self.icons, button)
 
 		return button
 	end
@@ -157,13 +160,18 @@ local SortFunc = function(a, b)
 end
 
 function bollo:SortBuffs(max)
-	table.sort(icons, SortFunc)
-	local gap = 0
+	table.sort(self.icons, SortFunc)
+	local gap = 10
 	local offset = 0
+	local growth = -1
 	for i = 1, max do
 		local buff = self.icons[i]
 		buff:ClearAllPoints()
-		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", offset * 20 + gap, 0)
+		if offset > 0 and gap > 0 then
+			gap = gap * growth
+		end
+		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", offset * 20 * growth + gap, 0)
+		offset = offset + 1
 	end
 end
 
@@ -184,7 +192,7 @@ end
 
 -- Blatently copied from oUF
 function bollo:PLAYER_AURAS_CHANGED()
-	local max = 0
+	local max = 1
 	for i = 1, 40 do
 		if not self:UpdateIcons(i) then
 			while self.icons[i] do
