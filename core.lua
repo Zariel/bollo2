@@ -22,17 +22,29 @@ function bollo:Enable()
 	bf:SetScript("OnUpdate", nil)
 	bf:SetScript("OnEvent", nil)
 
-	self:RegisterEvent("PLAYER_AURAS_CHANGED")
-	self:PLAYER_AURAS_CHANGED()
-
 	self.frame = CreateFrame("Frame")
 	local timer = 0
 	self.frame:SetScript("OnUpdate", function(self, elapsed)
 		timer = timer + elapsed
 		if timer > 0.5 then
 			local index = 1
-			while bollo.icons[index] do
-				local buff = bollo.icons[index]
+			while bollo.buffs[index] do
+				local buff = bollo.buffs[index]
+				if not buff:IsShown() then break end
+				local timeLeft = buff:GetTimeLeft()
+
+				if timeLeft and timeLeft > 0 then
+					buff.duration:SetFormattedText("%.2f", timeLeft)
+					buff.duration:Show()
+				else
+					buff.duration:Hide()
+				end
+
+				index = index + 1
+			end
+			index = 1
+			while bollo.debuffs[index] do
+				local buff = bollo.debuffs[index]
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
 
@@ -50,16 +62,19 @@ function bollo:Enable()
 	end)
 
 	local bbg = CreateFrame("Frame")
-	bg:SetWidth(250)
-	bg:SetHeight(50)
-	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
-	self.buffs.bg = bg
+	bbg:SetWidth(250)
+	bbg:SetHeight(50)
+	bbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
+	self.buffs.bg = bbg
 
 	local dbg = CreateFrame("Frame")
 	dbg:SetWidth(250)
 	dbg:SetHeight(50)
 	dbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -60)
 	self.debuffs.bg = dbg
+
+	self:RegisterEvent("PLAYER_AURAS_CHANGED")
+	self:PLAYER_AURAS_CHANGED()
 end
 
 do
