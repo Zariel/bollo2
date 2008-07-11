@@ -1,6 +1,14 @@
 local bollo = DongleStub("Dongle-1.2"):New("Bollo")
 
 function bollo:Initilize()
+	defaults = {
+		profile = {
+			["growth-x"] = "LEFT",
+			["growth-y"] = "DOWN",
+			["size"] = 22,
+			["spacing"] = 2,
+		},
+	}
 	self.db = self:InitializeDB("BolloDB", defaults, profile)
 end
 
@@ -50,7 +58,6 @@ end
 do
 	local name, rank, texture, count, debuffType, duration, timeLeft
 	local SetBuff = function(self, index)
-		bollo:Print(index)
 		self:SetID(index)
 		if self.debuff then
 			name, rank, texture, count, debuffType, duration, timeLeft = UnitDeBuff("player", index)
@@ -75,7 +82,7 @@ do
 			else
 				self.border:Hide()
 			end
-			self.info = {}
+			self.info = self.info or {}
 			self.info.buff = name
 			self.info.rank = rank
 			self.info.ount = count or 0
@@ -115,8 +122,8 @@ do
 
 	function bollo:CreateIcon(index, debuff)
 		local button = CreateFrame("Button")
-		button:SetHeight(20)
-		button:SetWidth(20)
+		button:SetHeight(bollo.db.profile.size)
+		button:SetWidth(bollo.db.profile.size)
 		button:EnableMouse(true)
 		button:SetID(index)
 		button:SetScript("OnEnter", OnEnter)
@@ -170,18 +177,27 @@ end
 function bollo:SortBuffs(max)
 	table.sort(self.icons, SortFunc)
 	local offset = 0
-	local growth = -1
-	local size = 20 + 3
+	local growthx = self.profile["growth-x"] == "LEFT" and -1 or 1
+	local growthy = self.profile["growth-y"] == "DOWN" and -1 or 1
+	local size = self.db.profile.size + (self.db.profile.spacing or 0)
+	local perCol = math.floor(self.bg:GetWidth() / size + 0.5)
+	local perRow = math.floor(self.bg:GetHeight() / size + 0.5)
+	local rows = 0
 	for i = 1, max do
 		local buff = self.icons[i]
 		buff:ClearAllPoints()
-		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", (offset * size * growth), 0)
+
+		if offset = perCol then
+			row = row + 1
+		end
+
+		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", (offset * size * growthx), rows * size * growthy)
 		offset = offset + 1
 	end
 end
 
 function bollo:UpdateIcons(i)
-	local index = GetPlayerBuff(i)
+	local index = GetPlayerBuff(i, "HELPFUL")
 	-- Buff
 	local name = GetPlayerBuffName(index)
 	local icon = self.icons[index]
@@ -207,7 +223,7 @@ function bollo:PLAYER_AURAS_CHANGED()
 			end
 			break
 		end
-		max = max + 1
+		max = i
 	end
 	self:SortBuffs(max - 1)
 end
