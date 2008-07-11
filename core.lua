@@ -1,5 +1,15 @@
 local bollo = DongleStub("Dongle-1.2"):New("Bollo")
 
+local ipairs = ipairs
+local pairs = pairs
+
+local GetPlayerBuffName = GetPlayerBuffName
+local GetPlayerBuff = GetPlayerBuff
+local DebuffTypeColor = DebuffTypeColor
+local GetPlayerBuffDispelType = GetPlayerBuffDispelType
+local GetPlayerBuffApplications = GetPlayerBuffApplications
+local DebuffTypeColor = DebuffTypeColor
+
 function bollo:Initialize()
 	defaults = {
 		profile = {
@@ -21,6 +31,7 @@ function bollo:Enable()
 	bf:Hide()
 	bf:SetScript("OnUpdate", nil)
 	bf:SetScript("OnEvent", nil)
+	_G.BuffButton_OnUpdate = nil
 
 	self.frame = CreateFrame("Frame")
 	local timer = 0
@@ -33,7 +44,7 @@ function bollo:Enable()
 				local timeLeft = buff:GetTimeLeft()
 
 				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText("%.2f", timeLeft)
+					buff.duration:SetFormattedText(SecondsToTimeAbbrev(timeLeft))
 					buff.duration:Show()
 				else
 					buff.duration:Hide()
@@ -46,7 +57,7 @@ function bollo:Enable()
 				local timeLeft = buff:GetTimeLeft()
 
 				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText("%.2f", timeLeft)
+					buff.duration:SetFormattedText(SecondsToTimeAbbrev(timeLeft))
 					buff.duration:Show()
 				else
 					buff.duration:Hide()
@@ -115,7 +126,7 @@ do
 	end
 
 	local GetTimeLeft = function(self)
-		return math.floor(GetPlayerBuffTimeLeft(self:GetID())*100/60)/100 or 0
+		return GetPlayerBuffTimeLeft(self:GetID()) or 0
 	end
 
 	local OnEnter = function(self)
