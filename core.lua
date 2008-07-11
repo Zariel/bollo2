@@ -1,59 +1,44 @@
-local icons = {}
-local bollo = CreateFrame("Frame")
-bollo:SetScript("OnEvent", function(self, event, ...)
-	return self[event](...)
-end)
-bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
-bollo:RegisterEvent("PLAYER_ENTERING_WORLD")
+local bollo = DongleStub("Dongle-1.2"):New("Bollo")
 
-local UpdateDurations
-do
+function bollo:Enable()
+	self.icons = {}
+
+	local bf = _G["BuffFrame"]
+	bf:UnregisterAllEvents()
+	bf:Hide()
+	bf:SetScript("OnUpdate", nil)
+	bf:SetScript("OnEvent", nil)
+
+	self:RegisterEvent("PLAYER_AURAS_CHANGED")
+	self:PLAYER_AURAS_CHANGED()
+
+	self.frame = CreateFrame("Frame")
 	local timer = 0
-	UpdateDurations = function(self, elapsed)
+	self.frame:SetScript("OnUpdate", function(self, elapsed)
 		timer = timer + elapsed
 		if timer > 0.5 then
-			for index, buff in ipairs(icons) do
+			local index = 1
+			while icons[index]:IsShown() do
 				local timeLeft = buff:GetTimeLeft()
-				if timeLeft > 0 then
+
+				if timeLeft and timeLeft > 0 then
 					buff.duration:SetText(timeLeft)
 					buff.duration:Show()
 				else
 					buff.duration:Hide()
 				end
+
+				index = index + 1
 			end
 			timer = 0
 		end
-	end
+	end)
 end
 
-bollo:SetScript("OnUpdate", UpdateDurations)
-
-
---
-local print = function(...)
-	local str = ""
-	for i = 1, select("#", ...) do
-		str = str .. " " .. tostring(select(i, ...))
-	end
-	return ChatFrame1:AddMessage(str)
-end
-
-
-
-local OnLeave = function(self)
-	GameTooltip:Hide()
-end
-
-local OnMouseUp = function(self, button)
-	if button == "RightButton" then
-		CancelPlayerBuff(self:GetID())
-	end
-end
-
-local SetBuff, GetBuff, GetTimeLeft
+local CreateIcon 
 do
 	local name, rank, texture, count, debuffType, duration, timeLeft
-	SetBuff = function(self, index)
+	local SetBuff = function(self, index)
 		self:SetID(index)
 		if self.debuff then
 			name, rank, texture, count, debuffType, duration, timeLeft = UnitDeBuff("player", index)
@@ -80,68 +65,78 @@ do
 		end
 	end
 
-	GetBuff = function(self)
+	local GetBuff = function(self)
 		return self.buff, self.texture
 	end
 
-	GetTimeLeft = function(self)
+	local GetTimeLeft = function(self)
 		return math.floor(GetPlayerBuffTimeLeft(self:GetID())*100/60)/100 or 0
 	end
-end
 
-local CreateIcon = function(index, debuff)
-	local button = CreateFrame("Button")
-	button:SetHeight(20)
-	button:SetWidth(20)
-	button:EnableMouse(true)
-	button:SetID(index)
-	button:SetScript("OnEnter", OnEnter)
-	button:SetScript("OnLeave", OnLeave)
-
-	if not debuff then
-		button:SetScript("OnMouseUp", OnMouseUp)
+	local OnEnter = function(self)
+		if self:IsVisible() then
+			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+			if self.debuff then
+				GameTooltip:SetUnitDebuff("player", self:GetID())
+			else
+				GameTooltip:SetUnitBuff("player", self:GetID())
+			end
+		end
 	end
 
-	local icon = button:CreateTexture(nil, "BACKGROUND")
-	icon:SetAllPoints(button)
+	local OnLeave = function(self)
+		return GameTooltip:Hide()
+	end
 
-	local count = button:CreateFontString(nil, "OVERLAY")
-	count:SetFontObject(NumberFontNormal)
-	count:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
-
-	local duration = button:CreateFontString(nil, "OVERLAY")
-	duration:SetFontObject(NumberFontNormal)
-	duration:SetPoint("TOP", button, "BOTTOM", 0, -2)
-
-	local border = button:CreateTexture(nil, "OVERLAY")
-	border:SetTexture("Interface\\Buttons\\UI-Debuff-Overlays")
-	border:SetAllPoints(button)
-	border:SetTexCoord(.296875, .5703125, 0, .515625)
-
-	button.count = count
-	button.icon = icon
-	button.duration = duration
-	button.debuff = debuff
-	button.border = border
-	button.timeLeft = 0
-
-	button.SetBuff = SetBuff
-	button.GetBuff = GetBuff
-	button.GetTimeLeft = GetTimeLeft
-
-	table.insert(icons, button)
-
-	return button
-end
-
-local OnEnter = function(self)
-	if self:IsVisible() then
-		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-		if self.debuff then
-			GameTooltip:SetUnitDebuff("player", self:GetID())
-		else
-			GameTooltip:SetUnitBuff("player", self:GetID())
+	local OnMouseUp = function(self, button)
+		if button == "RightButton" then
+			return CancelPlayerBuff(self:GetID())
 		end
+	end
+
+	CreateIcon = function(index, debuff)
+		local button = CreateFrame("Button")
+		button:SetHeight(20)
+		button:SetWidth(20)
+		button:EnableMouse(true)
+		button:SetID(index)
+		button:SetScript("OnEnter", OnEnter)
+		button:SetScript("OnLeave", OnLeave)
+
+		if not debuff then
+			button:SetScript("OnMouseUp", OnMouseUp)
+		end
+
+		local icon = button:CreateTexture(nil, "BACKGROUND")
+		icon:SetAllPoints(button)
+
+		local count = button:CreateFontString(nil, "OVERLAY")
+		count:SetFontObject(NumberFontNormal)
+		count:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
+
+		local duration = button:CreateFontString(nil, "OVERLAY")
+		duration:SetFontObject(NumberFontNormal)
+		duration:SetPoint("TOP", button, "BOTTOM", 0, -2)
+
+		local border = button:CreateTexture(nil, "OVERLAY")
+		border:SetTexture("Interface\\Buttons\\UI-Debuff-Overlays")
+		border:SetAllPoints(button)
+		border:SetTexCoord(.296875, .5703125, 0, .515625)
+
+		button.count = count
+		button.icon = icon
+		button.duration = duration
+		button.debuff = debuff
+		button.border = border
+		button.timeLeft = 0
+
+		button.SetBuff = SetBuff
+		button.GetBuff = GetBuff
+		button.GetTimeLeft = GetTimeLeft
+
+		table.insert(icons, button)
+
+		return button
 	end
 end
 
@@ -157,7 +152,6 @@ local SortBuffs = function(max)
 	table.sort(icons, SortFunc)
 	local offset = 0
 	for i = 1, max do
-		
 end
 
 local UpdateIcons = function(index)
@@ -176,27 +170,17 @@ local UpdateIcons = function(index)
 end
 
 -- Blatently copied from oUF
-bollo.PLAYER_AURAS_CHANGED = function()
+function bollo:PLAYER_AURAS_CHANGED()
+	local max = 0
 	for i = 1, 40 do
 		if not UpdateIcons(i) then
 			while icons[i] do
 				icons[i]:Hide()
 				i = i + 1
 			end
-
 			break
 		end
-		SortBuffs(i - 1)
+		max = max + 1
 	end
-end
-
-bollo.PLAYER_ENTERING_WORLD = function()
-	-- Break blizzards stuff.
-	local bf = _G["BuffFrame"]
-	bf:UnregisterAllEvents()
-	bf:Hide()
-	bf:SetScript("OnUpdate", nil)
-	bf:SetScript("OnEvent", nil)
-
-	bollo.PLAYER_AURAS_CHANGED()
+	SortBuffs(max - 1)
 end
