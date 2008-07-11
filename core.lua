@@ -1,4 +1,4 @@
-local bollo = DongleStub("Dongle-1.2"):New("Bollo")
+bollo = DongleStub("Dongle-1.2"):New("Bollo")
 
 function bollo:Enable()
 	self.icons = {}
@@ -24,7 +24,7 @@ function bollo:Enable()
 				local timeLeft = buff:GetTimeLeft()
 
 				if timeLeft and timeLeft > 0 then
-					buff.duration:SetText(timeLeft)
+					buff.duration:SetFormattedText("%.2f", timeLeft)
 					buff.duration:Show()
 				else
 					buff.duration:Hide()
@@ -39,7 +39,7 @@ function bollo:Enable()
 	local bg = CreateFrame("Frame")
 	bg:SetWidth(200)
 	bg:SetHeight(50)
-	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -20)
+	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
 	self.bg = bg
 end
 
@@ -161,16 +161,13 @@ end
 
 function bollo:SortBuffs(max)
 	table.sort(self.icons, SortFunc)
-	local gap = 10
 	local offset = 0
 	local growth = -1
+	local size = 20 + 3
 	for i = 1, max do
 		local buff = self.icons[i]
 		buff:ClearAllPoints()
-		if offset > 0 and gap > 0 then
-			gap = gap * growth
-		end
-		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", offset * 20 * growth + gap, 0)
+		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", (offset * size * growth), 0)
 		offset = offset + 1
 	end
 end
