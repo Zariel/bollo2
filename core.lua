@@ -33,9 +33,14 @@ function bollo:Enable()
 			timer = 0
 		end
 	end)
+
+	local bg = CreateFrame("Frame")
+	bg:SetWidth(200)
+	bg:SetHeight(50)
+	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
+	self.bg = bg
 end
 
-local CreateIcon 
 do
 	local name, rank, texture, count, debuffType, duration, timeLeft
 	local SetBuff = function(self, index)
@@ -48,6 +53,7 @@ do
 		if name then
 			self.icon:SetTexture(texture)
 			if count and count > 1 then
+				self.count:Show()
 				self.count:SetText(count)
 			else
 				self.count:Hide()
@@ -55,18 +61,20 @@ do
 			if self.debuff and debuffType then
 				local col = DebuffTypeColor[debuffType or "none"]
 				self.border:SetVertexColor(col.r, col.g, col.b)
+				self.border:Show()
 			else
-				self.border:SetVertexColor(0.8, 0.8, 0.8)
+				self.border:Hide()
 			end
 			self.buff = name
-			self.texture = texture
+			self.rank = rank
+			self.count = count or 0
 
 			self:Show()
 		end
 	end
 
 	local GetBuff = function(self)
-		return self.buff, self.texture
+		return self.buff, self.rank, self.count
 	end
 
 	local GetTimeLeft = function(self)
@@ -94,7 +102,7 @@ do
 		end
 	end
 
-	CreateIcon = function(index, debuff)
+	function bollo:CreateIcon(index, debuff)
 		local button = CreateFrame("Button")
 		button:SetHeight(20)
 		button:SetWidth(20)
@@ -148,18 +156,23 @@ local SortFunc = function(a, b)
 	end
 end
 
-local SortBuffs = function(max)
+function bollo:SortBuffs(max)
 	table.sort(icons, SortFunc)
+	local gap = 0
 	local offset = 0
 	for i = 1, max do
+		local buff = self.icons[i]
+		buff:ClearAllPoints()
+		buff:SetPoint("TOPRIGHT", self.bg, "TOPRIGHT", offset * 20 + gap, 0)
+	end
 end
 
-local UpdateIcons = function(index)
+function bollo:UpdateIcons(index)
 	-- Buff
 	local name = UnitBuff("player", index)
-	local icon = icons[index]
+	local icon = self.icons[index]
 	if name then
-		icon = icon or CreateIcon(index, false)
+		icon = icon or self:CreateIcon(index, false)
 		icon.debuff = false
 		icon:SetBuff(index)
 		return true
@@ -173,14 +186,14 @@ end
 function bollo:PLAYER_AURAS_CHANGED()
 	local max = 0
 	for i = 1, 40 do
-		if not UpdateIcons(i) then
-			while icons[i] do
-				icons[i]:Hide()
+		if not self:UpdateIcons(i) then
+			while self.icons[i] do
+				self.icons[i]:Hide()
 				i = i + 1
 			end
 			break
 		end
 		max = max + 1
 	end
-	SortBuffs(max - 1)
+	self:SortBuffs(max - 1)
 end
