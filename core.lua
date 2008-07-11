@@ -5,7 +5,7 @@ function bollo:Initialize()
 		profile = {
 			["growth-x"] = "LEFT",
 			["growth-y"] = "DOWN",
-			["size"] = 22,
+			["size"] = 20,
 			["spacing"] = 2,
 		},
 	}
@@ -89,6 +89,8 @@ do
 		texture = GetPlayerBuffTexture(index)
 		count = GetPlayerBuffApplications(index)
 
+		bollo:Print(index, name)
+
 		if name then
 			self.icon:SetTexture(texture)
 			if count and count > 1 then
@@ -129,7 +131,7 @@ do
 			if self.debuff then
 				GameTooltip:SetUnitDebuff("player", self:GetID())
 			else
-				GameTooltip:SetUnitBuff("player", self:GetID())
+				GameTooltip:SetPlayerBuff(self:GetID())
 			end
 		end
 	end
@@ -199,7 +201,7 @@ local SortFunc = function(a, b)
 end
 
 function bollo:SortBuffs(icons, max)
-	table.sort(icons, SortFunc)
+	--table.sort(icons, SortFunc)
 	local offset = 0
 	local growthx = self.db.profile["growth-x"] == "LEFT" and -1 or 1
 	local growthy = self.db.profile["growth-y"] == "DOWN" and -1 or 1
@@ -224,11 +226,10 @@ function bollo:UpdateIcons(i, parent, filter)
 	local index = GetPlayerBuff(i, filter)
 	-- Buff
 	local name = GetPlayerBuffName(index)
-	local icon = parent[index]
+	local icon = parent[i]
 
 	if name then
-		icon = icon or self:CreateIcon(index, parent)
-		icon.debuff = filter == "HELPFUL" and false or true
+		icon = icon or self:CreateIcon(index, parent, filter == "HARMFUL")
 		icon:SetBuff(index)
 		return true
 	elseif icon then
@@ -239,7 +240,7 @@ end
 
 -- Blatently copied from oUF
 function bollo:PLAYER_AURAS_CHANGED()
-	local max = 0
+	local max = 1
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, self.buffs, "HELPFUL") then
 			while self.buffs[i] do
