@@ -2,6 +2,7 @@
 ## Version: 1
 ## Interface: 20400
 ## OptionalDeps: Dongle
+## SavedVariables: BolloDB
 
 lib\Dongle\Dongle.lua
 

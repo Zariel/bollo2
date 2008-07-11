@@ -1,4 +1,8 @@
-bollo = DongleStub("Dongle-1.2"):New("Bollo")
+local bollo = DongleStub("Dongle-1.2"):New("Bollo")
+
+function bollo:Initilize()
+	self.db = self:InitializeDB("BolloDB", defaults, profile)
+end
 
 function bollo:Enable()
 	self.icons = {}
