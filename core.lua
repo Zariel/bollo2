@@ -126,8 +126,10 @@ do
 
 			self:Show()
 
-			for _, func in ipairs(bollo.callbacks["SetBuff"]) do
-				func(self)
+			if bollo.callbacks["SetBuff"] then
+				for _, func in ipairs(bollo.callbacks["SetBuff"]) do
+					func(self)
+				end
 			end
 		end
 	end
@@ -204,8 +206,10 @@ do
 
 		table.insert(parent, button)
 
-		for _, func in ipairs(bollo.callbacks["CreateIcon"]) do
-			func(parent, button)
+		if bollo.callbacks["CreateIcon"] then
+			for _, func in ipairs(bollo.callbacks["CreateIcon"]) do
+				func(parent, button)
+			end
 		end
 
 		return button

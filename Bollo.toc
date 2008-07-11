@@ -7,3 +7,5 @@
 lib\Dongle\Dongle.lua
 
 core.lua
+
+modules\name.lua
