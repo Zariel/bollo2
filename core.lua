@@ -13,7 +13,8 @@ function bollo:Initilize()
 end
 
 function bollo:Enable()
-	self.icons = {}
+	self.buffs = {}
+	self.debuffs = {}
 
 	local bf = _G["BuffFrame"]
 	bf:UnregisterAllEvents()
@@ -48,11 +49,17 @@ function bollo:Enable()
 		end
 	end)
 
-	local bg = CreateFrame("Frame")
-	bg:SetWidth(200)
+	local bbg = CreateFrame("Frame")
+	bg:SetWidth(250)
 	bg:SetHeight(50)
 	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
-	self.bg = bg
+	self.buffs.bg = bg
+
+	local dbg = CreateFrame("Frame")
+	dbg:SetWidth(250)
+	dbg:SetHeight(50)
+	dbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -60)
+	self.debuffs.bg = dbg
 end
 
 do
@@ -176,7 +183,7 @@ local SortFunc = function(a, b)
 	end
 end
 
-function bollo:SortBuffs(max)
+function bollo:SortBuffs(icons, max)
 	table.sort(self.icons, SortFunc)
 	local offset = 0
 	local growthx = self.profile["growth-x"] == "LEFT" and -1 or 1
@@ -186,7 +193,7 @@ function bollo:SortBuffs(max)
 	local perRow = math.floor(self.bg:GetHeight() / size + 0.5)
 	local rows = 0
 	for i = 1, max do
-		local buff = self.icons[i]
+		local buff = icons[i]
 		buff:ClearAllPoints()
 
 		if offset = perCol then
@@ -202,7 +209,14 @@ function bollo:UpdateIcons(i, filter)
 	local index = GetPlayerBuff(i, filter)
 	-- Buff
 	local name = GetPlayerBuffName(index)
-	local icon = self.icons[index]
+	local icon
+
+	if filter == "HARMFUL" then
+		icon = self.debuffs[index]
+	else
+		icon = self.buffs[index]
+	end
+
 	if name then
 		icon = icon or self:CreateIcon(index)
 		icon.debuff = filter == "HELPFUL" and false or true
@@ -227,15 +241,17 @@ function bollo:PLAYER_AURAS_CHANGED()
 		end
 		max = max + 1
 	end
+	self:SortBuffs(self.buffs, max - 1)
+	local max = 0
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, "HARMFUL") then
-			while self.icons[i] do
-				self.icons[i]:Hide()
+			while self.debuffs[i] do
+				self.debuffs[i]:Hide()
 				i = 1 + 1
 			end
 			break
 		end
 		max = max + 1
 	end
-	self:SortBuffs(max - 1)
+	self:SortBuffs(self.debuff, max - 1)
 end
