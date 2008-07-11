@@ -38,44 +38,7 @@ local print = function(...)
 	return ChatFrame1:AddMessage(str)
 end
 
-local SortFunc = function(a, b)
-	if a and b then
-		a:ClearAllPoints()
-		b:ClearAllPoints()
-		return b:GetTimeLeft() < a:GetTimeLeft()
-	else
-		return false
-	end
-end
 
-local SortBuffs = function()
-	table.sort(icons, SortFunc)
-	for i, buff in ipairs(icons) do
-		buff:ClearAllPoints()
-		if buff:IsShown() then
-			local index = buff:GetID()
-			buff:SetPoint("TOP", UIParent, "TOP", 0, -5)
-			if i > 1 then
-				if icons[i - 1]:IsShown() then
-					buff:SetPoint("RIGHT", icons[i - 1], "LEFT", - 4, 0)
-				else
-			else
-				buff:SetPoint("RIGHT", UIParent, "RIGHT", - 5, - 5)
-			end
-		end
-	end
-end
-
-local OnEnter = function(self)
-	if self:IsVisible() then
-		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-		if self.debuff then
-			GameTooltip:SetUnitDebuff("player", self:GetID())
-		else
-			GameTooltip:SetUnitBuff("player", self:GetID())
-		end
-	end
-end
 
 local OnLeave = function(self)
 	GameTooltip:Hide()
@@ -171,6 +134,32 @@ local CreateIcon = function(index, debuff)
 	return button
 end
 
+local OnEnter = function(self)
+	if self:IsVisible() then
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+		if self.debuff then
+			GameTooltip:SetUnitDebuff("player", self:GetID())
+		else
+			GameTooltip:SetUnitBuff("player", self:GetID())
+		end
+	end
+end
+
+local SortFunc = function(a, b)
+	if a and b then
+		return a:GetTimeLeft() > b:GetTimeLeft()
+	else
+		return false
+	end
+end
+
+local SortBuffs = function(max)
+	table.sort(icons, SortFunc)
+	local offset = 0
+	for i = 1, max do
+		
+end
+
 local UpdateIcons = function(index)
 	-- Buff
 	local name = UnitBuff("player", index)
@@ -186,14 +175,19 @@ local UpdateIcons = function(index)
 	end
 end
 
-
+-- Blatently copied from oUF
 bollo.PLAYER_AURAS_CHANGED = function()
 	for i = 1, 40 do
 		if not UpdateIcons(i) then
+			while icons[i] do
+				icons[i]:Hide()
+				i = i + 1
+			end
+
 			break
 		end
+		SortBuffs(i - 1)
 	end
-	SortBuffs()
 end
 
 bollo.PLAYER_ENTERING_WORLD = function()
