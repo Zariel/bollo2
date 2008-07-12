@@ -1,6 +1,16 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
-
+local SML = LibStub("LibSharedMedia-3.0")
 local duration = bollo:NewModule("Duration")
+
+do
+	local fonts = {}
+	function duration:GetFonts()
+		for k, v in pairs(SML:List("font")) do
+			fonts[SML:Fetch("font", v)] = v
+		end
+		return fonts
+	end
+end
 
 function duration:OnInitialize()
 	local defaults = {
@@ -15,7 +25,9 @@ function duration:OnInitialize()
 		}
 	}
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
+	SML.RegisterCallback(duration, "LibSharedMedia_Registered", "GetFonts")
 
+	self:GetFonts()
 	bollo.RegisterCallback(duration, "PostCreateIcon")
 	if not self.options then
 		self.options = {
@@ -23,7 +35,6 @@ function duration:OnInitialize()
 			type = "group",
 			args = {
 				general = {
-					guiInline = true,
 					name = self.db.profile.Description,
 					type = "group",
 					order = 1,
@@ -72,6 +83,52 @@ function duration:OnInitialize()
 								["BOTTOM"] = "BOTTOM",
 							}
 						},
+						xDesc = {
+							name = "Set the X position of the timer",
+							type = "description",
+							order = 5,
+						},
+						x = {
+							order = 7,
+							name = "X position",
+							type = "range",
+							min = -10,
+							max = 10,
+							step = 1,
+						},
+						yDesc = {
+							name = "Set the Y position of the timer",
+							type = "description",
+							order = 7,
+						},
+						y = {
+							order = 8,
+							name = "Y Position",
+							type = "range",
+							min = -10,
+							max = 10,
+							step = 1,
+						},
+						fontDesc = {
+							name = "Set the font",
+							type = "description",
+							order = 8,
+						},
+						font = {
+							order = 9,
+							name = "Font",
+							type = "select",
+							values = self:GetFonts(),
+							set = function(info, val)
+								local key = info[# info]
+								self.db.profile[key] = val
+								self:UpdateDisplay()
+							end,
+							get = function(info)
+								local key = self.db.profile[info[# info]]
+								return key
+							end,
+						}
 					}
 				},
 			}
