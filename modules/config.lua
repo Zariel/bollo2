@@ -47,48 +47,78 @@ local InitCore = function()
 									type = "description",
 									name = "Settings for Buff display",
 								},
-								size = {
+								sizeDesc = {
 									order = 2,
+									name = "Set the size of the buffs (height and width)",
+									type = "description",
+								},
+								size = {
+									order = 3,
 									name = "Size",
 									type = "range",
 									min = 10,
 									max = 50,
 									step = 1,
 								},
+								spacingDesc = {
+									order = 4,
+									name = "Set the horizontal spacing between buffs",
+									type = "description",
+								},
 								spacing = {
-									order = 3,
+									order = 5,
 									name = "Spacing",
 									type = "range",
 									min = -20,
 									max = 20,
 									step = 1,
 								},
+								rowSpacingDesc = {
+									order = 5,
+									name = "Set the vertical spacing between rows",
+									type = "description",
+								},
 								rowSpace = {
-									order = 4,
+									order = 6,
 									name = "Row Spacing",
 									type = "range",
 									min = 0,
 									max = 50,
 									step = 1,
 								},
+								heightDesc = {
+									order = 7,
+									name = "Set the height of the buff display",
+									type = "description",
+								},
 								height = {
-									order = 4,
+									order = 8,
 									name = "Max Height",
 									type = "range",
 									min = 25,
 									max = 600,
 									step = 25,
 								},
+								widthDesc = {
+									order = 9,
+									name = "Set the width the buff display",
+									type = "description",
+								},
 								width = {
-									order = 5,
+									order = 10,
 									name = "Max Width",
 									type = "range",
 									min = 25,
 									max = 600,
 									step = 25,
 								},
+								lockDesc = {
+									order = 11,
+									name = "Lock or unlock the display",
+									type = "description",
+								},
 								lock = {
-									order = 6,
+									order = 12,
 									name = "lock",
 									type = "toggle",
 									set = function(info, key)
@@ -124,48 +154,78 @@ local InitCore = function()
 									type = "description",
 									name = "Settings for Debuff display",
 								},
-								size = {
+								sizeDesc = {
 									order = 2,
+									name = "Set the size of the debuffs (height and width)",
+									type = "description",
+								},
+								size = {
+									order = 3,
 									name = "Size",
 									type = "range",
 									min = 10,
 									max = 50,
 									step = 1,
 								},
+								spacingDesc = {
+									order = 4,
+									name = "Set the horizontal spacing between debuffs",
+									type = "description",
+								},
 								spacing = {
-									order = 3,
+									order = 5,
 									name = "Spacing",
 									type = "range",
 									min = -20,
 									max = 20,
 									step = 1,
 								},
+								rowSpacingDesc = {
+									order = 5,
+									name = "Set the vertical spacing between rows",
+									type = "description",
+								},
 								rowSpace = {
-									order = 4,
+									order = 6,
 									name = "Row Spacing",
 									type = "range",
 									min = 0,
 									max = 50,
 									step = 1,
 								},
+								heightDesc = {
+									order = 7,
+									name = "Set the height of the debuff display",
+									type = "description",
+								},
 								height = {
-									order = 4,
+									order = 8,
 									name = "Max Height",
 									type = "range",
 									min = 25,
 									max = 600,
 									step = 25,
 								},
+								widthDesc = {
+									order = 9,
+									name = "Set the width the debuff display",
+									type = "description",
+								},
 								width = {
-									order = 5,
+									order = 10,
 									name = "Max Width",
 									type = "range",
 									min = 25,
 									max = 600,
 									step = 25,
 								},
+								lockDesc = {
+									order = 11,
+									name = "Lock or unlock the display",
+									type = "description",
+								},
 								lock = {
-									order = 6,
+									order = 12,
 									name = "lock",
 									type = "toggle",
 									set = function(info, key)
@@ -179,13 +239,13 @@ local InitCore = function()
 									get = function(info)
 										return not bollo.debuffs.bg:IsShown()
 									end,
-									},
-								}
-							},
+								},
+							}
 						},
-					}
+					},
 				}
 			}
+		}
 	end
 
 	return defaults
