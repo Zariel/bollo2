@@ -34,22 +34,24 @@ end
 
 function name:OnEnable()
 	local defaults = {
-		["font"] = STANDARD_TEXT_FONT,
-		["fontStyle"] = "OUTLINE",
-		["fontSize"] = 9,
+		profile = {
+			["font"] = STANDARD_TEXT_FONT,
+			["fontStyle"] = "OUTLINE",
+			["fontSize"] = 9,
+		}
 	}
 
 	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
 
 	if #bollo.buffs > 0 then
 		for k, v in ipairs(bollo.buffs) do
-			CreateIcon(v)
+			self:PostCreateIcon(v)
 		end
 	end
 
 	if #bollo.debuffs > 0 then
 		for k, v in ipairs(bollo.debuffs) do
-			CreateIcon(v)
+			self:PostCreateIcon(v)
 		end
 	end
 
