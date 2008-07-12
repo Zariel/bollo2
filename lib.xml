@@ -8,4 +8,5 @@
 	<Include file="lib\AceEvent-3.0\AceEvent-3.0.xml"/>
 	<Include file="lib\LibButtonFacade\lib.xml"/>
 	<Include file="lib\LibSharedMedia-3.0\lib.xml"/>
+	<Include file="lib\AceConfig-3.0\AceConfig-3.0.xml"/>
 </Ui>
