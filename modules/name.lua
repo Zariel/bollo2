@@ -36,6 +36,7 @@ end
 function name:OnEnable()
 	local defaults = {
 		profile = {
+			["Description"] = "Shows truncated names of buffs",
 			["font"] = STANDARD_TEXT_FONT,
 			["fontStyle"] = "OUTLINE",
 			["fontSize"] = 9,
@@ -43,19 +44,7 @@ function name:OnEnable()
 	}
 
 	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
---[[
-	if #bollo.buffs > 0 then
-		for k, v in ipairs(bollo.buffs) do
-			self:PostCreateIcon(bollo.buffs, v)
-		end
-	end
 
-	if #bollo.debuffs > 0 then
-		for k, v in ipairs(bollo.debuffs) do
-			self:PostCreateIcon(bollo.debuffs, v)
-		end
-	end
-]]
 	bollo.RegisterCallback(name, "PostCreateIcon")
 	bollo.RegisterCallback(name, "PostSetBuff")
 end
