@@ -34,38 +34,6 @@ function bollo:OnEnable()
 	bf:SetScript("OnEvent", nil)
 	_G.BuffButton_OnUpdate = nil
 
-	self.frame = CreateFrame("Frame")
-	local timer = 0
-	self.frame:SetScript("OnUpdate", function(self, elapsed)
-		timer = timer + elapsed
-		if timer > 0.25 then
-			for i, buff in ipairs(bollo.buffs) do
-				if not buff:IsShown() then break end
-				local timeLeft = buff:GetTimeLeft()
-
-				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText(SecondsToTimeAbbrev(timeLeft))
-					buff.duration:Show()
-				else
-					buff.duration:Hide()
-				end
-			end
-
-			for i, buff in ipairs(bollo.debuffs) do
-				if not buff:IsShown() then break end
-				local timeLeft = buff:GetTimeLeft()
-
-				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText(SecondsToTimeAbbrev(timeLeft))
-					buff.duration:Show()
-				else
-					buff.duration:Hide()
-				end
-			end
-			timer = 0
-		end
-	end)
-
 	local bbg = CreateFrame("Frame")
 	bbg:SetWidth(250)
 	bbg:SetHeight(75)
@@ -175,10 +143,6 @@ do
 		count:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
 		count:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
 
-		local duration = button:CreateFontString(nil, "OVERLAY")
-		duration:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
-		duration:SetPoint("TOP", button, "BOTTOM", 0, -2)
-
 		local border = button:CreateTexture(nil, "OVERLAY")
 		border:SetTexture("Interface\\Buttons\\UI-Debuff-Overlays")
 		border:SetAllPoints(button)
@@ -186,7 +150,6 @@ do
 
 		button.count = count
 		button.icon = icon
-		button.duration = duration
 		button.debuff = debuff
 		button.border = border
 		button.timeLeft = 0

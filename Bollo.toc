@@ -9,3 +9,4 @@ lib.xml
 core.lua
 
 modules\name.lua
+modules\duration.lua

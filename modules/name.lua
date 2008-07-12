@@ -6,7 +6,7 @@ local subs = setmetatable({}, {__mode = "k"})
 
 local truncate = function(b)
 	local buff = b:GetBuff()
-	if subs[buff] then return self[buff] end
+	if subs[buff] then return subs[buff] end
 
 	local s = ""
 	for w in string.gmatch(buff, "%S+") do s = s .. string.sub(w, 1, 1) end
@@ -19,7 +19,6 @@ local truncate = function(b)
 end
 
 function name:PostSetBuff(event, buff)
-	bollo:Print(buff)
 	local tru = truncate(buff)
 	if buff.name:GetText() ~= tru then
 		buff.name:SetText(tru)
@@ -33,7 +32,7 @@ function name:PostCreateIcon(event, parent, buff)
 	buff.name = f
 end
 
-function name:OnEnable()
+function name:OnInitialize()
 	local defaults = {
 		profile = {
 			["Description"] = "Shows truncated names of buffs",
@@ -42,8 +41,16 @@ function name:OnEnable()
 			["fontSize"] = 9,
 		}
 	}
-
 	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
+end
+
+function name:OnEnable()
+	for index, buff in ipairs(bollo.buffs) do
+		self:PostCreateIcon(nil, bollo.buffs, buff)
+	end
+	for index, buff in ipairs(bollo.debuffs) do
+		self:PostCreateIcon(nil, bollo.debuffs, buff)
+	end
 
 	bollo.RegisterCallback(name, "PostCreateIcon")
 	bollo.RegisterCallback(name, "PostSetBuff")
