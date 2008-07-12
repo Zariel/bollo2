@@ -13,10 +13,18 @@ local DebuffTypeColor = DebuffTypeColor
 function bollo:OnInitialize()
 	local defaults = {
 		profile = {
-			["growth-x"] = "LEFT",
-			["growth-y"] = "DOWN",
-			["size"] = 20,
-			["spacing"] = 2,
+			buff = {
+				["growth-x"] = "LEFT",
+				["growth-y"] = "DOWN",
+				["size"] = 20,
+				["spacing"] = 2,
+			},
+			debuff = {
+				["growth-x"] = "LEFT",
+				["growth-y"] = "DOWN",
+				["size"] = 20,
+				["spacing"] = 2,
+			}
 		},
 	}
 	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "profile")
@@ -24,8 +32,8 @@ function bollo:OnInitialize()
 end
 
 function bollo:OnEnable()
-	self.buffs = {}
-	self.debuffs = {}
+	self.buffs = setmetatable({}, {__tostring = function() return "buff" end})
+	self.debuffs =setmetatable({}, {__tostring = function() return "debuff" end})
 
 	local bf = _G["BuffFrame"]
 	bf:UnregisterAllEvents()
@@ -124,14 +132,14 @@ do
 	end
 
 	local GetName = function(self)
-		local name = self.debuff and "debuff" or "buff"
-		return name .. self:GetID()
+		return self.type .. self:GetID()
 	end
 
 	function bollo:CreateIcon(index, parent, debuff)
+		local name = debuff and "debuff" or "buff"
 		local button = CreateFrame("Button")
-		button:SetHeight(bollo.db.profile.size)
-		button:SetWidth(bollo.db.profile.size)
+		button:SetHeight(bollo.db.profile[name].size)
+		button:SetWidth(bollo.db.profile[name].size)
 		button:EnableMouse(true)
 		button:SetID(index)
 		button:SetScript("OnEnter", OnEnter)
@@ -164,6 +172,8 @@ do
 		button.GetTimeLeft = GetTimeLeft
 		button.GetName = GetName
 
+		button.type = name
+
 		table.insert(parent, button)
 
 		bollo.events:Fire("PostCreateIcon", parent, button)
@@ -188,10 +198,11 @@ end
 
 function bollo:SortBuffs(icons, max)
 --	table.sort(icons, SortFunc)
+	local name = tostring(icons)
 	local offset = 0
-	local growthx = self.db.profile["growth-x"] == "LEFT" and -1 or 1
-	local growthy = self.db.profile["growth-y"] == "DOWN" and -1 or 1
-	local size = self.db.profile.size + (self.db.profile.spacing or 0)
+	local growthx = self.db.profile[name]["growth-x"] == "LEFT" and -1 or 1
+	local growthy = self.db.profile[name]["growth-y"] == "DOWN" and -1 or 1
+	local size = self.db.profile[name].size + (self.db.profile[name].spacing or 0)
 	local perCol = math.floor(icons.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(icons.bg:GetHeight() / size + 0.5)
 	local rows = 0
@@ -253,19 +264,10 @@ function bollo:PLAYER_AURAS_CHANGED()
 	self:SortBuffs(self.debuffs, max - 1)
 end
 
-function bollo:UpdateSettings()
+function bollo:UpdateSettings(table)
 	local bf = self:GetModule("ButtonFacade", true)
-	for index, buff in ipairs(self.buffs) do
-		local size = self.db.profile.size
-		buff:SetHeight(size)
-		buff:SetWidth(size)
-		buff.border:ClearAllPoints()
-		buff.border:SetAllPoints(buff)
-		buff.icon:ClearAllPoints()
-		buff.icon:SetAllPoints(buff)
-	end
-	for index, buff in ipairs(self.debuffs) do
-		local size = self.db.profile.size
+	for index, buff in ipairs(table) do
+		local size = self.db.profile[tostring(table)].size
 		buff:SetHeight(size)
 		buff:SetWidth(size)
 		buff.border:ClearAllPoints()
@@ -274,8 +276,7 @@ function bollo:UpdateSettings()
 		buff.icon:SetAllPoints(buff)
 	end
 
-	self:SortBuffs(self.buffs)
-	self:SortBuffs(self.debuffs)
+	self:SortBuffs(table)
 
 	if bf then
 		bf:OnEnable()
