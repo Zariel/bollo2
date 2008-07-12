@@ -10,7 +10,7 @@ local GetPlayerBuffApplications = GetPlayerBuffApplications
 local DebuffTypeColor = DebuffTypeColor
 
 function bollo:Initialize()
-	defaults = {
+	local defaults = {
 		profile = {
 			["growth-x"] = "LEFT",
 			["growth-y"] = "DOWN",
