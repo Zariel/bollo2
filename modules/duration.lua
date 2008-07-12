@@ -114,24 +114,59 @@ function duration:OnInitialize()
 							type = "description",
 							order = 8,
 						},
-						font = {
+						fonts = {
+							name = "Fonts",
+							guiInline = true,
+							type = "group",
 							order = 9,
-							name = "Font",
-							type = "select",
-							values = self:GetFonts(),
-							set = function(info, val)
-								local key = info[# info]
-								self.db.profile[key] = val
-								self:UpdateDisplay()
-							end,
-							get = function(info)
-								local key = self.db.profile[info[# info]]
-								return key
-							end,
-						}
-					}
+							args = {
+								fontDesc = {
+									name = "Set the font, uses SharedMedia-3.0",
+									type = "description",
+									order = 1,
+								},
+								font = {
+									order = 2,
+									name = "Font",
+									type = "select",
+									values = self:GetFonts(),
+									set = function(info, val)
+										local key = info[# info]
+										self.db.profile[key] = val
+										self:UpdateDisplay()
+									end,
+									get = function(info)
+										local key = self.db.profile[info[# info]]
+										return key
+									end,
+								},
+								fontSizeDesc = {
+									order = 3,
+									type = "description",
+									name = "Set the font Size",
+								},
+								fontSize = {
+									order = 4,
+									name = "Font Size",
+									type = "range",
+									min = 6,
+									max = 30,
+									step = 1,
+									get = function(info)
+										local key = info[# info]
+										return self.db.profile[key]
+									end,
+									set = function(info, val)
+										local key = info[# info]
+										self.db.profile[key] = val
+										self:UpdateDisplay()
+									end,
+								},
+							},
+						},
+					},
 				},
-			}
+			},
 		}
 	end
 
