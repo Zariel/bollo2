@@ -46,6 +46,24 @@ function duration:PostCreateIcon(event, parent, button)
 end
 
 function duration:OnEnable()
+	self.options = {
+		name = "Duration",
+		type = "group",
+		args = {
+			general = {
+				name = "General Settings",
+				type = "group",
+				order = 1,
+				args = {
+					info = {
+						name = "Info",
+						type = "description",
+						order = 1,
+					}
+				}
+			},
+		}
+	}
 	self:OnUpdate()
 end
 
