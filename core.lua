@@ -123,9 +123,13 @@ do
 		end
 	end
 
+	local GetName = function(self)
+		local name = self.debuff and "debuff" or "buff"
+		return name .. self:GetID()
+	end
+
 	function bollo:CreateIcon(index, parent, debuff)
-		local name = debuff and "Debuff" or "Buff"
-		local button = CreateFrame("Button", name .. index)
+		local button = CreateFrame("Button")
 		button:SetHeight(bollo.db.profile.size)
 		button:SetWidth(bollo.db.profile.size)
 		button:EnableMouse(true)
@@ -158,6 +162,7 @@ do
 		button.SetBuff = SetBuff
 		button.GetBuff = GetBuff
 		button.GetTimeLeft = GetTimeLeft
+		button.GetName = GetName
 
 		table.insert(parent, button)
 
