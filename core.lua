@@ -124,7 +124,8 @@ do
 	end
 
 	function bollo:CreateIcon(index, parent, debuff)
-		local button = CreateFrame("Button")
+		local name = debuff and "Debuff" or "Buff"
+		local button = CreateFrame("Button", name .. index)
 		button:SetHeight(bollo.db.profile.size)
 		button:SetWidth(bollo.db.profile.size)
 		button:EnableMouse(true)

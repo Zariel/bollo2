@@ -6,8 +6,9 @@ function bf:PostCreateIcon(event, parent, button)
 	local debuff = button.debuff
 
 	local data = {
-		icon = button.icon,
-		border = button.border,
+		["Icon"] = button.icon,
+		["Border"] = button.border,
+		["normalTexture"] = button.icon,
 	}
 
 	if debuff then
@@ -22,16 +23,18 @@ function bf:OnInitialize()
 		profile = {
 		}
 	}
+
 	self.db = bollo.db:RegisterNamespace("Bollo-ButtonFacade", defaults)
 
+	lib = LibStub("LibButtonFacade")
+
+	self.buffs = lib:Group("Bollo", "Buffs")
+	self.debuffs = lib:Group("Bollo", "Debuffs")
 	bollo.RegisterCallback(bf, "PostCreateIcon")
 end
 
 function bf:OnEnable()
-	lib = LibStub("LibButtonFacade-1.0")
 
-	self.buffs = lib:Group("Bollo", "Buffs")
-	self.debuffs = lib:Group("Bollo", "Debuffs")
 end
 
 function bf:OnDisable()
