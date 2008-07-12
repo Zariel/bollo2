@@ -6,4 +6,6 @@
 	<Include file="lib\AceDB-3.0\AceDB-3.0.xml"/>
 	<Include file="lib\AceAddon-3.0\AceAddon-3.0.xml"/>
 	<Include file="lib\AceEvent-3.0\AceEvent-3.0.xml"/>
+	<Include file="lib\LibButtonFacade\lib.xml"/>
+	<Include file="lib\LibSharedMedia-3.0\lib.xml"/>
 </Ui>
