@@ -71,7 +71,7 @@ do
 				self.count:Hide()
 			end
 
-			if self.debuff and debuffType then
+			if self.debuff then
 				local col = DebuffTypeColor[debuffType or "none"]
 				self.border:SetVertexColor(col.r, col.g, col.b)
 				self.border:Show()
