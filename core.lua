@@ -30,6 +30,12 @@ function bollo:OnInitialize()
 				["growth-y"] = "DOWN",
 				["size"] = 20,
 				["spacing"] = 2,
+				["lock"] = false,
+				["x"] = 0,
+				["y"] = 0,
+				["height"] = 100,
+				["width"] = 350,
+				["rowSpace"] = 20,
 			}
 		},
 	}
@@ -76,9 +82,30 @@ function bollo:OnEnable()
 	self.buffs.bg = bbg
 
 	local dbg = CreateFrame("Frame")
-	dbg:SetWidth(250)
-	dbg:SetHeight(75)
-	dbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -60)
+	dbg:SetWidth(bollo.db.profile.debuff.width)
+	dbg:SetHeight(bollo.db.profile.debuff.height)
+	dbg:SetBackdrop({
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		insets = {left = 1, right = 1, top = 1, bottom = 1},
+	})
+	dbg:SetBackdropColor(1, 0, 0, 0.3)
+	dbg:Hide()
+
+	dbg:SetMovable(true)
+	dbg:EnableMouse(true)
+	dbg:SetClampedToScreen(true)
+	dbg:SetScript("OnMouseDown", function(self, button)
+		self:ClearAllPoints()
+		return self:StartMoving()
+	end)
+	dbg:SetScript("OnMouseUp", function(self, button)
+		local x, y = self:GetLeft(), self:GetTop()
+		bollo.db.profile.debuff.x, bollo.db.profile.debuff.y = x, y
+		return self:StopMovingOrSizing()
+	end)
+
+	dbg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", bollo.db.profile.debuff.x, bollo.db.profile.debuff.y)
+
 	self.debuffs.bg = dbg
 
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
@@ -295,10 +322,12 @@ end
 
 function bollo:UpdateSettings(table)
 	local bf = self:GetModule("ButtonFacade", true)
-	table.bg:SetHeight(self.db.profile[tostring(table)].height)
-	table.bg:SetWidth(self.db.profile[tostring(table)].width)
+	local name = tostring(table)
+	table.bg:SetHeight(self.db.profile[name].height)
+	table.bg:SetWidth(self.db.profile[name].width)
+
 	for index, buff in ipairs(table) do
-		local size = self.db.profile[tostring(table)].size
+		local size = self.db.profile[name].size
 		buff:SetHeight(size)
 		buff:SetWidth(size)
 		buff.border:ClearAllPoints()
