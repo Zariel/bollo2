@@ -1,8 +1,4 @@
-local _G = getfenv(0)
-
-if not _G.bollo then
-	return
-end
+local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 
 local name = bollo:NewModule("Bollo-Name")
 
@@ -22,42 +18,42 @@ local truncate = function(self)
 	return s
 end
 
-local SetBuff = function(self)
+function name:PostSetBuff(self)
 	local tru = truncate(self)
 	if self.name:GetText() ~= tru then
 		self.name:SetText(tru)
 	end
 end
 
-local CreateIcon = function(buff)
+function name:PostCreateIcon(buff)
 	local f = buff:CreateFontString(nil, "OVERLAY")
 	f:SetPoint("TOP", buff, "BOTTOM", 0, -1)
 	f:SetFont(name.db.font, name.db.fontSize, name.db.fontStyle)
 	buff.name = f
 end
 
-function name:Enable()
-	bollo.db.profile.modules = bollo.db.profile.modules or {}
-	bollo.db.profile.modules.name = bollo.db.profile.modules.name or {
+function name:OnEnable()
+	local defaults = {
 		["font"] = STANDARD_TEXT_FONT,
-		["fontStyle"] = "OUTLINT",
+		["fontStyle"] = "OUTLINE",
 		["fontSize"] = 9,
 	}
 
-	self.db = bollo.db.profile.modules.name
+	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
 
 	if #bollo.buffs > 0 then
 		for k, v in ipairs(bollo.buffs) do
 			CreateIcon(v)
 		end
 	end
+
 	if #bollo.debuffs > 0 then
 		for k, v in ipairs(bollo.debuffs) do
 			CreateIcon(v)
 		end
 	end
 
-	bollo:RegisterCallback("CreateIcon", CreateIcon)
-	bollo:RegisterCallback("SetBuff", SetBuff)
+	bollo.event:RegisterEvent(name, "PostCreateIcon")
+	bollo.event:RegisterEvent(name, "PostSetBuff")
 
 end
