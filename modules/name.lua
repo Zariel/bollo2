@@ -46,11 +46,15 @@ function name:Enable()
 
 	self.db = bollo.db.profile.modules.name
 
-	for k, v in ipairs(bollo.buffs) do
-		CreateIcon(v)
+	if #bollo.buffs > 0 then
+		for k, v in ipairs(bollo.buffs) do
+			CreateIcon(v)
+		end
 	end
-	for k, v in ipairs(bollo.debuffs) do
-		CreateIcon(v)
+	if #bollo.debuffs > 0 then
+		for k, v in ipairs(bollo.debuffs) do
+			CreateIcon(v)
+		end
 	end
 
 	bollo:RegisterCallback("CreateIcon", CreateIcon)
