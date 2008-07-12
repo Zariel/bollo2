@@ -28,7 +28,7 @@ end
 function name:PostCreateIcon(buff)
 	local f = buff:CreateFontString(nil, "OVERLAY")
 	f:SetPoint("TOP", buff, "BOTTOM", 0, -1)
-	f:SetFont(name.db.font, name.db.fontSize, name.db.fontStyle)
+	f:SetFont(self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle)
 	buff.name = f
 end
 
@@ -55,7 +55,7 @@ function name:OnEnable()
 		end
 	end
 
-	bollo.event:RegisterEvent(name, "PostCreateIcon")
-	bollo.event:RegisterEvent(name, "PostSetBuff")
+	bollo.events:RegisterEvent(name, "PostCreateIcon")
+	bollo.events:RegisterEvent(name, "PostSetBuff")
 
 end
