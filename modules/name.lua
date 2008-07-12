@@ -4,8 +4,8 @@ local name = bollo:NewModule("Bollo-Name")
 
 local subs = setmetatable({}, {__mode = "k"})
 
-local truncate = function(self)
-	local buff = self:GetBuff()
+local truncate = function(b)
+	local buff = b:GetBuff()
 	if subs[buff] then return self[buff] end
 
 	local s = ""
@@ -18,14 +18,15 @@ local truncate = function(self)
 	return s
 end
 
-function name:PostSetBuff(self)
-	local tru = truncate(self)
-	if self.name:GetText() ~= tru then
-		self.name:SetText(tru)
+function name:PostSetBuff(event, buff)
+	bollo:Print(buff)
+	local tru = truncate(buff)
+	if buff.name:GetText() ~= tru then
+		buff.name:SetText(tru)
 	end
 end
 
-function name:PostCreateIcon(buff)
+function name:PostCreateIcon(event, parent, buff)
 	local f = buff:CreateFontString(nil, "OVERLAY")
 	f:SetPoint("TOP", buff, "BOTTOM", 0, -1)
 	f:SetFont(self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle)
@@ -42,20 +43,19 @@ function name:OnEnable()
 	}
 
 	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
-
+--[[
 	if #bollo.buffs > 0 then
 		for k, v in ipairs(bollo.buffs) do
-			self:PostCreateIcon(v)
+			self:PostCreateIcon(bollo.buffs, v)
 		end
 	end
 
 	if #bollo.debuffs > 0 then
 		for k, v in ipairs(bollo.debuffs) do
-			self:PostCreateIcon(v)
+			self:PostCreateIcon(bollo.debuffs, v)
 		end
 	end
-
-	bollo.events:RegisterEvent(name, "PostCreateIcon")
-	bollo.events:RegisterEvent(name, "PostSetBuff")
-
+]]
+	bollo.RegisterCallback(name, "PostCreateIcon")
+	bollo.RegisterCallback(name, "PostSetBuff")
 end

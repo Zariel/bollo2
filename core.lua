@@ -20,11 +20,10 @@ function bollo:OnInitialize()
 		},
 	}
 	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "profile")
+	self.events = LibStub("CallbackHandler-1.0"):New(bollo)
 end
 
 function bollo:OnEnable()
-	self.events = LibStub("CallbackHandler-1.0"):New(bollo)
-
 	self.buffs = {}
 	self.debuffs = {}
 
@@ -118,7 +117,12 @@ do
 			self.info.count = count or 0
 
 			self:Show()
+		else
+			self:Hide()
 		end
+
+		local buff = self
+		bollo.events:Fire("PostSetBuff", buff)
 	end
 
 	local GetBuff = function(self)
@@ -192,6 +196,8 @@ do
 		button.GetTimeLeft = GetTimeLeft
 
 		table.insert(parent, button)
+
+		bollo.events:Fire("PostCreateIcon", parent, button)
 
 		return button
 	end
