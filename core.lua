@@ -1,5 +1,4 @@
-bollo = DongleStub("Dongle-1.2"):New("Bollo")
-
+local bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo", "AceEvent-3.0", "AceConsole-3.0")
 local ipairs = ipairs
 local pairs = pairs
 
@@ -17,13 +16,14 @@ function bollo:Initialize()
 			["growth-y"] = "DOWN",
 			["size"] = 20,
 			["spacing"] = 2,
-			["modules"] = {},
 		},
 	}
-	self.db = self:InitializeDB("BolloDB", defaults, profile)
+	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "profile")
 end
 
 function bollo:Enable()
+	self.events = LibSub("CallbackHandler-1.0"):New(bollo)
+
 	self.buffs = {}
 	self.debuffs = {}
 
@@ -78,16 +78,8 @@ function bollo:Enable()
 	dbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -60)
 	self.debuffs.bg = dbg
 
-	self.callbacks = {}
-
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
-end
-
-function bollo:RegisterCallback(when, func)
-	if not self.callbacks[when] then self.callbacks[when] = {} end
-
-	table.insert(self.callbacks[when], func)
 end
 
 do
@@ -125,12 +117,6 @@ do
 			self.info.count = count or 0
 
 			self:Show()
-
-			if bollo.callbacks["SetBuff"] then
-				for _, func in ipairs(bollo.callbacks["SetBuff"]) do
-					func(self)
-				end
-			end
 		end
 	end
 
@@ -205,12 +191,6 @@ do
 		button.GetTimeLeft = GetTimeLeft
 
 		table.insert(parent, button)
-
-		if bollo.callbacks["CreateIcon"] then
-			for _, func in ipairs(bollo.callbacks["CreateIcon"]) do
-				func(parent, button)
-			end
-		end
 
 		return button
 	end
