@@ -9,18 +9,21 @@ function bf:PostCreateIcon(event, parent, button)
 		["Icon"] = button.icon,
 		["Border"] = button.border,
 		["normalTexture"] = button.icon,
+		["Count"] = button.count,
 	}
 
 	if debuff then
-		self.debuffs:AddButton(button, data)
+		self.Debuffs:AddButton(button, data)
 	else
-		self.buffs:AddButton(button, data)
+		self.Buffs:AddButton(button, data)
 	end
 end
 
 function bf:OnInitialize()
 	local defaults = {
 		profile = {
+			Debuffs = {},
+			Buffs = {},
 		}
 	}
 
@@ -28,13 +31,29 @@ function bf:OnInitialize()
 
 	lib = LibStub("LibButtonFacade")
 
-	self.buffs = lib:Group("Bollo", "Buffs")
-	self.debuffs = lib:Group("Bollo", "Debuffs")
+	self.Buffs = lib:Group("Bollo", "Buffs")
+	self.Debuffs = lib:Group("Bollo", "Debuffs")
 	bollo.RegisterCallback(bf, "PostCreateIcon")
 end
 
-function bf:OnEnable()
+function bf:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
+	if Group then
+		self.db.profile[Group] = {
+			["Skin"] = SkinID,
+			["Gloss"] = Gloss,
+			["Backdrop"] = Backdrop,
+			["Color"] = Colors,
+		}
+	end
+end
 
+function bf:OnEnable()
+	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
+
+	for g, table in pairs(self.db.profile) do
+		local group = self[g]
+		group:Skin(table.Skin, table.Gloss, table.Backdrop)
+	end
 end
 
 function bf:OnDisable()
