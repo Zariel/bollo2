@@ -1,4 +1,5 @@
 local bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo", "AceEvent-3.0", "AceConsole-3.0")
+
 local ipairs = ipairs
 local pairs = pairs
 
@@ -9,7 +10,7 @@ local GetPlayerBuffDispelType = GetPlayerBuffDispelType
 local GetPlayerBuffApplications = GetPlayerBuffApplications
 local DebuffTypeColor = DebuffTypeColor
 
-function bollo:Initialize()
+function bollo:OnInitialize()
 	local defaults = {
 		profile = {
 			["growth-x"] = "LEFT",
@@ -21,8 +22,8 @@ function bollo:Initialize()
 	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "profile")
 end
 
-function bollo:Enable()
-	self.events = LibSub("CallbackHandler-1.0"):New(bollo)
+function bollo:OnEnable()
+	self.events = LibStub("CallbackHandler-1.0"):New(bollo)
 
 	self.buffs = {}
 	self.debuffs = {}
