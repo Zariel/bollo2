@@ -17,14 +17,14 @@ function duration:OnInitialize()
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
 
 	bollo.RegisterCallback(duration, "PostCreateIcon")
-		if not self.options then
+	if not self.options then
 		self.options = {
 			name = "Duration",
 			type = "group",
 			args = {
 				general = {
 					guiInline = true,
-					name = "General Settings",
+					name = self.db.profile.Description,
 					type = "group",
 					order = 1,
 					set = function(info, val)
