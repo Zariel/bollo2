@@ -18,6 +18,12 @@ function bollo:OnInitialize()
 				["growth-y"] = "DOWN",
 				["size"] = 20,
 				["spacing"] = 2,
+				["lock"] = false,
+				["x"] = 0,
+				["y"] = 0,
+				["height"] = 100,
+				["width"] = 350,
+				["rowSpace"] = 20,
 			},
 			debuff = {
 				["growth-x"] = "LEFT",
@@ -43,9 +49,30 @@ function bollo:OnEnable()
 	_G.BuffButton_OnUpdate = nil
 
 	local bbg = CreateFrame("Frame")
-	bbg:SetWidth(250)
-	bbg:SetHeight(75)
-	bbg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -10, -10)
+	bbg:SetWidth(bollo.db.profile.buff.width)
+	bbg:SetHeight(bollo.db.profile.buff.height)
+	bbg:SetBackdrop({
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		insets = {left = 1, right = 1, top = 1, bottom = 1},
+	})
+	bbg:SetBackdropColor(0, 1, 0, 0.3)
+	bbg:Hide()
+
+	bbg:SetMovable(true)
+	bbg:EnableMouse(true)
+	bbg:SetClampedToScreen(true)
+	bbg:SetScript("OnMouseDown", function(self, button)
+		self:ClearAllPoints()
+		return self:StartMoving()
+	end)
+	bbg:SetScript("OnMouseUp", function(self, button)
+		local x, y = self:GetLeft(), self:GetTop()
+		bollo.db.profile.buff.x, bollo.db.profile.buff.y = x, y
+		return self:StopMovingOrSizing()
+	end)
+
+	bbg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", bollo.db.profile.buff.x, bollo.db.profile.buff.y)
+
 	self.buffs.bg = bbg
 
 	local dbg = CreateFrame("Frame")
@@ -205,6 +232,7 @@ function bollo:SortBuffs(icons, max)
 	local size = self.db.profile[name].size + (self.db.profile[name].spacing or 0)
 	local perCol = math.floor(icons.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(icons.bg:GetHeight() / size + 0.5)
+	local rowSpace = self.db.profile[name].rowSpace
 	local rows = 0
 	--for i = 1, max do
 	for i, buff in ipairs(icons) do
@@ -212,7 +240,8 @@ function bollo:SortBuffs(icons, max)
 			buff:ClearAllPoints()
 
 			if offset == perCol then
-				row = row + 1
+				rows = rows + 1
+				offset = 0
 			end
 
 			buff:SetPoint("TOPRIGHT", icons.bg, "TOPRIGHT", (offset * size * growthx), rows * size * growthy)
@@ -266,6 +295,8 @@ end
 
 function bollo:UpdateSettings(table)
 	local bf = self:GetModule("ButtonFacade", true)
+	table.bg:SetHeight(self.db.profile[tostring(table)].height)
+	table.bg:SetWidth(self.db.profile[tostring(table)].width)
 	for index, buff in ipairs(table) do
 		local size = self.db.profile[tostring(table)].size
 		buff:SetHeight(size)
