@@ -64,14 +64,55 @@ local InitCore = function()
 									min = -20,
 									max = 20,
 									step = 1,
-									},
 								},
+								rowSpace = {
+									order = 4,
+									name = "Row Spacing",
+									type = "range",
+									min = 0,
+									max = 50,
+									step = 1,
+								},
+								height = {
+									order = 4,
+									name = "Max Height",
+									type = "range",
+									min = 25,
+									max = 600,
+									step = 25,
+								},
+								width = {
+									order = 5,
+									name = "Max Width",
+									type = "range",
+									min = 25,
+									max = 600,
+									step = 25,
+								},
+								lock = {
+									order = 6,
+									name = "lock",
+									type = "toggle",
+									set = function(info, key)
+										if key then
+											bollo.buffs.bg:Hide()
+										else
+											bollo.buffs.bg:Show()
+										end
+										bollo.db.profile.buff.lock = key
+									end,
+									get = function(info)
+										return not bollo.buffs.bg:IsShown()
+									end,
+									},
+								}
 							},
 						},
 					}
 				}
 			}
 	end
+
 	return defaults
 end
 
