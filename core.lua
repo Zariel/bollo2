@@ -252,3 +252,32 @@ function bollo:PLAYER_AURAS_CHANGED()
 	end
 	self:SortBuffs(self.debuffs, max - 1)
 end
+
+function bollo:UpdateSettings()
+	local bf = self:GetModule("ButtonFacade", true)
+	for index, buff in ipairs(self.buffs) do
+		local size = self.db.profile.size
+		buff:SetHeight(size)
+		buff:SetWidth(size)
+		buff.border:ClearAllPoints()
+		buff.border:SetAllPoints(buff)
+		buff.icon:ClearAllPoints()
+		buff.icon:SetAllPoints(buff)
+	end
+	for index, buff in ipairs(self.debuffs) do
+		local size = self.db.profile.size
+		buff:SetHeight(size)
+		buff:SetWidth(size)
+		buff.border:ClearAllPoints()
+		buff.border:SetAllPoints(buff)
+		buff.icon:ClearAllPoints()
+		buff.icon:SetAllPoints(buff)
+	end
+
+	self:SortBuffs(self.buffs)
+	self:SortBuffs(self.debuffs)
+
+	if bf then
+		bf:OnEnable()
+	end
+end
