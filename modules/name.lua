@@ -42,16 +42,10 @@ function name:OnInitialize()
 		}
 	}
 	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
-end
-
-function name:OnEnable()
-	for index, buff in ipairs(bollo.buffs) do
-		self:PostCreateIcon(nil, bollo.buffs, buff)
-	end
-	for index, buff in ipairs(bollo.debuffs) do
-		self:PostCreateIcon(nil, bollo.debuffs, buff)
-	end
 
 	bollo.RegisterCallback(name, "PostCreateIcon")
 	bollo.RegisterCallback(name, "PostSetBuff")
+end
+
+function name:OnEnable()
 end

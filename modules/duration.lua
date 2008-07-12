@@ -11,10 +11,12 @@ function duration:OnInitialize()
 			["fontSize"] = 9,
 			["fontStyle"] = "OUTLINE",
 			["x"] = 0,
-			["y"] = 3,
+			["y"] = 1,
 		}
 	}
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
+
+	bollo.RegisterCallback(duration, "PostCreateIcon")
 end
 
 local GetPoint = function(point)
@@ -39,22 +41,11 @@ function duration:PostCreateIcon(event, parent, button)
 
 	duration:SetFont(font, size, flag)
 	duration:ClearAllPoints()
-	duration:SetPoint("LEFT")
-	duration:SetPoint("RIGHT")
-	duration:Show()
 	duration:SetPoint(anchor, button, relative, x, y)
 	button.duration = duration
 end
 
 function duration:OnEnable()
-	for index, buff in ipairs(bollo.buffs) do
-		self:PostCreateIcon(nil, bollo.buffs, buff)
-	end
-	for index, buff in ipairs(bollo.debuffs) do
-		self:PostCreateIcon(nil, bollo.debuffs, buff)
-	end
-
-	bollo.RegisterCallback(duration, "PostCreateIcon")
 	self:OnUpdate()
 end
 
