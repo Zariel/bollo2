@@ -149,7 +149,7 @@ function duration:OnInitialize()
 									order = 4,
 									name = "Font Size",
 									type = "range",
-									min = 6,
+									min = 4,
 									max = 30,
 									step = 1,
 									get = function(info)
@@ -162,6 +162,22 @@ function duration:OnInitialize()
 										self:UpdateDisplay()
 									end,
 								},
+								fontStyleDesc = {
+									order = 5,
+									name = "Set the font style (flags)",
+									type = "description",
+								},
+								fontStyle = {
+									order = 6,
+									name = "Font Style",
+									type = "select",
+									values = {
+										["NONE"] = "NONE",
+										["OUTLINE"] = "OUFLINE",
+										["THINOUTLINE"] = "THINOUTLINE",
+										["THICKOUTLINE"] = "THICKOUTLINE",
+									},
+								}, 
 							},
 						},
 					},
