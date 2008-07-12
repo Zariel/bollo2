@@ -1,5 +1,5 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
-local bf = bollo:NewModule("Bollo-ButtonFacade")
+local bf = bollo:NewModule("ButtonFacade")
 local lib
 
 function bf:PostCreateIcon(event, parent, button)

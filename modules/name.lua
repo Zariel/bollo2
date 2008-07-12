@@ -1,6 +1,6 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 
-local name = bollo:NewModule("Bollo-Name")
+local name = bollo:NewModule("Name")
 
 local subs = setmetatable({}, {__mode = "k"})
 

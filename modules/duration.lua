@@ -1,6 +1,6 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 
-local duration = bollo:NewModule("Bollo-Duration")
+local duration = bollo:NewModule("Duration")
 
 function duration:OnInitialize()
 	local defaults = {
@@ -11,7 +11,7 @@ function duration:OnInitialize()
 			["fontSize"] = 9,
 			["fontStyle"] = "OUTLINE",
 			["x"] = 0,
-			["y"] = 1,
+			["y"] = 0,
 		}
 	}
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
