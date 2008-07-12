@@ -229,7 +229,7 @@ function bollo:SortBuffs(icons, max)
 	local offset = 0
 	local growthx = self.db.profile[name]["growth-x"] == "LEFT" and -1 or 1
 	local growthy = self.db.profile[name]["growth-y"] == "DOWN" and -1 or 1
-	local size = self.db.profile[name].size + (self.db.profile[name].spacing or 0)
+	local size = self.db.profile[name].size
 	local perCol = math.floor(icons.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(icons.bg:GetHeight() / size + 0.5)
 	local rowSpace = self.db.profile[name].rowSpace
@@ -244,7 +244,7 @@ function bollo:SortBuffs(icons, max)
 				offset = 0
 			end
 
-			buff:SetPoint("TOPRIGHT", icons.bg, "TOPRIGHT", (offset * size * growthx), rows * size * growthy)
+			buff:SetPoint("TOPRIGHT", icons.bg, "TOPRIGHT", (offset * (size + self.db.profile[name].spacing) * growthx), (rows * (size + rowSpace) * growthy))
 			offset = offset + 1
 		end
 	end
