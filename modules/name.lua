@@ -37,6 +37,8 @@ function name:PostSetBuff(event, buff)
 end
 
 function name:PostCreateIcon(event, parent, buff)
+	if buff.name then return end
+
 	local f = buff:CreateFontString(nil, "OVERLAY")
 	f:SetPoint("TOP", buff, "BOTTOM", 0, -1)
 	f:SetFont(self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle)
@@ -55,9 +57,8 @@ function name:OnInitialize()
 			["point"] = "BOTTOM",
 		}
 	}
-	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
 
-	SML.RegisterCallback(name, "LibSharedMedia_Registered", "GetFonts")
+	self.db = bollo.db:RegisterNamespace("Module-Name", defaults)
 
 	if not self.options then
 		self.options = {
@@ -218,21 +219,31 @@ function name:OnInitialize()
 	end
 
 	self:SetEnabledState(self.db.profile.enabled)
-
-	bollo.RegisterCallback(name, "PostCreateIcon")
-	bollo.RegisterCallback(name, "PostSetBuff")
 end
 
 function name:OnEnable()
+	bollo.RegisterCallback(self, "PostCreateIcon")
+	bollo.RegisterCallback(self, "PostSetBuff")
+	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
+	self:GetFonts()
+
 	for k, v in ipairs(bollo.buffs) do
+		self:PostCreateIcon(nil, bollo.buffs, v)
+		self:PostSetBuff(nil, v)
 		v.name:Show()
 	end
 	for k, v in ipairs(bollo.debuffs) do
+		self:PostCreateIcon(nil, bollo.debuffs, v)
+		self:PostSetBuff(nil, v)
 		v.name:Show()
 	end
 end
 
 function name:OnDisable()
+	bollo.UnregisterCallback(self, "PostCreateIcon")
+	bollo.UnregisterCallback(self, "PostSetBuff")
+	SML.UnregisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
+
 	for k, v in ipairs(bollo.buffs) do
 		v.name:Hide()
 	end
