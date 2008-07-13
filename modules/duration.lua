@@ -26,10 +26,7 @@ function duration:OnInitialize()
 		}
 	}
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
-	SML.RegisterCallback(duration, "LibSharedMedia_Registered", "GetFonts")
 
-	self:GetFonts()
-	bollo.RegisterCallback(duration, "PostCreateIcon")
 	if not self.options then
 		self.options = {
 			name = "Duration",
@@ -262,10 +259,24 @@ function duration:PostCreateIcon(event, parent, button)
 end
 
 function duration:OnEnable()
+	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
+	self:GetFonts()
+
+	bollo.RegisterCallback(self, "PostCreateIcon")
+
 	self:OnUpdate()
+
+	for k, v in ipairs(bollo.buffs) do
+		self:PostCreateIcon(nil, bollo.buffs, v)
+	end
+	for k, v in ipairs(bollo.debuffs) do
+		self:PostCreateIcon(nil, bollo.debuffs, v)
+	end
 end
 
 function duration:OnDisable()
+	bollo.UnregisterCallback(self, "PostCreateIcon")
+	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
 	self.frame:SetScript("OnUpdate", nil)
 	for k, v in ipairs(bollo.buffs) do
 		v.duration:Hide()
@@ -273,6 +284,7 @@ function duration:OnDisable()
 	for k, v in ipairs(bollo.debuffs) do
 		v.duration:Hide()
 	end
+
 end
 
 function duration:FormatTime(type, time)
