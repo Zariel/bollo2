@@ -1,9 +1,14 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 local bf = bollo:NewModule("ButtonFacade")
 local lib
+local SetVertexColor
 
 function bf:PostCreateIcon(event, parent, button)
 	local debuff = button.debuff
+
+	if not SetVertexColor then
+		SetVertexColor = button.border.SetVertexColor
+	end
 
 	local data = {
 		["Icon"] = button.icon,
@@ -16,6 +21,14 @@ function bf:PostCreateIcon(event, parent, button)
 		self.Debuffs:AddButton(button, data)
 	else
 		self.Buffs:AddButton(button, data)
+	end
+end
+
+function bf:PostSetBuff(event, button)
+	if button.debuff then
+		local index = button:GetID()
+		local col = DebuffTypeColor[GetPlayerBuffDispelType(index) or "none"]
+		SetVertexColor(button.border, col.r, col.g, col.b)
 	end
 end
 
@@ -34,6 +47,7 @@ function bf:OnInitialize()
 	self.Buffs = lib:Group("Bollo", "Buffs")
 	self.Debuffs = lib:Group("Bollo", "Debuffs")
 	bollo.RegisterCallback(bf, "PostCreateIcon")
+	bollo.RegisterCallback(bf, "PostSetBuff")
 end
 
 function bf:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
