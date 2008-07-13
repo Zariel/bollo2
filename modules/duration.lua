@@ -283,8 +283,13 @@ function duration:FormatTime(type, time)
 		text = "%d:%02.f"
 		return text, m, s
 	elseif type == "MM" then
-		m = math.floor(mod(time, 3600) / 60)
-		text = "%dm"
+		if time > 60 then
+			m = math.floor(mod(time, 3600) / 60)
+			text = "%dm"
+		else
+			m = time
+			text = "%ds"
+		end
 		return text, m
 	end
 end
