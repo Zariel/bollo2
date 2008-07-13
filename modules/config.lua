@@ -112,13 +112,41 @@ local InitCore = function()
 									max = 600,
 									step = 25,
 								},
-								lockDesc = {
+								growthxDesc = {
 									order = 11,
+									name = "Set the Growth-X",
+									type = "description",
+								},
+								growthx = {
+									order = 12,
+									name = "Growth X",
+									type = "select",
+									values = {
+										["LEFT"] = "LEFT",
+										["RIGHT"] = "RIGHT",
+									},
+								},
+								growthyDesc = {
+									order = 13,
+									name = "Set the Growth-X",
+									type = "description",
+								},
+								growthy = {
+									order = 14,
+									name = "Growth X",
+									type = "select",
+									values = {
+										["UP"] = "UP",
+										["DOWN"] = "DOWN",
+									},
+								},
+								lockDesc = {
+									order = 15,
 									name = "Lock or unlock the display",
 									type = "description",
 								},
 								lock = {
-									order = 12,
+									order = 16,
 									name = "lock",
 									type = "toggle",
 									set = function(info, key)
@@ -219,8 +247,31 @@ local InitCore = function()
 									max = 600,
 									step = 25,
 								},
+								growthx = {
+									order = 12,
+									name = "Growth X",
+									type = "select",
+									values = {
+										["LEFT"] = "LEFT",
+										["RIGHT"] = "RIGHT",
+									},
+								},
+								growthyDesc = {
+									order = 13,
+									name = "Set the Growth-X",
+									type = "description",
+								},
+								growthy = {
+									order = 14,
+									name = "Growth X",
+									type = "select",
+									values = {
+										["UP"] = "UP",
+										["DOWN"] = "DOWN",
+									},
+								},
 								lockDesc = {
-									order = 11,
+									order = 15,
 									name = "Lock or unlock the display",
 									type = "description",
 								},

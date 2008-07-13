@@ -14,8 +14,8 @@ function bollo:OnInitialize()
 	local defaults = {
 		profile = {
 			buff = {
-				["growth-x"] = "LEFT",
-				["growth-y"] = "DOWN",
+				["growthx"] = "LEFT",
+				["growthy"] = "DOWN",
 				["size"] = 20,
 				["spacing"] = 2,
 				["lock"] = false,
@@ -26,8 +26,8 @@ function bollo:OnInitialize()
 				["rowSpace"] = 20,
 			},
 			debuff = {
-				["growth-x"] = "LEFT",
-				["growth-y"] = "DOWN",
+				["growthx"] = "LEFT",
+				["growthy"] = "DOWN",
 				["size"] = 20,
 				["spacing"] = 2,
 				["lock"] = false,
@@ -272,8 +272,8 @@ function bollo:SortBuffs(icons, max)
 --	table.sort(icons, SortFunc)
 	local name = tostring(icons)
 	local offset = 0
-	local growthx = self.db.profile[name]["growth-x"] == "LEFT" and -1 or 1
-	local growthy = self.db.profile[name]["growth-y"] == "DOWN" and -1 or 1
+	local growthx = self.db.profile[name]["growthx"] == "LEFT" and -1 or 1
+	local growthy = self.db.profile[name]["growthy"] == "DOWN" and -1 or 1
 	local size = self.db.profile[name].size
 	local perCol = math.floor(icons.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(icons.bg:GetHeight() / size + 0.5)
