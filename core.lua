@@ -250,6 +250,24 @@ local SortFunc = function(a, b)
 	return a > b
 end
 
+function bollo:GetPoint(point)
+	local anchor, relative, mod
+	if point == "TOP" then
+		relative = "TOP"
+		anchor = "BOTTOM"
+		mod = 1
+	elseif point == "BOTTOM" then
+		relative = "BOTTOM"
+		anchor = "TOP"
+		mod = -1
+	elseif point == "CENTER" then
+		relative = "CENTER"
+		anchor = "CENTER"
+		mod = 1
+	end
+	return anchor, relative, mod
+end
+
 function bollo:SortBuffs(icons, max)
 --	table.sort(icons, SortFunc)
 	local name = tostring(icons)

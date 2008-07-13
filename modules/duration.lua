@@ -201,20 +201,6 @@ function duration:OnInitialize()
 	self:SetEnabledState(self.db.profile.enabled)
 end
 
-local GetPoint = function(point)
-	local anchor, relative, mod
-	if point == "TOP" then
-		relative = "TOP"
-		anchor = "BOTTOM"
-		mod = 1
-	elseif point == "BOTTOM" then
-		relative = "BOTTOM"
-		anchor = "TOP"
-		mod = -1
-	end
-	return anchor, relative, mod
-end
-
 function duration:UpdateDisplay()
 	for i, buff in ipairs(bollo.buffs) do
 		if not buff.duration then break end
@@ -222,7 +208,7 @@ function duration:UpdateDisplay()
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
-		local anchor, relative, mod = GetPoint(point)
+		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.duration:SetFont(font, size, flag)
 		buff.duration:ClearAllPoints()
@@ -234,7 +220,7 @@ function duration:UpdateDisplay()
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
-		local anchor, relative, mod = GetPoint(point)
+		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.duration:SetFont(font, size, flag)
 		buff.duration:ClearAllPoints()
@@ -243,14 +229,13 @@ function duration:UpdateDisplay()
 
 end
 
-
 function duration:PostCreateIcon(event, parent, button)
 	local duration = button:CreateFontString(nil, "OVERLAY")
 	local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 	local point = self.db.profile.point
 	local x, y = self.db.profile.x, self.db.profile.y
 
-	local anchor, relative, mod = GetPoint(point)
+	local anchor, relative, mod = bollo:GetPoint(point)
 
 	duration:SetFont(font, size, flag)
 	duration:ClearAllPoints()
