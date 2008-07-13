@@ -264,7 +264,7 @@ end
 
 function name:UpdateDisplay()
 	for i, buff in ipairs(bollo.buffs) do
-		if not buff.duration then break end
+		if not buff.name then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
