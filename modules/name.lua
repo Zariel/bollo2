@@ -40,8 +40,16 @@ function name:PostCreateIcon(event, parent, buff)
 	if buff.name then return end
 
 	local f = buff:CreateFontString(nil, "OVERLAY")
-	f:SetPoint("TOP", buff, "BOTTOM", 0, -1)
-	f:SetFont(self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle)
+
+	local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
+	local point = self.db.profile.point
+	local x, y = self.db.profile.x, self.db.profile.y
+	local anchor, relative, mod = bollo:GetPoint(point)
+
+	f:SetFont(font, size, flag)
+	f:ClearAllPoints()
+	f:SetPoint(anchor, buff, relative, mod * x, y)
+
 	buff.name = f
 end
 
@@ -252,23 +260,7 @@ function name:OnDisable()
 	end
 end
 
-local GetPoint = function(point)
-	local anchor, relative, mod
-	if point == "TOP" then
-		relative = "TOP"
-		anchor = "BOTTOM"
-		mod = 1
-	elseif point == "BOTTOM" then
-		relative = "BOTTOM"
-		anchor = "TOP"
-		mod = -1
-	elseif point == "CENTER" then
-		relative = "CENTER"
-		anchor = "CENTER"
-		mod = 1
-	end
-	return anchor, relative, mod
-end
+
 
 function name:UpdateDisplay()
 	for i, buff in ipairs(bollo.buffs) do
@@ -277,7 +269,7 @@ function name:UpdateDisplay()
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
-		local anchor, relative, mod = GetPoint(point)
+		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.name:SetFont(font, size, flag)
 		buff.name:ClearAllPoints()
@@ -289,7 +281,7 @@ function name:UpdateDisplay()
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
-		local anchor, relative, mod = GetPoint(point)
+		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.name:SetFont(font, size, flag)
 		buff.name:ClearAllPoints()
