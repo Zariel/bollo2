@@ -80,7 +80,7 @@ function duration:OnInitialize()
 							type = "select",
 							order = 4,
 							values = {
-								["M:SS"] = "MM:SS",
+								["M:SS"] = "M:SS",
 								["MM"] = "MM",
 							}
 						},
@@ -280,7 +280,7 @@ function duration:FormatTime(type, time)
 	if type == "M:SS" then
 		m = math.floor(time/60)
 		s = math.floor(math.fmod(time, 60))
-		text = "%d:%d"
+		text = "%d:%02.f"
 		return text, m, s
 	elseif type == "MM" then
 		m = math.floor(mod(time, 3600) / 60)
