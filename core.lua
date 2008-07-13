@@ -44,6 +44,8 @@ function bollo:OnInitialize()
 end
 
 function bollo:OnEnable()
+	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
+	self.OnUpdate = false
 	self.buffs = setmetatable({}, {__tostring = function() return "buff" end})
 	self.debuffs =setmetatable({}, {__tostring = function() return "debuff" end})
 
@@ -358,5 +360,29 @@ function bollo:UpdateSettings(table)
 
 	if bf then
 		bf:OnEnable()
+	end
+end
+
+local OnUpdate
+do
+	local timer = 0
+	OnUpdate = function(self, elapsed)
+		timer = timer + elapsed
+		if timer > 0.25 then
+			bollo.events:Fire("OnUpdate")
+			timer = 0
+		end
+	end
+end
+
+function bollo.events:OnUsed(target, event)
+	if event == "OnUpdate" then
+		bollo.frame:SetScript("OnUpdate", OnUpdate)
+	end
+end
+
+function bollo.events:OnUnused(target, event)
+	if event == "OnUpdate" then
+		bollo.frame:SetScript("OnUpdate", nil)
 	end
 end
