@@ -75,7 +75,7 @@ function duration:OnInitialize()
 							type = "description",
 							order = 3,
 						},
-						style = {
+						format = {
 							name = "Style",
 							type = "select",
 							order = 4,
