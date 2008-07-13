@@ -22,6 +22,7 @@ function duration:OnInitialize()
 			["fontStyle"] = "OUTLINE",
 			["x"] = 0,
 			["y"] = 0,
+			["format"] = "M:SS",
 		}
 	}
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
@@ -69,15 +70,29 @@ function duration:OnInitialize()
 							end,
 							order = 2
 						},
+						styleDesc = {
+							name = "Set the style of display",
+							type = "description",
+							order = 3,
+						},
+						style = {
+							name = "Style",
+							type = "select",
+							order = 4,
+							values = {
+								["M:SS"] = "MM:SS",
+								["MM"] = "MM",
+							}
+						},
 						pointdesc = {
 							name = "Set Where to show the duration",
 							type = "description",
-							order = 3,
+							order = 5,
 						},
 						point = {
 							name = "point",
 							type = "select",
-							order = 4,
+							order = 6,
 							values = {
 								["TOP"] = "TOP",
 								["BOTTOM"] = "BOTTOM",
@@ -86,10 +101,10 @@ function duration:OnInitialize()
 						xDesc = {
 							name = "Set the X position of the timer",
 							type = "description",
-							order = 5,
+							order = 7,
 						},
 						x = {
-							order = 7,
+							order = 8,
 							name = "X position",
 							type = "range",
 							min = -10,
@@ -99,10 +114,10 @@ function duration:OnInitialize()
 						yDesc = {
 							name = "Set the Y position of the timer",
 							type = "description",
-							order = 7,
+							order = 9,
 						},
 						y = {
-							order = 8,
+							order = 10,
 							name = "Y Position",
 							type = "range",
 							min = -10,
@@ -112,13 +127,13 @@ function duration:OnInitialize()
 						fontDesc = {
 							name = "Set the font",
 							type = "description",
-							order = 8,
+							order = 11,
 						},
 						fonts = {
 							name = "Fonts",
 							guiInline = true,
 							type = "group",
-							order = 9,
+							order = 12,
 							args = {
 								fontDesc = {
 									name = "Set the font, uses SharedMedia-3.0",
@@ -260,6 +275,20 @@ function duration:OnDisable()
 	end
 end
 
+function duration:FormatTime(type, time)
+	local hr, m, s, text
+	if type == "M:SS" then
+		m = math.floor(time/60)
+		s = math.floor(math.fmod(time, 60))
+		text = "%d:%d"
+		return text, m, s
+	elseif type == "MM" then
+		m = math.floor(mod(time, 3600) / 60)
+		text = "%dm"
+		return text, m
+	end
+end
+
 function duration:OnUpdate()
 	self.frame = self.frame or CreateFrame("Frame")
 	local timer = 1
@@ -270,7 +299,7 @@ function duration:OnUpdate()
 				if not buff:IsShown() then break end
 				local timeLeft = buff:GetTimeLeft()
 				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText(SecondsToTimeAbbrev(timeLeft))
+					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
 					buff.duration:Show()
 				else
 					buff.duration:Hide()
@@ -282,7 +311,7 @@ function duration:OnUpdate()
 				local timeLeft = buff:GetTimeLeft()
 
 				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText(SecondsToTimeAbbrev(timeLeft))
+					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
 					buff.duration:Show()
 				else
 					buff.duration:Hide()
