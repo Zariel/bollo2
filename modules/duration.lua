@@ -260,7 +260,7 @@ end
 
 function duration:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
-	bollo.UpregisterCallback(self, "OnUpdate")
+	bollo.UnregisterCallback(self, "OnUpdate")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
 
 	for k, v in ipairs(bollo.buffs) do
@@ -292,34 +292,26 @@ function duration:FormatTime(type, time)
 end
 
 function duration:OnUpdate()
-	self.frame = self.frame or CreateFrame("Frame")
-	local timer = 1
-	self.frame:SetScript("OnUpdate", function(self, elapsed)
-		timer = timer + elapsed
-		if timer > 0.25 then
-			for i, buff in ipairs(bollo.buffs) do
-				if not buff:IsShown() then break end
-				local timeLeft = buff:GetTimeLeft()
-				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
-					buff.duration:Show()
-				else
-					buff.duration:Hide()
-				end
-			end
-
-			for i, buff in ipairs(bollo.debuffs) do
-				if not buff:IsShown() then break end
-				local timeLeft = buff:GetTimeLeft()
-
-				if timeLeft and timeLeft > 0 then
-					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
-					buff.duration:Show()
-				else
-					buff.duration:Hide()
-				end
-			end
-			timer = 0
+	for i, buff in ipairs(bollo.buffs) do
+		if not buff:IsShown() then break end
+		local timeLeft = buff:GetTimeLeft()
+		if timeLeft and timeLeft > 0 then
+			buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
+			buff.duration:Show()
+		else
+			buff.duration:Hide()
 		end
-	end)
+	end
+
+	for i, buff in ipairs(bollo.debuffs) do
+		if not buff:IsShown() then break end
+		local timeLeft = buff:GetTimeLeft()
+
+		if timeLeft and timeLeft > 0 then
+				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
+				buff.duration:Show()
+			else
+				buff.duration:Hide()
+			end
+	end
 end
