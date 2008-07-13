@@ -112,6 +112,30 @@ function bollo:OnEnable()
 
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
+
+	local OnUpdate
+	do
+		local timer = 0
+		OnUpdate = function(self, elapsed)
+			timer = timer + elapsed
+			if timer > 0.25 then
+				bollo.events:Fire("OnUpdate")
+				timer = 0
+			end
+		end
+	end
+
+	function bollo.events:OnUsed(target, event)
+		if event == "OnUpdate" then
+			bollo.frame:SetScript("OnUpdate", OnUpdate)
+		end
+	end
+
+	function bollo.events:OnUnused(target, event)
+		if event == "OnUpdate" then
+			bollo.frame:SetScript("OnUpdate", nil)
+		end
+	end
 end
 
 do
@@ -363,26 +387,4 @@ function bollo:UpdateSettings(table)
 	end
 end
 
-local OnUpdate
-do
-	local timer = 0
-	OnUpdate = function(self, elapsed)
-		timer = timer + elapsed
-		if timer > 0.25 then
-			bollo.events:Fire("OnUpdate")
-			timer = 0
-		end
-	end
-end
 
-function bollo.events:OnUsed(target, event)
-	if event == "OnUpdate" then
-		bollo.frame:SetScript("OnUpdate", OnUpdate)
-	end
-end
-
-function bollo.events:OnUnused(target, event)
-	if event == "OnUpdate" then
-		bollo.frame:SetScript("OnUpdate", nil)
-	end
-end
