@@ -248,8 +248,7 @@ function duration:OnEnable()
 	self:GetFonts()
 
 	bollo.RegisterCallback(self, "PostCreateIcon")
-
-	self:OnUpdate()
+	bollo.RegisterCallback(self, "OnUpdate")
 
 	for k, v in ipairs(bollo.buffs) do
 		self:PostCreateIcon(nil, bollo.buffs, v)
@@ -261,8 +260,9 @@ end
 
 function duration:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
+	bollo.UpregisterCallback(self, "OnUpdate")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
-	self.frame:SetScript("OnUpdate", nil)
+
 	for k, v in ipairs(bollo.buffs) do
 		v.duration:Hide()
 	end
