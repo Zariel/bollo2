@@ -177,7 +177,7 @@ function duration:OnInitialize()
 										["THINOUTLINE"] = "THINOUTLINE",
 										["THICKOUTLINE"] = "THICKOUTLINE",
 									},
-								}, 
+								},
 							},
 						},
 					},

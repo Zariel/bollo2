@@ -208,7 +208,7 @@ function name:OnInitialize()
 										["THINOUTLINE"] = "THINOUTLINE",
 										["THICKOUTLINE"] = "THICKOUTLINE",
 									},
-								},    
+								},
 							},
 						},
 					},
