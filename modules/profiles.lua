@@ -7,14 +7,9 @@ function profiles:OnInitialize()
 			type = "group",
 			name = "Bollo profiles",
 			args = {
-				general = {
-					type = "group",
-					name = "Database Settings",
-					args = {
-						profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(bollo.db),
-					}
-				}
+				general = LibStub("AceDBOptions-3.0"):GetOptionsTable(bollo.db),
 			}
 		}
 	end
+	bollo:AddOptions(self)
 end
