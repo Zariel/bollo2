@@ -47,7 +47,7 @@ local New = function(self, parent)
 	local icon = button:CreateTexture(nil, "BACKGROUND")
 	icon:SetAllPoints(button)
 
-	local border = button:CreateTextire(nil, "OVERLAY")
+	local border = button:CreateTexture(nil, "OVERLAY")
 	border:SetAllPoints(button)
 
 	button.icon = icon
