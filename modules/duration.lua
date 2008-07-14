@@ -23,6 +23,12 @@ function duration:OnInitialize()
 			["x"] = 0,
 			["y"] = 0,
 			["format"] = "M:SS",
+			["color"] = {
+				r = 1,
+				g = 1,
+				b = 1,
+				a = 1,
+			},
 		}
 	}
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
@@ -189,6 +195,28 @@ function duration:OnInitialize()
 										["THINOUTLINE"] = "THINOUTLINE",
 										["THICKOUTLINE"] = "THICKOUTLINE",
 									},
+								},
+								colorDesc = {
+									order = 6,
+									name = "Set the color of the font",
+									type = "description",
+								},
+								color = {
+									type = "color",
+									name = "color",
+									order = 7,
+									get = function(info)
+										local t = self.db.profile[info[#info]]
+										return t.r, t.g, t.b, t.a
+									end,
+									set = function(info, r, g, b, a)
+										local t = self.db.profile[info[#info]]
+										t.r = r
+										t.g = g
+										t.b = b
+										t.a = a
+										self:UpdateDisplay()
+									end,
 								},
 							},
 						},
