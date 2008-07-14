@@ -60,6 +60,8 @@ local New = function(self, parent)
 	bollo.events:Fire("PostCreateIcon", button)
 
 	table.insert(parent, button)
+
+	return button
 end
 
 --[[
