@@ -7,6 +7,7 @@
 lib.xml
 
 core.lua
+prototype.lua
 
 modules\name.lua
 modules\duration.lua

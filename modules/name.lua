@@ -29,15 +29,15 @@ local truncate = function(b)
 	return s
 end
 
-function name:PostSetBuff(event, buff)
+function name:PostSetBuff(event, buff, index, filter)
 	local tru = truncate(buff)
-	if buff.name:GetText() ~= tru then
-		buff.name:SetText(tru)
+	if buff.text:GetText() ~= tru then
+		buff.text:SetText(tru)
 	end
 end
 
 function name:PostCreateIcon(event, parent, buff)
-	if buff.name then return end
+	if buff.text then return end
 
 	local f = buff:CreateFontString(nil, "OVERLAY")
 
@@ -50,7 +50,7 @@ function name:PostCreateIcon(event, parent, buff)
 	f:ClearAllPoints()
 	f:SetPoint(anchor, buff, relative, mod * x, y)
 
-	buff.name = f
+	buff.text = f
 end
 
 function name:OnInitialize()
@@ -238,12 +238,12 @@ function name:OnEnable()
 	for k, v in ipairs(bollo.buffs) do
 		self:PostCreateIcon(nil, bollo.buffs, v)
 		self:PostSetBuff(nil, v)
-		v.name:Show()
+		v.text:Show()
 	end
 	for k, v in ipairs(bollo.debuffs) do
 		self:PostCreateIcon(nil, bollo.debuffs, v)
 		self:PostSetBuff(nil, v)
-		v.name:Show()
+		v.text:Show()
 	end
 end
 
@@ -260,31 +260,29 @@ function name:OnDisable()
 	end
 end
 
-
-
 function name:UpdateDisplay()
 	for i, buff in ipairs(bollo.buffs) do
-		if not buff.name then break end
+		if not buff.text then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
-		buff.name:SetFont(font, size, flag)
-		buff.name:ClearAllPoints()
-		buff.name:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.text:SetFont(font, size, flag)
+		buff.text:ClearAllPoints()
+		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 	end
 	for i, buff in ipairs(bollo.debuffs) do
-		if not buff.name then break end
+		if not buff.text then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
-		buff.name:SetFont(font, size, flag)
-		buff.name:ClearAllPoints()
-		buff.name:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.text:SetFont(font, size, flag)
+		buff.text:ClearAllPoints()
+		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 	end
 end
