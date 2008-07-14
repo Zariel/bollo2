@@ -41,9 +41,35 @@ function bollo:OnInitialize()
 	}
 	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "char")
 	self.events = LibStub("CallbackHandler-1.0"):New(bollo)
+
+	local OnUpdate
+	do
+		local timer = 0
+		OnUpdate = function(self, elapsed)
+			timer = timer + elapsed
+			if timer > 0.25 then
+				bollo.events:Fire("OnUpdate")
+				timer = 0
+			end
+		end
+	end
+
+	function bollo.events:OnUsed(target, event)
+		if event == "OnUpdate" then
+			bollo.frame:SetScript("OnUpdate", OnUpdate)
+		end
+	end
+
+	function bollo.events:OnUnused(target, event)
+		if event == "OnUpdate" then
+			bollo.frame:SetScript("OnUpdate", nil)
+		end
+	end
 end
 
 function bollo:OnEnable()
+	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
+	self.OnUpdate = false
 	self.buffs = setmetatable({}, {__tostring = function() return "buff" end})
 	self.debuffs =setmetatable({}, {__tostring = function() return "debuff" end})
 
@@ -110,6 +136,8 @@ function bollo:OnEnable()
 
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
+
+
 end
 
 do
@@ -279,6 +307,9 @@ function bollo:SortBuffs(icons, max)
 	local perRow = math.floor(icons.bg:GetHeight() / size + 0.5)
 	local rowSpace = self.db.profile[name].rowSpace
 	local rows = 0
+	local anchor = growthx > 0 and "LEFT" or "RIGHT"
+	local relative = growthy  > 0 and "BOTTOM" or "TOP"
+	local point = relative .. anchor
 	--for i = 1, max do
 	for i, buff in ipairs(icons) do
 		if buff:IsShown() then
@@ -289,7 +320,7 @@ function bollo:SortBuffs(icons, max)
 				offset = 0
 			end
 
-			buff:SetPoint("TOPRIGHT", icons.bg, "TOPRIGHT", (offset * (size + self.db.profile[name].spacing) * growthx), (rows * (size + rowSpace) * growthy))
+			buff:SetPoint(point, icons.bg, point, (offset * (size + self.db.profile[name].spacing) * growthx), (rows * (size + rowSpace) * growthy))
 			offset = offset + 1
 		end
 	end
@@ -360,3 +391,5 @@ function bollo:UpdateSettings(table)
 		bf:OnEnable()
 	end
 end
+
+
