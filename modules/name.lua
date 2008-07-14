@@ -45,8 +45,10 @@ function name:PostCreateIcon(event, parent, buff)
 	local point = self.db.profile.point
 	local x, y = self.db.profile.x, self.db.profile.y
 	local anchor, relative, mod = bollo:GetPoint(point)
+	local col = self.db.profile.color
 
 	f:SetFont(font, size, flag)
+	f:SetTextColor(col.r, col.g, col.b, col.a)
 	f:ClearAllPoints()
 	f:SetPoint(anchor, buff, relative, mod * x, y)
 
