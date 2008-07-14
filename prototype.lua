@@ -9,6 +9,27 @@ local GetPlayerBuffTimeLeft = GetPlayerBuffTimeLeft
 local prototype = CreateFrame("Button")
 
 --[[
+	Utility
+]]
+
+local OnEnter = function(self)
+	if self:IsVisible() then
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+		GameTooltip:SetPlayerBuff(self:GetID())
+	end
+end
+
+local OnLeave = function(self)
+	return GameTooltip:Hide()
+end
+
+local OnMouseUp = function(self, button)
+	if button == "RightButton" then
+		return CancelPlayerBuff(self:GetID())
+	end
+end
+
+--[[
 	New(parent)
 		parent (table) - parent table
 		Create a new icon with border, texture
@@ -31,6 +52,8 @@ local New = function(self, parent)
 
 	button.icon = icon
 	button.border = border
+
+	button.name = tostring(parent)
 
 	setmetatable(button, {__index = prototype})
 
@@ -93,6 +116,16 @@ function prototype:GetTimeLeft()
 	else
 		return GetPlayerBuffTimeLeft(id) or 0
 	end
+end
+
+--[[
+	GetName()
+	return Name From parent .. ID
+	This is to condom buttonfacade
+]]
+
+function prototype:GetName()
+	return self.name .. self:GetID()
 end
 
 bollo.CreateIcon = New
