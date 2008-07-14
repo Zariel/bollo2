@@ -25,7 +25,7 @@ function Weapon:OnInitialize()
 		set = function(info, val)
 			local key = info[# info]
 			self.db.profile[key] = val
-			self:OnUpdate()
+			self:UpdateConfig()
 		end,
 		get = function(info)
 			local key = info[# info]
@@ -196,7 +196,6 @@ function Weapon:OnEnable()
 		end
 	end
 
-
 	if not self.weapon.bg then
 		local bg = CreateFrame("Frame")
 		bg:SetWidth(Weapon.db.profile.width)
@@ -218,7 +217,7 @@ function Weapon:OnEnable()
 
 		bg:SetScript("OnMouseUp", function(self, button)
 			local x, y = self:GetLeft(), self:GetTop()
-			bollo.db.profile.x, bollo.db.profile.y = x, y
+			Weapon.db.profile.x, Weapon.db.profile.y = x, y
 			return self:StopMovingOrSizing()
 		end)
 
@@ -289,5 +288,13 @@ function Weapon:OnUpdate()
 			buff:SetPoint(point, self.weapon.bg, point, (offset * (size + spacing) * growthx), (rows * (size + rowSpace) * growthy))
 			offset = offset + 1
 		end
+	end
+end
+
+function Weapon:UpdateConfig()
+	local size = Weapon.db.profile.height
+	for k, v in ipairs(self.weapon) do
+		v:SetHeight(size)
+		v:SetWidht(size)
 	end
 end
