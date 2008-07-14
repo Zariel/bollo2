@@ -44,11 +44,23 @@ function prototype:SetBuff(index, filter)
 		error("Bad argument #2 to :SetBuff expected string")
 	end
 
-	local name, rank = GetPlayerBuffName(index)
 	local texture = GetPlayerBuffTexture(index)
-	local count = GetPlayerBuffApplications(index)
 
 	self:SetID(index)
-	self.debuf = filter == "HARMFUL"
+	self.debuff = filter == "HARMFUL"
 
+	self.icon:SetTexture(texture)
+
+	if self.debuff then
+		local col = DebuffTypeColor[GetPlayerBuffDispelType(index) or "none"]
+		self.border:SetVertexColor(col.r, col.g, col.b)
+		self.border:Show()
+	else
+		self.border:Hide()
+	end
 end
+
+function prototype:GetBuff()
+	return GetPlayerBuffName(self:GetID())
+end
+
