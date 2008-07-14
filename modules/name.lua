@@ -63,6 +63,12 @@ function name:OnInitialize()
 			["x"] = 0,
 			["y"] = 0,
 			["point"] = "BOTTOM",
+			["color"] = {
+				r = 1,
+				g = 1,
+				b = 1,
+				a = 1,
+			},
 		}
 	}
 
@@ -218,6 +224,28 @@ function name:OnInitialize()
 										["THICKOUTLINE"] = "THICKOUTLINE",
 									},
 								},
+								colorDesc = {
+									order = 6,
+									name = "Set the color of the font",
+									type = "description",
+								},
+								color = {
+									type = "color",
+									name = "color",
+									order = 7,
+									get = function(info)
+										local t = self.db.profile[info[#info]]
+										return t.r, t.g, t.b, t.a
+									end,
+									set = function(info, r, g, b, a)
+										local t = self.db.profile[info[#info]]
+										t.r = r
+										t.g = g
+										t.b = b
+										t.a = a
+										self:UpdateDisplay()
+									end,
+								},
 							},
 						},
 					},
@@ -266,23 +294,27 @@ function name:UpdateDisplay()
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
+		local col = self.db.profile.color
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.text:SetFont(font, size, flag)
 		buff.text:ClearAllPoints()
 		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.text:SetTextColor(col.r, col.g, col.b, col.a)
 	end
 	for i, buff in ipairs(bollo.debuffs) do
 		if not buff.text then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
+		local col = self.db.profile.color
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.text:SetFont(font, size, flag)
 		buff.text:ClearAllPoints()
 		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.text:SetTextColor(col.r, col.g, col.b, col.a)
 	end
 end
