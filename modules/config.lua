@@ -303,17 +303,19 @@ local InitCore = function()
 end
 
 
-function conf:OnEnable()
-	InitCore()
+function conf:OnInitialize()
+	bollo.Print(self, "init")
+	bollo.options = InitCore()
 	defaults.plugins = {}
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)
-	bollo.options = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", nil, nil, "general")
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", nil, nil, "general")
 end
 
 
 function bollo:AddOptions(module)
 	if module.options then
 		local modName = tostring(module)
+		local name = modName:match("Bollo_(.+)")
 		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(modName, module.options)
 		module.bliz = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(modName, name, "Bollo", "general")
 	end
