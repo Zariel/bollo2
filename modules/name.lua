@@ -262,27 +262,27 @@ end
 
 function name:UpdateDisplay()
 	for i, buff in ipairs(bollo.buffs) do
-		if not buff.name then break end
+		if not buff.text then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
-		buff.name:SetFont(font, size, flag)
-		buff.name:ClearAllPoints()
-		buff.name:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.text:SetFont(font, size, flag)
+		buff.text:ClearAllPoints()
+		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 	end
 	for i, buff in ipairs(bollo.debuffs) do
-		if not buff.name then break end
+		if not buff.text then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
-		buff.name:SetFont(font, size, flag)
-		buff.name:ClearAllPoints()
-		buff.name:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.text:SetFont(font, size, flag)
+		buff.text:ClearAllPoints()
+		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 	end
 end
