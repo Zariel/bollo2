@@ -138,4 +138,13 @@ function prototype:GetName()
 	return self.name .. self:GetID()
 end
 
+--[[
+	GetCount()
+	return Buff Applications
+]]
+
+function prototype:GetCount()
+	return GetPlayerBuffApplications(self:GetID())
+end
+
 bollo.CreateIcon = New
