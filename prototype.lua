@@ -1,5 +1,9 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 
+local GetPlayerBuffName = GetPlayerBuffName
+local GetPlayerBuffTexture = GetPlayerBuffTexture
+local GetPlayerBuffApplications = GetPlayerBuffApplications
+
 local prototype = CreateFrame("Frame")
 
 --[[
@@ -27,11 +31,24 @@ local New = function()
 end
 
 --[[
-	SetBuff (index, type)
+	SetBuff (index, filter)
 		index - ID of the aura
 		filter - buff temp)
 		Sets the buff
 ]]
-function prototype:SetBuff(index)
+function prototype:SetBuff(index, filter)
+	if type(index) ~= "number" then
+		error("Bad argument #1 to :SetBuff expected number")
+	end
+	if type(filter) ~= "string" then
+		error("Bad argument #2 to :SetBuff expected string")
+	end
+
+	local name, rank = GetPlayerBuffName(index)
+	local texture = GetPlayerBuffTexture(index)
+	local count = GetPlayerBuffApplications(index)
+
+	self:SetID(index)
+	self.debuf = filter == "HARMFUL"
 
 end
