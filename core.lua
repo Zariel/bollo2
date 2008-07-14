@@ -183,7 +183,6 @@ function bollo:SortBuffs(icons, max)
 	local anchor = growthx > 0 and "LEFT" or "RIGHT"
 	local relative = growthy  > 0 and "BOTTOM" or "TOP"
 	local point = relative .. anchor
-	--for i = 1, max do
 	for i, buff in ipairs(icons) do
 		if buff:IsShown() then
 			buff:ClearAllPoints()
