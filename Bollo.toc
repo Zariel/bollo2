@@ -13,5 +13,6 @@ modules\name.lua
 modules\duration.lua
 modules\buttonfacade.lua
 modules\profiles.lua
+modules\count.lua
 
 modules\config.lua
