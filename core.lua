@@ -328,11 +328,9 @@ end
 
 function bollo:UpdateIcons(i, parent, filter)
 	local index = GetPlayerBuff(i, filter)
-	-- Buff
-	local name = GetPlayerBuffName(index)
 	local icon = parent[i]
 
-	if name then
+	if index > 0 then
 		icon = icon or self:CreateIcon(index, parent, filter == "HARMFUL")
 		icon:SetBuff(index)
 		return true
