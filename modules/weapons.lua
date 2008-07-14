@@ -18,22 +18,11 @@ function Weapon:OnInitialize()
 		}
 	}
 
-	self.options = {
-		type = "group",
-		name = "Weapons",
-		args = {
-			general = {
-				type = "group",
-				name = "Weapon buffs",
-				args = {}
-			}
-		}
-	}
-
-	self.options.args.general.args.weapon = {
+	bollo.Print(self, "init")
+	local conf = bollo.options.args.general.args
+	conf.weapon = {
 		order = 1,
 		type = "group",
-		guiInline = true,
 		set = function(info, val)
 			local key = info[# info]
 			self.db.profile[key] = val
