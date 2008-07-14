@@ -33,7 +33,7 @@ local New = function()
 end
 
 --[[
-	SetBuff (index, filter)
+	SetBuff(index, filter)
 		index - ID of the aura
 		filter - buff temp)
 		Sets the buff
@@ -63,9 +63,21 @@ function prototype:SetBuff(index, filter)
 	end
 end
 
+--[[
+	GetBuff()
+		returns
+		Buffname, rank
+]]
+
 function prototype:GetBuff()
 	return GetPlayerBuffName(self:GetID())
 end
+
+--[[
+	GetTimeLeft()
+		returns
+		BufftimeLeft (seconds)
+]]
 
 function prototype:GetTimeLeft()
 	local id = self:GetID()
