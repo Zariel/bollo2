@@ -91,6 +91,8 @@ function prototype:SetBuff(index, filter)
 	else
 		self.border:Hide()
 	end
+
+	bollo.events:Fire("PostSetBuff", self, index, filter)
 end
 
 --[[
