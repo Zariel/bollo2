@@ -29,10 +29,11 @@ local truncate = function(b)
 	return s
 end
 
-function name:PostSetBuff(event, buff)
+function name:PostSetBuff(event, buff, index, filter)
+	bollo:Print("post Set buff", buff)
 	local tru = truncate(buff)
-	if buff.name:GetText() ~= tru then
-		buff.name:SetText(tru)
+	if buff.text:GetText() ~= tru then
+		buff.text:SetText(tru)
 	end
 end
 
@@ -50,7 +51,7 @@ function name:PostCreateIcon(event, parent, buff)
 	f:ClearAllPoints()
 	f:SetPoint(anchor, buff, relative, mod * x, y)
 
-	buff.name = f
+	buff.text = f
 end
 
 function name:OnInitialize()
@@ -259,8 +260,6 @@ function name:OnDisable()
 		v.name:Hide()
 	end
 end
-
-
 
 function name:UpdateDisplay()
 	for i, buff in ipairs(bollo.buffs) do
