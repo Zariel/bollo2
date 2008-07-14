@@ -5,7 +5,7 @@ local duration = bollo:NewModule("Duration")
 do
 	local fonts = {}
 	function duration:GetFonts()
-		for k, v in pairs(SML:List("font")) do
+		for k, v in ipairs(SML:List("font")) do
 			fonts[SML:Fetch("font", v)] = v
 		end
 		return fonts

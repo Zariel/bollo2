@@ -6,7 +6,7 @@ local SML = LibStub("LibSharedMedia-3.0")
 do
 	local fonts = {}
 	function name:GetFonts()
-		for k, v in pairs(SML:List("font")) do
+		for k, v in ipairs(SML:List("font")) do
 			fonts[SML:Fetch("font", v)] = v
 		end
 		return fonts
