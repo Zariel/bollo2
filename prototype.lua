@@ -35,15 +35,15 @@ end
 		Create a new icon with border, texture
 ]]
 
-local New = function(self, parent)
+local New = function(self, parent, db)
 	if type(parent) ~= "table" then
 		error("Bad argument to #1 CreateIcon expected table")
 	end
 
 	local name = tostring(parent)
 	local button = CreateFrame("Button", nil, UIParent)
-	button:SetHeight(bollo.db.profile[name].size)
-	button:SetWidth(bollo.db.profile[name].size)
+	button:SetHeight(db and db.size or bollo.db.profile[name].size)
+	button:SetWidth(db and db.size or bollo.db.profile[name].size)
 	button:EnableMouse(true)
 
 	local icon = button:CreateTexture(nil, "BACKGROUND")
