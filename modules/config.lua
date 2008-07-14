@@ -57,7 +57,7 @@ local InitCore = function()
 									name = "Size",
 									type = "range",
 									min = 10,
-									max = 50,
+									max = 100,
 									step = 1,
 								},
 								spacingDesc = {
@@ -192,7 +192,7 @@ local InitCore = function()
 									name = "Size",
 									type = "range",
 									min = 10,
-									max = 50,
+									max = 100,
 									step = 1,
 								},
 								spacingDesc = {
