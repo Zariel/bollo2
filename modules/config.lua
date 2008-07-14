@@ -305,7 +305,6 @@ end
 
 
 function conf:OnInitialize()
-	bollo.Print(self, "init")
 	bollo.options = InitCore()
 	defaults.plugins = {}
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)

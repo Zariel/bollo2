@@ -18,10 +18,9 @@ function Weapon:OnInitialize()
 		}
 	}
 
-	bollo.Print(self, "init")
 	local conf = bollo.options.args.general.args
 	conf.weapon = {
-		order = 1,
+		order = 3,
 		type = "group",
 		set = function(info, val)
 			local key = info[# info]
