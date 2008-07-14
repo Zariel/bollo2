@@ -223,15 +223,24 @@ function Weapon:OnEnable()
 		end)
 
 		bg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", Weapon.db.profile.x, Weapon.db.profile.y)
-
 		self.weapon.bg = bg
 	end
 
 	bollo.RegisterCallback(self, "OnUpdate")
+
+	TemporaryEnchantFrame:SetScript("OnUpdate", nil)
+	TemporaryEnchantFrame:Hide()
 end
 
 function Weapon:OnDisable()
 	bollo.UnregisterCallback(self, "OnUpdate")
+	self.weapon.bg:Hide()
+	for k, v in ipairs(self.weapon) do
+		v:Hide()
+	end
+
+	TemporaryEnchantFrame:Show()
+	TemporaryEnchantFrame:SetScript("OnUpdate", BuffFrame_Enchant_OnUpdate)
 end
 
 local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges
