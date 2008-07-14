@@ -17,9 +17,9 @@ function Count:PostSetBuff(event, buff, index, filter)
 	local count = buff:GetCount()
 	if count > 1 then
 		buff.count:SetText(count)
-		count:Show()
+		buff.count:Show()
 	else
-		count:Hide()
+		buff.count:Hide()
 	end
 end
 
