@@ -30,7 +30,6 @@ local truncate = function(b)
 end
 
 function name:PostSetBuff(event, buff, index, filter)
-	bollo:Print("post Set buff", buff)
 	local tru = truncate(buff)
 	if buff.text:GetText() ~= tru then
 		buff.text:SetText(tru)
@@ -38,7 +37,7 @@ function name:PostSetBuff(event, buff, index, filter)
 end
 
 function name:PostCreateIcon(event, parent, buff)
-	if buff.name then return end
+	if buff.text then return end
 
 	local f = buff:CreateFontString(nil, "OVERLAY")
 
@@ -239,12 +238,12 @@ function name:OnEnable()
 	for k, v in ipairs(bollo.buffs) do
 		self:PostCreateIcon(nil, bollo.buffs, v)
 		self:PostSetBuff(nil, v)
-		v.name:Show()
+		v.text:Show()
 	end
 	for k, v in ipairs(bollo.debuffs) do
 		self:PostCreateIcon(nil, bollo.debuffs, v)
 		self:PostSetBuff(nil, v)
-		v.name:Show()
+		v.text:Show()
 	end
 end
 
