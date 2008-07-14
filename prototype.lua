@@ -1,8 +1,10 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 
+local GetPlayerBuff = GetPlayerBuff
 local GetPlayerBuffName = GetPlayerBuffName
 local GetPlayerBuffTexture = GetPlayerBuffTexture
 local GetPlayerBuffApplications = GetPlayerBuffApplications
+local GetPlayerBuffTimeLeft = GetPlayerBuffTimeLeft
 
 local prototype = CreateFrame("Frame")
 
@@ -36,6 +38,7 @@ end
 		filter - buff temp)
 		Sets the buff
 ]]
+
 function prototype:SetBuff(index, filter)
 	if type(index) ~= "number" then
 		error("Bad argument #1 to :SetBuff expected number")
@@ -62,5 +65,14 @@ end
 
 function prototype:GetBuff()
 	return GetPlayerBuffName(self:GetID())
+end
+
+function prototype:GetTimeLeft()
+	local id = self:GetID()
+	if select(2, GetPlayerBuff(id)) > 0 then
+		return 0
+	else
+		return GetPlayerBuffTimeLeft(id) or 0
+	end
 end
 
