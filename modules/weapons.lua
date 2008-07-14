@@ -158,11 +158,11 @@ function Weapon:OnInitialize()
 				type = "toggle",
 				set = function(info, key)
 					if key then
-						bollo.buffs.bg:Hide()
+						self.weapon.bg:Hide()
 					else
-						bollo.buffs.bg:Show()
+						self.weapon.bg:Show()
 					end
-					self.db.profile.buff.lock = key
+					self.db.profile.lock = key
 				end,
 				get = function(info)
 					return not self.weapon.bg:IsShown()
@@ -272,7 +272,7 @@ function Weapon:OnUpdate()
 				offset = 0
 			end
 
-			buff:SetPoint(point, self.weapons.bg, point, (offset * (size + spacing) * growthx), (rows * (size + rowSpace) * growthy))
+			buff:SetPoint(point, self.weapon.bg, point, (offset * (size + spacing) * growthx), (rows * (size + rowSpace) * growthy))
 			offset = offset + 1
 		end
 	end
