@@ -295,6 +295,6 @@ function Weapon:UpdateConfig()
 	local size = Weapon.db.profile.height
 	for k, v in ipairs(self.weapon) do
 		v:SetHeight(size)
-		v:SetWidht(size)
+		v:SetWidth(size)
 	end
 end
