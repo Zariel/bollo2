@@ -308,13 +308,14 @@ function conf:OnEnable()
 	defaults.plugins = {}
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)
 	bollo.options = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", nil, nil, "general")
-
-	for name, module in bollo:IterateModules() do
-		if module.options then
-			local modName = tostring(module)
-			LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(modName, module.options)
-			module.bliz = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(modName, name, "Bollo", "general")
-		end
-	end
 end
 
+
+function bollo:AddOptions(module)
+	if module.options then
+		local modName = tostring(module)
+		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(modName, module.options)
+		module.bliz = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(modName, name, "Bollo", "general")
+	end
+
+end
