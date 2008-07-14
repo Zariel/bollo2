@@ -6,7 +6,7 @@ local GetPlayerBuffTexture = GetPlayerBuffTexture
 local GetPlayerBuffApplications = GetPlayerBuffApplications
 local GetPlayerBuffTimeLeft = GetPlayerBuffTimeLeft
 
-local prototype = CreateFrame("Frame")
+local prototype = CreateFrame("Button")
 
 --[[
 	New(parent)
