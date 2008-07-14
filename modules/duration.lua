@@ -227,6 +227,7 @@ function duration:OnInitialize()
 		}
 	end
 
+	bollo:AddOptions(self)
 	self:SetEnabledState(self.db.profile.enabled)
 end
 
