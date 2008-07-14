@@ -235,24 +235,28 @@ function duration:UpdateDisplay()
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
+		local col = self.db.profile.color
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.duration:SetFont(font, size, flag)
 		buff.duration:ClearAllPoints()
 		buff.duration:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.duration:SetTextColor(col.r, col.g, col.b, col.a)
 	end
 	for i, buff in ipairs(bollo.debuffs) do
 		if not buff.duration then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 		local point = self.db.profile.point
 		local x, y = self.db.profile.x, self.db.profile.y
+		local col = self.db.profile.color
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
 		buff.duration:SetFont(font, size, flag)
 		buff.duration:ClearAllPoints()
 		buff.duration:SetPoint(anchor, buff, relative, mod * x, y)
+		buff.duration:SetTextColor(col.r, col.g, col.b, col.a)
 	end
 
 end
@@ -262,12 +266,14 @@ function duration:PostCreateIcon(event, parent, button)
 	local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
 	local point = self.db.profile.point
 	local x, y = self.db.profile.x, self.db.profile.y
+	local col = self.db.profile.color
 
 	local anchor, relative, mod = bollo:GetPoint(point)
 
 	duration:SetFont(font, size, flag)
 	duration:ClearAllPoints()
 	duration:SetPoint(anchor, button, relative, mod * x, y)
+	duration:SetTextColor(col.r, col.g, col.b, col.a)
 	button.duration = duration
 end
 
