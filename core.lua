@@ -69,7 +69,6 @@ end
 
 function bollo:OnEnable()
 	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
-	self.OnUpdate = false
 	self.buffs = setmetatable({}, {__tostring = function() return "buff" end})
 	self.debuffs =setmetatable({}, {__tostring = function() return "debuff" end})
 
@@ -136,8 +135,6 @@ function bollo:OnEnable()
 
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
-
-
 end
 
 local SortFunc = function(a, b)
