@@ -18,6 +18,8 @@ function Weapon:OnInitialize()
 		}
 	}
 
+	self.db = bollo.db:RegisterNamespace("Bollo-Weapon", defaults)
+
 	local conf = bollo.options.args.general.args
 	conf.weapon = {
 		order = 3,
@@ -171,7 +173,6 @@ function Weapon:OnInitialize()
 		}
 	}
 
-	self.db = bollo.db:RegisterNamespace("Bollo-Weapon", defaults)
 	self:SetEnabledState(self.db.profile.enabled)
 end
 
@@ -292,9 +293,17 @@ function Weapon:OnUpdate()
 end
 
 function Weapon:UpdateConfig()
-	local size = Weapon.db.profile.height
+	local size = Weapon.db.profile.size
 	for k, v in ipairs(self.weapon) do
 		v:SetHeight(size)
 		v:SetWidth(size)
+		v.icon:SetAllPoints(v)
 	end
+
+	local bf = bollo:GetModule("ButtonFacade")
+	if bf then
+		bf:OnEnable()
+	end
+
+	self:OnUpdate()
 end
