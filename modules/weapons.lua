@@ -4,10 +4,10 @@ local Weapon = bollo:NewModule("WeaponBuffs")
 function Weapon:OnInitialize()
 	local defaults = {
 		profile = {
-			weapon = {
+			weapons = {
 				["growthx"] = "LEFT",
 				["growthy"] = "DOWN",
-				["size"] = 20,
+				["size"] = 30,
 				["spacing"] = 2,
 				["lock"] = false,
 				["x"] = 0,
@@ -21,14 +21,14 @@ function Weapon:OnInitialize()
 	}
 
 	self.db = bollo.db:RegisterNamespace("Bollo-Weapon", defaults)
-	self:SetEnabledState(self.db.profile.enabled)
+	self:SetEnabledState(self.db.profile.weapons.enabled)
 end
 
 function Weapon:OnEnable()
 	self.weapons = setmetatable({}, {__tostring = function() return "weapon" end})
 	
 	for i = 1, 2 do
-		local button = 	bollo:CreateIcon(bollo.weapons)
+		local button = 	bollo:CreateIcon(Weapon.weapons, Weapon.db.profile.weapons)
 		button:SetID(15 + i)
 		button:SetScript("OnEnter", function(self)
 			if self:IsVisible() then
@@ -44,8 +44,8 @@ function Weapon:OnEnable()
 	end
 
 	local bg = CreateFrame("Frame")
-	bg:SetWidth(bollo.db.profile.debuff.width)
-	bg:SetHeight(bollo.db.profile.debuff.height)
+	bg:SetWidth(Weapon.db.profile.weapons.width)
+	bg:SetHeight(Weapon.db.profile.weapons.height)
 	bg:SetBackdrop({
 		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
 		insets = {left = 1, right = 1, top = 1, bottom = 1},
@@ -66,44 +66,44 @@ function Weapon:OnEnable()
 		return self:StopMovingOrSizing()
 	end)
 
-	bg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", bollo.db.profile.weapons.x, bollo.db.profile.weapons.y)
+	bg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", Weapon.db.profile.weapons.x, Weapon.db.profile.weapons.y)
 
 	self.weapons.bg = bg
-
 
 	bollo.RegisterCallback(self, "OnUpdate")
 end
 
 function Weapon:OnDisable()
-	bollo.RegisterCallback(self, "OnUpdate")
+	bollo.UnregisterCallback(self, "OnUpdate")
 end
 
-local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges = GetWeaponEnchantInfo()
+local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges
 function Weapon:OnUpdate()
+	hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges = GetWeaponEnchantInfo()
 	local offset = 0
-	local growthx = self.db.profile.weapons.["growthx"] == "LEFT" and -1 or 1
-	local growthy = self.db.profile.weapons.["growthy"] == "DOWN" and -1 or 1
+	local growthx = self.db.profile.weapons["growthx"] == "LEFT" and -1 or 1
+	local growthy = self.db.profile.weapons["growthy"] == "DOWN" and -1 or 1
 	local size = self.db.profile.weapons.size
 	local perCol = math.floor(self.weapons.bg:GetWidth() / size + 0.5)
-	local perRow = math.floor(self.weapons.bg.bg:GetHeight() / size + 0.5)
+	local perRow = math.floor(self.weapons.bg:GetHeight() / size + 0.5)
 	local rowSpace = self.db.profile.weapons.rowSpace
 	local rows = 0
 	local anchor = growthx > 0 and "LEFT" or "RIGHT"
 	local relative = growthy  > 0 and "BOTTOM" or "TOP"
 	local point = relative .. anchor
 
+	local icon = self.weapons[1]
 	if hasMainHandEnchant then
-		local icon = self.weapons[1]
-		local texture = GetInventoryItemTexture("player", self:GetID())
+		local texture = GetInventoryItemTexture("player", icon:GetID())
 		icon.icon:SetTexture(texture)
 		icon:Show()
 	else
 		icon:Hide()
 	end
 
+	icon = self.weapons[2]
 	if hasOffHandEnchant then
-		local icon = self.weapons[2]
-		local texture = GetInventoryItemTexture("player", self:GetID())
+		local texture = GetInventoryItemTexture("player", icon:GetID())
 		icon.icon:SetTexture(texture)
 		icon:Show()
 	else
