@@ -9,11 +9,15 @@ local GetPlayerBuffTimeLeft = GetPlayerBuffTimeLeft
 local prototype = CreateFrame("Frame")
 
 --[[
-	New
+	New()
 		Create a new icon with border, texture
 ]]
 
-local New = function()
+local New = function(self, parent)
+	if type(parent) ~= "table" then
+		error("Bad argument to #1 CreateIcon expected table")
+	end
+
 	local button = CreateFrame("Button", nil, UIParent)
 	button:SetHeight(20)
 	button:SetWidth(20)
@@ -30,6 +34,8 @@ local New = function()
 	setmetatable(button, {__index = prototype})
 
 	bollo.events:Fire("PostCreateIcon", button)
+
+	table.insert(parent, button)
 end
 
 --[[
@@ -88,3 +94,4 @@ function prototype:GetTimeLeft()
 	end
 end
 
+bollo.CreateIcon = New
