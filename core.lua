@@ -205,7 +205,7 @@ function bollo:UpdateIcons(i, parent, filter)
 
 	if index > 0 then
 		icon = icon or self:CreateIcon(parent)
-		icon:SetBuff(index)
+		icon:SetBuff(index, filter)
 		return true
 	elseif icon then
 		icon:SetID(0)
