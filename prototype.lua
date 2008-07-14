@@ -59,7 +59,10 @@ local New = function(self, parent)
 
 	button:SetScript("OnEnter", OnEnter)
 	button:SetScript("OnLeave", OnLeave)
-	button:SetScript("OnMouseUp", OnMouseUp)
+
+	if name == "buff" then
+		button:SetScript("OnMouseUp", OnMouseUp)
+	end
 
 	setmetatable(button, {__index = prototype})
 
@@ -101,6 +104,8 @@ function prototype:SetBuff(index, filter)
 	end
 
 	bollo.events:Fire("PostSetBuff", self, index, filter)
+
+	self:Show()
 end
 
 --[[

@@ -5,7 +5,7 @@ local SML = LibStub("LibSharedMedia-3.0")
 
 do
 	local fonts = {}
-	function name:GetFonts()
+	function Count:GetFonts()
 		for k, v in ipairs(SML:List("font")) do
 			fonts[SML:Fetch("font", v)] = v
 		end
@@ -40,7 +40,7 @@ function Count:PostCreateIcon(event, parent, buff)
 	buff.count = f
 end
 
-function name:OnInitialize()
+function Count:OnInitialize()
 	local defaults = {
 		profile = {
 			["Description"] = "Shows count of buffs/debuffs",
