@@ -9,7 +9,8 @@ local GetPlayerBuffTimeLeft = GetPlayerBuffTimeLeft
 local prototype = CreateFrame("Frame")
 
 --[[
-	New()
+	New(parent)
+		parent (table) - parent table
 		Create a new icon with border, texture
 ]]
 
