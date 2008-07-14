@@ -21,6 +21,7 @@ local InitCore = function()
 				general = {
 					order = 1,
 					type = "group",
+					childGroups  = "tab",
 					name = "General Settings",
 					args = {
 						desc = {
