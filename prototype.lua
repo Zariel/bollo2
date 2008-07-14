@@ -57,7 +57,7 @@ local New = function(self, parent)
 
 	setmetatable(button, {__index = prototype})
 
-	bollo.events:Fire("PostCreateIcon", button)
+	bollo.events:Fire("PostCreateIcon", parent, button)
 
 	table.insert(parent, button)
 
