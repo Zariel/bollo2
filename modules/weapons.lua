@@ -176,51 +176,56 @@ function Weapon:OnInitialize()
 end
 
 function Weapon:OnEnable()
-	self.weapon = setmetatable({}, {__tostring = function() return "weapon" end})
+	self.weapon = self.weapon or setmetatable({}, {__tostring = function() return "weapon" end})
 
-	for i = 1, 2 do
-		local button = 	bollo:CreateIcon(Weapon.weapon, Weapon.db.profile)
-		button:SetID(15 + i)
-		button:SetScript("OnEnter", function(self)
-			if self:IsVisible() then
-				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-				GameTooltip:SetInventoryItem("player", self:GetID())
-			end
-		end)
-		button:SetScript("OnMouseUp", function(self, button)
-			if button == "RightButton" then
-				CancelItemTempEnchantment(self:GetID() - 15)
-			end
-		end)
+	if not self.weapon[1] then
+		for i = 1, 2 do
+			local button = 	bollo:CreateIcon(Weapon.weapon, Weapon.db.profile)
+			button:SetID(15 + i)
+			button:SetScript("OnEnter", function(self)
+				if self:IsVisible() then
+					GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+					GameTooltip:SetInventoryItem("player", self:GetID())
+				end
+			end)
+			button:SetScript("OnMouseUp", function(self, button)
+				if button == "RightButton" then
+					CancelItemTempEnchantment(self:GetID() - 15)
+				end
+			end)
+		end
 	end
 
-	local bg = CreateFrame("Frame")
-	bg:SetWidth(Weapon.db.profile.width)
-	bg:SetHeight(Weapon.db.profile.height)
-	bg:SetBackdrop({
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
-		insets = {left = 1, right = 1, top = 1, bottom = 1},
-	})
-	bg:SetBackdropColor(0, 0, 1, 0.3)
-	bg:Hide()
 
-	bg:SetMovable(true)
-	bg:EnableMouse(true)
-	bg:SetClampedToScreen(true)
-	bg:SetScript("OnMouseDown", function(self, button)
-		self:ClearAllPoints()
-		return self:StartMoving()
-	end)
+	if not self.weapon.bg then
+		local bg = CreateFrame("Frame")
+		bg:SetWidth(Weapon.db.profile.width)
+		bg:SetHeight(Weapon.db.profile.height)
+		bg:SetBackdrop({
+			bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+			insets = {left = 1, right = 1, top = 1, bottom = 1},
+		})
+		bg:SetBackdropColor(0, 0, 1, 0.3)
+		bg:Hide()
 
-	bg:SetScript("OnMouseUp", function(self, button)
-		local x, y = self:GetLeft(), self:GetTop()
-		bollo.db.profile.x, bollo.db.profile.y = x, y
-		return self:StopMovingOrSizing()
-	end)
+		bg:SetMovable(true)
+		bg:EnableMouse(true)
+		bg:SetClampedToScreen(true)
+		bg:SetScript("OnMouseDown", function(self, button)
+			self:ClearAllPoints()
+			return self:StartMoving()
+		end)
 
-	bg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", Weapon.db.profile.x, Weapon.db.profile.y)
+		bg:SetScript("OnMouseUp", function(self, button)
+			local x, y = self:GetLeft(), self:GetTop()
+			bollo.db.profile.x, bollo.db.profile.y = x, y
+			return self:StopMovingOrSizing()
+		end)
 
-	self.weapon.bg = bg
+		bg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", Weapon.db.profile.x, Weapon.db.profile.y)
+
+		self.weapon.bg = bg
+	end
 
 	bollo.RegisterCallback(self, "OnUpdate")
 end
