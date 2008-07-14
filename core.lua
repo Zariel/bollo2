@@ -204,7 +204,7 @@ function bollo:UpdateIcons(i, parent, filter)
 	local icon = parent[i]
 
 	if index > 0 then
-		icon = icon or self:CreateIcon(index, parent, filter == "HARMFUL")
+		icon = icon or self:CreateIcon(parent)
 		icon:SetBuff(index)
 		return true
 	elseif icon then
