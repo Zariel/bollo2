@@ -40,9 +40,11 @@ local New = function(self, parent)
 		error("Bad argument to #1 CreateIcon expected table")
 	end
 
+	local name = tostring(parent)
 	local button = CreateFrame("Button", nil, UIParent)
-	button:SetHeight(20)
-	button:SetWidth(20)
+	button:SetHeight(bollo.db.profile[name].size)
+	button:SetWidth(bollo.db.profile[name].size)
+	button:EnableMouse(true)
 
 	local icon = button:CreateTexture(nil, "BACKGROUND")
 	icon:SetAllPoints(button)
@@ -53,7 +55,11 @@ local New = function(self, parent)
 	button.icon = icon
 	button.border = border
 
-	button.name = tostring(parent)
+	button.name = name
+
+	button:SetScript("OnEnter", OnEnter)
+	button:SetScript("OnLeave", OnLeave)
+	button:SetScript("OnMouseUp", OnMouseUp)
 
 	setmetatable(button, {__index = prototype})
 
