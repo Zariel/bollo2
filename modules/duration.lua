@@ -205,6 +205,7 @@ function duration:OnInitialize()
 									type = "color",
 									name = "color",
 									order = 7,
+									hasAlpha = true,
 									get = function(info)
 										local t = self.db.profile[info[#info]]
 										return t.r, t.g, t.b, t.a
