@@ -18,7 +18,7 @@ end
 ]]
 
 
-function conf:AddChildOpts(name)
+function conf:AddChildOpts(name, db)
 	if type(name) ~= "string" then
 		error("Bad argument to #1 :AddChildOpts, expected string")
 	end
@@ -26,7 +26,7 @@ function conf:AddChildOpts(name)
 	if bollo.options.args.general.args[name] then return end -- Already added.
 
 	local c = bollo.options.args.general.args
-	local db = bollo.db.profile[name]
+	local db = db or bollo.db.profile[name]
 	local icons = bollo.icons[name]
 
 	self.count = (self.count or 0) + 1
