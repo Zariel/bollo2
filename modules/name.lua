@@ -34,7 +34,7 @@ function name:AddOptions(name)
 		set = function(info, val)
 			local key = info[# info]
 			self.db.profile[name][key] = val
-			self:UpdateDisplay(name)
+			self:UpdateDisplay(nil, name)
 		end,
 		["name"] = name,
 		type = "group",
@@ -110,7 +110,7 @@ function name:AddOptions(name)
 						set = function(info, val)
 							local key = info[# info]
 							self.db.profile[name][key] = val
-							self:UpdateDisplay()
+							self:UpdateDisplay(nil, name)
 						end,
 						get = function(info)
 							local key = self.db.profile[name][info[# info]]
@@ -136,7 +136,7 @@ function name:AddOptions(name)
 						set = function(info, val)
 							local key = info[# info]
 							self.db.profile[name][key] = val
-							self:UpdateDisplay(name)
+							self:UpdateDisplay(nil, name)
 						end,
 					},
 					fontStyleDesc = {
@@ -241,7 +241,7 @@ function name:OnInitialize()
 					set = function(info, val)
 						local key = info[# info]
 						self.db.profile[key] = val
-						self:UpdateDisplay()
+						self:UpdateDisplay(nil, nil)
 					end,
 					get = function(info)
 						local key = info[# info]
@@ -290,7 +290,7 @@ function name:OnEnable()
 			self:PostCreateIcon(nil, bollo.icons[name], v)
 			v.text:Show()
 		end
-		self:UpdateDisplay(name)
+		self:UpdateDisplay(nil, name)
 	end
 
 	bollo.RegisterCallback(self, "PostCreateIcon")
@@ -363,7 +363,7 @@ function name:PostCreateIcon(event, parent, buff)
 end
 
 
-function name:UpdateDisplay(name)
+function name:UpdateDisplay(event, name)
 	if not name then
 		return
 	end
