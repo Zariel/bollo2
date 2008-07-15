@@ -97,9 +97,9 @@ function bf:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
 end
 
 function bf:OnEnable()
-	lib = LibStub("LibButtonFacade")
+	lib = lib or LibStub("LibButtonFacade")
 	self.buff = self.buff or lib:Group("Bollo", "buff")
-	self.debuff = self.debuff or lib:Group("Bollo", "buff")
+	self.debuff = self.debuff or lib:Group("Bollo", "debuff")
 
 	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
 	bollo.RegisterCallback(bf, "PostCreateIcon")
@@ -107,18 +107,18 @@ function bf:OnEnable()
 	bollo.RegisterCallback(bf, "PostUpdateConfig", "OnEnable")
 
 	for name in pairs(bollo.icons) do
+		local table = self.db.profile[name]
+		local group = self[name]
+		group:Skin(table.Skin, table.Gloss, table.Backdrop)
 		for k, v in ipairs(bollo.icons[name]) do
-			local table = self.db.profile[name]
-			local group = self[name]
-			group:Skin(table.Skin, table.Gloss, table.Backdrop)
+			self:PostCreateIcon(nil, nil, v)
 		end
 	end
 end
 
 function bf:OnDisable()
-	self.Print("To unskin the buffs you must reload your interface")
-	lib:UnregisterSkinCallback("Bollo", self.UpdateSkin)
+	self.Print(self, "To unskin the buffs you must reload your interface")
 	bollo.UnregisterCallback(bf, "PostCreateIcon")
 	bollo.UnregisterCallback(bf, "PostSetBuff")
-	bollo.RegisterCallback(bf, "PostUpdateConfig")
+	bollo.UnregisterCallback(bf, "PostUpdateConfig")
 end
