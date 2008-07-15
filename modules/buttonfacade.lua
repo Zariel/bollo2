@@ -1,14 +1,17 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
-local bf = bollo:NewModule("ButtonFacade")
+local bf = bollo:NewModule("ButtonFacade", "AceConsole-3.0")
 local lib
 local SetVertexColor
+
+local groups = {
+	["Buffs"] = true,
+	["Debuffs"] = true
+}
 
 function bf:PostCreateIcon(event, parent, button)
 	local debuff = button.debuff
 
-	if not SetVertexColor then
-		SetVertexColor = button.border.SetVertexColor
-	end
+	button.border._SetVertexColor = button.border.SetVertexColor
 
 	local data = {
 		["Icon"] = button.icon,
@@ -22,13 +25,14 @@ function bf:PostCreateIcon(event, parent, button)
 	else
 		self.Buffs:AddButton(button, data)
 	end
+	self:PostSetBuff(nil, button)
 end
 
 function bf:PostSetBuff(event, button)
 	if button.debuff then
 		local index = button:GetID()
 		local col = DebuffTypeColor[GetPlayerBuffDispelType(index) or "none"]
-		SetVertexColor(button.border, col.r, col.g, col.b)
+		button.border:_SetVertexColor(col.r, col.g, col.b)
 	end
 end
 
@@ -37,17 +41,51 @@ function bf:OnInitialize()
 		profile = {
 			Debuffs = {},
 			Buffs = {},
+			enabled = true,
 		}
 	}
 
 	self.db = bollo.db:RegisterNamespace("Bollo-ButtonFacade", defaults)
 
-	lib = LibStub("LibButtonFacade")
+	self.options = {
+		type = "group",
+		name = "Button Facade",
+		args = {
+			general = {
+				name = "Button Facade",
+				type = "group",
+				args = {
+					enableDesc = {
+						type = "description",
+						name = "Enable the Button Facade module, will only take effect after reload of UI",
+						order = 1,
+					},
+					enabled = {
+						type = "toggle",
+						name = "Enable",
+						order = 2,
+						set = function(info, val)
+							local key = info[# info]
+							self.db.profile[key] = val
+							if val then
+								self:Enable()
+							else
+								self:Disable()
+							end
+						end,
+						get = function(info)
+							local key = info[# info]
+							return self.db.profile[key]
+						end
+					},
+				}
+			}
+		}
+	}
 
-	self.Buffs = lib:Group("Bollo", "Buffs")
-	self.Debuffs = lib:Group("Bollo", "Debuffs")
-	bollo.RegisterCallback(bf, "PostCreateIcon")
-	bollo.RegisterCallback(bf, "PostSetBuff")
+	bollo:AddOptions(self)
+
+	self:SetEnabledState(self.db.profile.enabled)
 end
 
 function bf:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
@@ -62,13 +100,31 @@ function bf:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
 end
 
 function bf:OnEnable()
-	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
+	lib = LibStub("LibButtonFacade")
+	self.Buffs = lib:Group("Bollo", "Buffs")
+	self.Debuffs = lib:Group("Bollo", "Buffs")
 
-	for g, table in pairs(self.db.profile) do
-		local group = self[g]
+	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
+	bollo.RegisterCallback(bf, "PostCreateIcon")
+	bollo.RegisterCallback(bf, "PostSetBuff")
+
+	for k, v in pairs(groups) do
+		local group = self[k]
+		local table = self.db.profile[k]
 		group:Skin(table.Skin, table.Gloss, table.Backdrop)
+	end
+
+	for k, v in ipairs(bollo.buffs) do
+		self:PostCreateIcon(nil, nil, v)
+	end
+	for k, v in ipairs(bollo.debuffs) do
+		self:PostCreateIcon(nil, nil, v)
 	end
 end
 
 function bf:OnDisable()
+	self.Print("To unskin the buffs you must reload your interface")
+	lib:UnregisterSkinCallback("Bollo", self.UpdateSkin)
+	bollo.UnregisterCallback(bf, "PostCreateIcon")
+	bollo.UnregisterCallback(bf, "PostSetBuff")
 end
