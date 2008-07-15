@@ -108,7 +108,7 @@ function bf:OnEnable()
 
 	for name in pairs(bollo.icons) do
 		for k, v in ipairs(bollo.icons[name]) do
-			local table = self.db.profile[k]
+			local table = self.db.profile[name]
 			local group = self[name]
 			group:Skin(table.Skin, table.Gloss, table.Backdrop)
 		end
