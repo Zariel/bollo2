@@ -198,9 +198,13 @@ end
 
 function conf:OnInitialize()
 	bollo.options = self:InitCore()
-	self:AddChildOpts("buff")
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", nil, nil, "general")
+end
+
+function conf:OnEnable()
+	self:AddChildOpts("buff")
+	self:AddChildOpts("debuff")
 end
 
 function bollo:AddOptions(module)
