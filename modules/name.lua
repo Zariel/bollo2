@@ -292,10 +292,10 @@ function name:OnDisable()
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 
 	for k, v in ipairs(bollo.buffs) do
-		v.name:Hide()
+		v.text:Hide()
 	end
 	for k, v in ipairs(bollo.debuffs) do
-		v.name:Hide()
+		v.text:Hide()
 	end
 end
 
