@@ -44,7 +44,7 @@ function bollo:OnInitialize()
 
 	local OnUpdate
 	do
-		local timer = 0
+		local timer = 1
 		OnUpdate = function(self, elapsed)
 			timer = timer + elapsed
 			if timer > 0.25 then
