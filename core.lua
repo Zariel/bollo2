@@ -36,6 +36,7 @@ function bollo:OnInitialize()
 				["height"] = 100,
 				["width"] = 350,
 				["rowSpace"] = 20,
+
 			}
 		},
 	}
