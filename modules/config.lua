@@ -277,7 +277,7 @@ local InitCore = function()
 									type = "description",
 								},
 								lock = {
-									order = 12,
+									order = 16,
 									name = "lock",
 									type = "toggle",
 									set = function(info, key)
