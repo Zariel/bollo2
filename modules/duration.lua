@@ -223,6 +223,8 @@ function duration:OnInitialize()
 
 	self.db =  bollo.db:RegisterNamespace("Bollo-Duration", defaults)
 
+	self.count = 2
+
 	self.options = {
 		name = "Duration",
 		type = "group",
@@ -327,7 +329,7 @@ function duration:OnDisable()
 	bollo.UnregisterCallback(self, "PostUpdateConfig")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
 	bollo.db.UnregisterCallback(self, "OnProfileChanged")
-	
+
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
 			v.duration:Hide()
