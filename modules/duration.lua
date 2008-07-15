@@ -14,7 +14,7 @@ do
 	end
 end
 
-function duration:AddOptions(name)
+function duration:AddOptions(name, db)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
@@ -25,7 +25,16 @@ function duration:AddOptions(name)
 
 	local conf = self.options.args.general.args
 	local icons = bollo.icons[name]
-	local db = self.db.profile[name]
+
+	-- Probally not a good idea
+	if db then
+		self.db.profile[name] = db
+	end
+
+	db = db or self.db.profile[name]
+
+	if not db then bollo:Print(name); return end
+
 	conf[name] = {
 		get = function(info)
 			return db[info[# info]]
@@ -368,7 +377,7 @@ end
 function duration:OnUpdate()
 	for name in pairs(RegisteredIcons) do
 		for index, buff in ipairs(bollo.icons[name]) do
-			if not buff:IsShown() then break end
+			if not buff:IsShown() or not buff.duration then break end
 			local timeLeft = buff:GetTimeLeft()
 			if timeLeft and timeLeft > 0 then
 				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))

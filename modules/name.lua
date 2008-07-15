@@ -17,24 +17,30 @@ end
 
 local subs = setmetatable({}, {__mode = "k"})
 
-function name:AddOptions(name)
+function name:AddOptions(name, db)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
 
 	RegisteredIcons[name] = true
 
+	if db then
+		self.db.profile[name] = db
+	end
+
+	db = db or self.db.profile[name]
+
 	self.count = self.count + 1
 
 	local conf = self.options.args.general.args
 	conf[name] = {
 		get = function(info)
-			return self.db.profile[name][info[# info]]
+			return db[info[# info]]
 		end,
 		set = function(info, val)
 			local key = info[# info]
-			self.db.profile[name][key] = val
-			self:UpdateDisplay(nil, name)
+			db[key] = val
+			self:UpdateDisplay(nil, name, db)
 		end,
 		["name"] = name,
 		type = "group",
@@ -108,11 +114,11 @@ function name:AddOptions(name)
 						values = self:GetFonts(),
 						set = function(info, val)
 							local key = info[# info]
-							self.db.profile[name][key] = val
-							self:UpdateDisplay(nil, name)
+							db[key] = val
+							self:UpdateDisplay(nil, name, db)
 						end,
 						get = function(info)
-							local key = self.db.profile[name][info[# info]]
+							local key = db[info[# info]]
 							return key
 						end,
 					},
@@ -130,12 +136,12 @@ function name:AddOptions(name)
 						step = 1,
 						get = function(info)
 							local key = info[# info]
-							return self.db.profile[name][key]
+							return db[key]
 						end,
 						set = function(info, val)
 							local key = info[# info]
-							self.db.profile[name][key] = val
-							self:UpdateDisplay(nil, name)
+							db[key] = val
+							self:UpdateDisplay(nil, name, db)
 						end,
 					},
 					fontStyleDesc = {
@@ -165,16 +171,16 @@ function name:AddOptions(name)
 					order = 7,
 					hasAlpha = true,
 					get = function(info)
-						local t = self.db.profile[name][info[#info]]
+						local t = db[info[#info]]
 						return t.r, t.g, t.b, t.a
 					end,
 					set = function(info, r, g, b, a)
-						local t = self.db.profile[name][info[#info]]
+						local t = db[info[#info]]
 						t.r = r
 						t.g = g
 						t.b = b
 						t.a = a
-						self:UpdateDisplay(name)
+						self:UpdateDisplay(nil, name, db)
 					end,
 					}
 				}
@@ -336,6 +342,7 @@ function name:PostSetBuff(event, buff, index, filter)
 	local tru = truncate(buff)
 	if buff.text:GetText() ~= tru then
 		buff.text:SetText(tru)
+		buff.text:Show()
 	end
 end
 
@@ -362,16 +369,17 @@ function name:PostCreateIcon(event, parent, buff)
 end
 
 
-function name:UpdateDisplay(event, name)
+function name:UpdateDisplay(event, name, db)
 	if not name then
 		return
 	end
+	db = db or self.db.profile[name]
 	for i, buff in ipairs(bollo.icons[name]) do
 		if not buff.text then self:PostSetBuff(nil, buff) end
-		local font, size, flag = self.db.profile[name].font, self.db.profile[name].fontSize, self.db.profile[name].fontStyle
-		local point = self.db.profile[name].point
-		local x, y = self.db.profile[name].x, self.db.profile[name].y
-		local col = self.db.profile[name].color
+		local font, size, flag = db.font, db.fontSize, db.fontStyle
+		local point = db.point
+		local x, y = db.x, db.y
+		local col = db.color
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
