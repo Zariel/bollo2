@@ -71,6 +71,7 @@ function name:OnInitialize()
 				b = 1,
 				a = 1,
 			},
+			["enabled"] = true,
 		}
 	}
 
@@ -221,7 +222,7 @@ function name:OnInitialize()
 									type = "select",
 									values = {
 										["NONE"] = "NONE",
-										["OUTLINE"] = "OUFLINE",
+										["OUTLINE"] = "OUTLINE",
 										["THINOUTLINE"] = "THINOUTLINE",
 										["THICKOUTLINE"] = "THICKOUTLINE",
 									},
