@@ -232,6 +232,27 @@ function duration:OnInitialize()
 				childGroups = "tab",
 				name = "Duration",
 				args = {
+					enableDesc = {
+					name = "Enable or disable the module",
+					type = "description",
+					order = 1,
+					},
+					enable = {
+						name = "Enable",
+						type = "toggle",
+						get = function(info)
+							return self:IsEnabled()
+						end,
+						set = function(info, key)
+							if key then
+								self:Enable()
+							else
+								self:Disable()
+							end
+							self.db.profile.enabled = key
+						end,
+						order = 2,
+					}
 				}
 			}
 		}
@@ -265,6 +286,8 @@ function duration:UpdateDisplay(event, name)
 end
 
 function duration:PostCreateIcon(event, parent, button)
+	if not RegisteredIcons[button.name] then return end
+
 	local db = self.db.profile[button.name]
 	local duration = button:CreateFontString(nil, "OVERLAY")
 	local font, size, flag = db.font, db.fontSize, db.fontStyle
@@ -285,8 +308,9 @@ function duration:OnEnable()
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
 			self:PostCreateIcon(nil, bollo.icons[name], v)
+			v.duration:Show()
 		end
-		self:UpdateDisplay(name)
+		self:UpdateDisplay(nil, name)
 	end
 
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
@@ -345,7 +369,7 @@ function duration:OnUpdate()
 			if not buff:IsShown() then break end
 			local timeLeft = buff:GetTimeLeft()
 			if timeLeft and timeLeft > 0 then
-				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
+				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))
 				buff.duration:Show()
 			else
 				buff.duration:Hide()
