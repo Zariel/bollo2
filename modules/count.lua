@@ -36,6 +36,8 @@ function Count:PostCreateIcon(event, parent, buff)
 	local x, y = db.x, db.y
 	local col = db.color
 
+	local anchor, relative, mod = bollo:GetPoint(point)
+
 	f:SetFont(font, size, flag)
 	f:SetTextColor(col.r, col.g, col.b, col.a)
 	f:ClearAllPoints()
@@ -44,7 +46,7 @@ function Count:PostCreateIcon(event, parent, buff)
 	buff.count = f
 end
 
-function duration:AddOptions(name)
+function Count:AddOptions(name)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
@@ -299,7 +301,7 @@ function Count:OnEnable()
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
 			self:PostCreateIcon(nil, bollo.icons[name], v)
-			v.duration:Show()
+			v.count:Show()
 		end
 		self:UpdateDisplay(nil, name)
 	end
@@ -313,6 +315,12 @@ function Count:OnEnable()
 end
 
 function Count:OnDisable()
+	for name in pairs(RegisteredIcons) do
+		for k, v in ipairs(bollo.icons[name]) do
+			v.count:Hide()
+		end
+	end
+
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "PostSetBuff")
 	bollo.UnregisterCallback(self, "PostUpdateConfig")
@@ -326,7 +334,6 @@ function Count:UpdateDisplay(event, name)
 	for i, buff in ipairs(bollo.icons[name]) do
 		if not buff.text then break end
 		local db = self.db.profile[buff.name]
-		local duration = button:CreateFontString(nil, "OVERLAY")
 		local font, size, flag = db.font, db.fontSize, db.fontStyle
 		local point = db.point
 		local x, y = db.x, db.y
