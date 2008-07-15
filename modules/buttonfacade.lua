@@ -107,11 +107,13 @@ function bf:OnEnable()
 	bollo.RegisterCallback(bf, "PostUpdateConfig", "OnEnable")
 
 	for name in pairs(bollo.icons) do
-		local table = self.db.profile[name]
 		local group = self[name]
-		group:Skin(table.Skin, table.Gloss, table.Backdrop)
-		for k, v in ipairs(bollo.icons[name]) do
-			self:PostCreateIcon(nil, nil, v)
+		if group then
+			local table = self.db.profile[name]
+			group:Skin(table.Skin, table.Gloss, table.Backdrop)
+			for k, v in ipairs(bollo.icons[name]) do
+				self:PostCreateIcon(nil, nil, v)
+			end
 		end
 	end
 end
