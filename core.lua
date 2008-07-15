@@ -42,6 +42,12 @@ function bollo:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "default")
 	self.events = LibStub("CallbackHandler-1.0"):New(bollo)
 
+	self.icons = setmetatable({}, {
+		__newindex = function(t, key, val)
+			rawset(t, key, val)
+		end
+	})
+
 	local OnUpdate
 	do
 		local timer = 1
@@ -69,11 +75,7 @@ end
 
 function bollo:OnEnable()
 	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
-	self.icons = setmetatable({}, {
-		__newindex = function(t, key, val)
-			rawset(t, key, val)
-		end
-	})
+
 	self.icons.buff = setmetatable({}, {__tostring = function() return "buff" end})
 	self.icons.debuff =setmetatable({}, {__tostring = function() return "debuff" end})
 
@@ -261,7 +263,6 @@ function bollo:PLAYER_AURAS_CHANGED()
 end
 
 function bollo:UpdateSettings(table)
-	local bf = self:GetModule("ButtonFacade", true)
 	local name = tostring(table)
 	table.bg:SetHeight(self.db.profile[name].height)
 	table.bg:SetWidth(self.db.profile[name].width)
@@ -277,10 +278,6 @@ function bollo:UpdateSettings(table)
 	end
 
 	self:SortBuffs(table)
-
-	if bf then
-		bf:OnEnable()
-	end
 
 	self.events:Fire("PostUpdateConfig", name)
 end

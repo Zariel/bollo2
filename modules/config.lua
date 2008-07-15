@@ -23,7 +23,7 @@ function conf:AddChildOpts(name)
 		error("Bad argument to #1 :AddChildOpts, expected string")
 	end
 
-	if self.conf.general.args[name] then return end -- Already added.
+	if bollo.options.args.general.args[name] then return end -- Already added.
 
 	local c = bollo.options.args.general.args
 	local db = bollo.db.profile[name]
