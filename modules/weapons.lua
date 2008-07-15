@@ -17,6 +17,38 @@ function Weapon:OnInitialize()
 				["width"] = 350,
 				["rowSpace"] = 20,
 				["enabled"] = true,
+				["Name"] = {
+					["Description"] = "Shows truncated names of buffs",
+					["font"] = STANDARD_TEXT_FONT,
+					["fontStyle"] = "OUTLINE",
+					["fontSize"] = 9,
+					["x"] = 0,
+					["y"] = 0,
+					["point"] = "BOTTOM",
+					["color"] = {
+						r = 1,
+						g = 1,
+						b = 1,
+						a = 1,
+					},
+					["enabled"] = true,
+				},
+				["Duration"] = {
+					["Description"] = "Show buff durations",
+					["point"] = "TOP",
+					["font"] = STANDARD_TEXT_FONT,
+					["fontSize"] = 9,
+					["fontStyle"] = "OUTLINE",
+					["x"] = 0,
+					["y"] = 0,
+					["format"] = "M:SS",
+					["color"] = {
+						r = 1,
+						g = 1,
+						b = 1,
+						a = 1,
+					}
+				},
 			}
 		}
 	}
@@ -28,13 +60,34 @@ function Weapon:OnInitialize()
 	self:SetEnabledState(self.db.profile.enabled)
 end
 
+local GetTimeLeft = function(self)
+	local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges = GetWeaponEnchantInfo()
+
+	local id = self:GetID()
+	if id == 16 then
+		return hasMainHandEnchant and mainHandExpiration / 1000 or 0
+	else
+		return hasOffHandEnchant and offHandExpiration / 1000 or 0
+	end
+end
+
+local GetBuff = function(self)
+	if GetInventoryItemLink("player", self:GetID()) then
+		return GetItemInfo(GetInventoryItemLink("player", self:GetID()))
+	else
+		return ""
+	end
+end
+
 function Weapon:OnEnable()
 	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateConfig")
 
 	if not bollo.icons.weapon[1] then
 		for i = 1, 2 do
-			local button =	bollo:CreateIcon(bollo.icons.weapon, Weapon.db.profile.weapon)
+			local button = bollo:CreateIcon(bollo.icons.weapon, Weapon.db.profile.weapon)
 			button:SetID(15 + i)
+			button.GetBuff = GetBuff
+			button.GetTimeLeft = GetTimeLeft
 			button:SetScript("OnEnter", function(self)
 				if self:IsVisible() then
 					GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
