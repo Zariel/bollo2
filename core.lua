@@ -135,6 +135,12 @@ function bollo:OnEnable()
 
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
+
+	local Update = function(self)
+		bollo:UpdateSettings(bollo.buffs)
+		bollo:UpdateSettings(bollo.debuffs)
+	end
+	self.db.RegisterCallback("", "OnProfileChanged", Update)
 end
 
 local SortFunc = function(a, b)
@@ -164,6 +170,14 @@ function bollo:GetPoint(point)
 	elseif point == "CENTER" then
 		relative = "CENTER"
 		anchor = "CENTER"
+		mod = 1
+	elseif point == "LEFT" then
+		relative = "LEFT"
+		anchor = "RIGHT"
+		mod = 1
+	elseif point == "RIGHT" then
+		relative = "RIGHT"
+		anchor = "LEFT"
 		mod = 1
 	end
 	return anchor, relative, mod
