@@ -178,6 +178,7 @@ end
 
 function Weapon:OnEnable()
 	self.weapon = self.weapon or setmetatable({}, {__tostring = function() return "weapon" end})
+	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateConfig")
 
 	if not self.weapon[1] then
 		for i = 1, 2 do
@@ -234,6 +235,7 @@ end
 
 function Weapon:OnDisable()
 	bollo.UnregisterCallback(self, "OnUpdate")
+	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 	self.weapon.bg:Hide()
 	for k, v in ipairs(self.weapon) do
 		v:Hide()

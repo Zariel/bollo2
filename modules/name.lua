@@ -265,6 +265,7 @@ end
 function name:OnEnable()
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "PostSetBuff")
+	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 	self:GetFonts()
 
@@ -284,6 +285,7 @@ end
 function name:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "PostSetBuff")
+	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 
 	for k, v in ipairs(bollo.buffs) do

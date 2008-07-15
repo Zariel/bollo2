@@ -271,6 +271,7 @@ end
 function Count:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "PostSetBuff")
+	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 
 	for k, v in ipairs(bollo.buffs) do
