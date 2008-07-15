@@ -115,6 +115,7 @@ function Count:OnInitialize()
 								["BOTTOM"] = "BOTTOM",
 								["CENTER"] = "CENTER",
 								["LEFT"] = "LEFT",
+								["RIGHT"] = "RIGHT",
 							}
 						},
 						xDesc = {
@@ -250,6 +251,7 @@ end
 function Count:OnEnable()
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "PostSetBuff")
+	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 	self:GetFonts()
 
