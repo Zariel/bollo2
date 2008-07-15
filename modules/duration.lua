@@ -14,12 +14,10 @@ do
 	end
 end
 
-function name:AddOptions(name)
+function duration:AddOptions(name)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
-
-	RegisteredIcons[name] = true
 
 	self.count = (self.count or 0) + 1
 
