@@ -39,7 +39,7 @@ function bollo:OnInitialize()
 			}
 		},
 	}
-	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "char")
+	self.db = LibStub("AceDB-3.0"):New("BolloDB", defaults, "default")
 	self.events = LibStub("CallbackHandler-1.0"):New(bollo)
 
 	local OnUpdate
