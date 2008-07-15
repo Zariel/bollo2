@@ -69,7 +69,11 @@ end
 
 function bollo:OnEnable()
 	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
-	self.icons = setmetatable({}, {__newindex = function(self, key) end})
+	self.icons = setmetatable({}, {
+		__newindex = function(t, key, val)
+			rawset(t, key, val)
+		end
+	})
 	self.icons.buff = setmetatable({}, {__tostring = function() return "buff" end})
 	self.icons.debuff =setmetatable({}, {__tostring = function() return "debuff" end})
 
@@ -278,5 +282,5 @@ function bollo:UpdateSettings(table)
 		bf:OnEnable()
 	end
 
-	self.events:Fire("PostUpdateConfig")
+	self.events:Fire("PostUpdateConfig", name)
 end
