@@ -1,6 +1,8 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 local name = bollo:NewModule("Name")
 
+local RegisteredIcons = {}
+
 local SML = LibStub("LibSharedMedia-3.0")
 
 do
@@ -31,7 +33,7 @@ end
 
 function name:PostSetBuff(event, buff, index, filter)
 	local tru = truncate(buff)
-	if buff.text:GetText() ~= tru then
+	if buff.text and buff.text:GetText() ~= tru then
 		buff.text:SetText(tru)
 	end
 end
@@ -41,11 +43,14 @@ function name:PostCreateIcon(event, parent, buff)
 
 	local f = buff:CreateFontString(nil, "OVERLAY")
 
-	local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
-	local point = self.db.profile.point
-	local x, y = self.db.profile.x, self.db.profile.y
+	local name = tostring(parent)
+	bollo:Print(name, RegisteredIcons[name])
+	if not RegisteredIcons[name] then return end
+	local font, size, flag = self.db.profile[name].font, self.db.profile[name].fontSize, self.db.profile[name].fontStyle
+	local point = self.db.profile[name].point
+	local x, y = self.db.profile[name].x, self.db.profile[name].y
 	local anchor, relative, mod = bollo:GetPoint(point)
-	local col = self.db.profile.color
+	local col = self.db.profile[name].color
 
 	f:SetFont(font, size, flag)
 	f:SetTextColor(col.r, col.g, col.b, col.a)
@@ -58,6 +63,7 @@ end
 function name:OnInitialize()
 	local defaults = {
 		profile = {
+			buff = {
 			["Description"] = "Shows truncated names of buffs",
 			["font"] = STANDARD_TEXT_FONT,
 			["fontStyle"] = "OUTLINE",
@@ -72,6 +78,7 @@ function name:OnInitialize()
 				a = 1,
 			},
 			["enabled"] = true,
+			}
 		}
 	}
 
@@ -83,8 +90,9 @@ function name:OnInitialize()
 			type = "group",
 			args = {
 				general = {
-					name = self.db.profile.Description,
+					name = "Name module",
 					type = "group",
+					childGroups = "tab",
 					order = 1,
 					set = function(info, val)
 						local key = info[# info]
@@ -96,176 +104,201 @@ function name:OnInitialize()
 						return self.db.profile[key]
 					end,
 					args = {
-						info = {
-							name = "Display Truncated name of buffs",
-							type = "description",
-							order = 1,
-						},
-						enable = {
-							name = "Enable",
-							type = "toggle",
-							get = function(info)
-								return self:IsEnabled()
-							end,
-							set = function(info, key)
-								if key then
-									self:Enable()
-								else
-									self:Disable()
-								end
-								self.db.profile.enabled = key
-							end,
-							order = 2
-						},
-						pointdesc = {
-							name = "Set Where to show the name",
-							type = "description",
-							order = 3,
-						},
-						point = {
-							name = "point",
-							type = "select",
-							order = 4,
-							values = {
-								["TOP"] = "TOP",
-								["BOTTOM"] = "BOTTOM",
-								["CENTER"] = "CENTER",
-							}
-						},
-						xDesc = {
-							name = "Set the X position of the name",
-							type = "description",
-							order = 5,
-						},
-						x = {
-							order = 7,
-							name = "X position",
-							type = "range",
-							min = -10,
-							max = 10,
-							step = 1,
-						},
-						yDesc = {
-							name = "Set the Y position of the name",
-							type = "description",
-							order = 7,
-						},
-						y = {
-							order = 8,
-							name = "Y Position",
-							type = "range",
-							min = -10,
-							max = 10,
-							step = 1,
-						},
-						fontDesc = {
-							name = "Set the font",
-							type = "description",
-							order = 8,
-						},
-						fonts = {
-							name = "Fonts",
-							guiInline = true,
-							type = "group",
-							order = 9,
-							args = {
-								fontDesc = {
-									name = "Set the font, uses SharedMedia-3.0",
-									type = "description",
-									order = 1,
-								},
-								font = {
-									order = 2,
-									name = "Font",
-									type = "select",
-									values = self:GetFonts(),
-									set = function(info, val)
-										local key = info[# info]
-										self.db.profile[key] = val
-										self:UpdateDisplay()
-									end,
-									get = function(info)
-										local key = self.db.profile[info[# info]]
-										return key
-									end,
-								},
-								fontSizeDesc = {
-									order = 3,
-									type = "description",
-									name = "Set the font Size",
-								},
-								fontSize = {
-									order = 4,
-									name = "Font Size",
-									type = "range",
-									min = 4,
-									max = 30,
-									step = 1,
-									get = function(info)
-										local key = info[# info]
-										return self.db.profile[key]
-									end,
-									set = function(info, val)
-										local key = info[# info]
-										self.db.profile[key] = val
-										self:UpdateDisplay()
-									end,
-								},
-								fontStyleDesc = {
-									order = 5,
-									name = "Set the font style (flags)",
-									type = "description",
-								},
-								fontStyle = {
-									order = 6,
-									name = "Font Style",
-									type = "select",
-									values = {
-										["NONE"] = "NONE",
-										["OUTLINE"] = "OUTLINE",
-										["THINOUTLINE"] = "THINOUTLINE",
-										["THICKOUTLINE"] = "THICKOUTLINE",
-									},
-								},
-								colorDesc = {
-									order = 6,
-									name = "Set the color of the font",
-									type = "description",
-								},
-								color = {
-									type = "color",
-									name = "color",
-									order = 7,
-									hasAlpha = true,
-									get = function(info)
-										local t = self.db.profile[info[#info]]
-										return t.r, t.g, t.b, t.a
-									end,
-									set = function(info, r, g, b, a)
-										local t = self.db.profile[info[#info]]
-										t.r = r
-										t.g = g
-										t.b = b
-										t.a = a
-										self:UpdateDisplay()
-									end,
-								},
-							},
-						},
-					},
+					}
 				},
 			},
 		}
 	end
 
+	function name:AddOptions(name)
+		-- Name must be the referance to everything else, ie if name
+		-- is Buffs then settings are created for bollo.Buffs etc.
+		if self.options.args.general.args[name] then return end      -- Already have it
+
+		RegisteredIcons[name] = true
+
+		local conf = self.options.args.general.args
+		conf[name] = {
+			get = function(info)
+				return self.db.profile[name][info[# info]]
+			end,
+			set = function(info, val)
+				local key = info[# info]
+				self.db.profile[name][key] = val
+				self:UpdateDisplay(name)
+			end,
+			["name"] = name,
+			type = "group",
+			args = {
+				info = {
+					name = "Display Truncated name of " .. name,
+					type = "description",
+					order = 1,
+				},
+			--[[	enable = {
+					name = "Enable",
+					type = "toggle",
+					get = function(info)
+						return self:IsEnabled()
+					end,
+					set = function(info, key)
+						if key then
+							self:Enable()
+						else
+							self:Disable()
+						end
+						self.db.profile[name].enabled = key
+					end,
+					order = 2
+				},]]
+				pointdesc = {
+					name = "Set Where to show the name",
+					type = "description",
+					order = 3,
+				},
+				point = {
+					name = "point",
+					type = "select",
+					order = 4,
+					values = {
+						["TOP"] = "TOP",
+						["BOTTOM"] = "BOTTOM",
+						["CENTER"] = "CENTER",
+					}
+				},
+				xDesc = {
+					name = "Set the X position of the name",
+					type = "description",
+					order = 5,
+				},
+				x = {
+					order = 7,
+					name = "X position",
+					type = "range",
+					min = -10,
+					max = 10,
+					step = 1,
+				},
+				yDesc = {
+					name = "Set the Y position of the name",
+					type = "description",
+					order = 7,
+				},
+				y = {
+					order = 8,
+					name = "Y Position",
+					type = "range",
+					min = -10,
+					max = 10,
+					step = 1,
+				},
+				fontDesc = {
+					name = "Set the font",
+					type = "description",
+					order = 8,
+				},
+				fonts = {
+					name = "Fonts",
+					guiInline = true,
+					type = "group",
+					order = 9,
+					args = {
+						fontDesc = {
+							name = "Set the font, uses SharedMedia-3.0",
+							type = "description",
+							order = 1,
+						},
+						font = {
+							order = 2,
+							name = "Font",
+							type = "select",
+							values = self:GetFonts(),
+							set = function(info, val)
+								local key = info[# info]
+								self.db.profile[name][key] = val
+								self:UpdateDisplay()
+							end,
+							get = function(info)
+								local key = self.db.profile[name][info[# info]]
+								return key
+							end,
+						},
+						fontSizeDesc = {
+							order = 3,
+							type = "description",
+							name = "Set the font Size",
+						},
+						fontSize = {
+							order = 4,
+							name = "Font Size",
+							type = "range",
+							min = 4,
+							max = 30,
+							step = 1,
+							get = function(info)
+								local key = info[# info]
+								return self.db.profile[name][key]
+							end,
+							set = function(info, val)
+								local key = info[# info]
+								self.db.profile[name][key] = val
+								self:UpdateDisplay()
+							end,
+						},
+						fontStyleDesc = {
+							order = 5,
+							name = "Set the font style (flags)",
+							type = "description",
+						},
+						fontStyle = {
+							order = 6,
+							name = "Font Style",
+							type = "select",
+							values = {
+								["NONE"] = "NONE",
+							["OUTLINE"] = "OUTLINE",
+							["THINOUTLINE"] = "THINOUTLINE",
+							["THICKOUTLINE"] = "THICKOUTLINE",
+						},
+					},
+					colorDesc = {
+						order = 6,
+						name = "Set the color of the font",
+						type = "description",
+					},
+					color = {
+						type = "color",
+						name = "color",
+						order = 7,
+						hasAlpha = true,
+						get = function(info)
+							local t = self.db.profile[name][info[#info]]
+							return t.r, t.g, t.b, t.a
+						end,
+						set = function(info, r, g, b, a)
+							local t = self.db.profile[name][info[#info]]
+							t.r = r
+							t.g = g
+							t.b = b
+							t.a = a
+							self:UpdateDisplay()
+						end,
+						}
+					}
+				},
+			},
+		}
+	end
+
+	self:AddOptions("buff")
 	bollo:AddOptions(self)
-	self:SetEnabledState(self.db.profile.enabled)
+	--self:SetEnabledState(self.db.profile.enabled)
 end
 
 function name:OnEnable()
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "PostSetBuff")
-	bollo.RegisterCallback(self, "PostUpdateConfig", "UpdateDisplay")
+	--bollo.RegisterCallback(self, "PostUpdateConfig", "UpdateDisplay")
 	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 	self:GetFonts()
@@ -299,13 +332,16 @@ function name:OnDisable()
 	end
 end
 
-function name:UpdateDisplay()
-	for i, buff in ipairs(bollo.buffs) do
+function name:UpdateDisplay(name)
+	if not name then
+		return
+	end
+	for i, buff in ipairs(bollo[name]) do
 		if not buff.text then break end
-		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
-		local point = self.db.profile.point
-		local x, y = self.db.profile.x, self.db.profile.y
-		local col = self.db.profile.color
+		local font, size, flag = self.db.profile[name].font, self.db.profile[name].fontSize, self.db.profile[name].fontStyle
+		local point = self.db.profile[name].point
+		local x, y = self.db.profile[name].x, self.db.profile[name].y
+		local col = self.db.profile[name].color
 
 		local anchor, relative, mod = bollo:GetPoint(point)
 
@@ -314,6 +350,7 @@ function name:UpdateDisplay()
 		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 		buff.text:SetTextColor(col.r, col.g, col.b, col.a)
 	end
+	--[[
 	for i, buff in ipairs(bollo.debuffs) do
 		if not buff.text then break end
 		local font, size, flag = self.db.profile.font, self.db.profile.fontSize, self.db.profile.fontStyle
@@ -328,4 +365,5 @@ function name:UpdateDisplay()
 		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 		buff.text:SetTextColor(col.r, col.g, col.b, col.a)
 	end
+	]]
 end
