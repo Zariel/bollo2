@@ -311,13 +311,22 @@ end
 function duration:FormatTime(type, time)
 	local hr, m, s, text
 	if type == "M:SS" then
+		text = "%d:%02.f"
+		if time > 3600 then
+			hr = math.floor(time / 3600)
+			m = math.floor(math.fmod(time, 3600))
+			return text, hr, m
+		end
+
 		m = math.floor(time/60)
 		s = math.floor(math.fmod(time, 60))
-		text = "%d:%02.f"
 		return text, m, s
 	elseif type == "MM" then
-		if time > 60 then
-			m = math.floor(mod(time, 3600) / 60)
+		if time > 3600 then
+			m = math.floor(time / 3600)
+			text = "%dhr"
+		elseif time > 60 then
+			m = math.floor(mod(time, 3600))
 			text = "%dm"
 		else
 			m = time
