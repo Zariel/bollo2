@@ -3,11 +3,6 @@ local bf = bollo:NewModule("ButtonFacade", "AceConsole-3.0")
 local lib
 local SetVertexColor
 
-local groups = {
-	["Buffs"] = true,
-	["Debuffs"] = true
-}
-
 function bf:PostCreateIcon(event, parent, button)
 	local debuff = button.debuff
 
@@ -39,8 +34,10 @@ end
 function bf:OnInitialize()
 	local defaults = {
 		profile = {
-			Debuffs = {},
-			Buffs = {},
+			debuff = {
+			},
+			buff = {
+			},
 			enabled = true,
 		}
 	}
@@ -101,24 +98,20 @@ end
 
 function bf:OnEnable()
 	lib = LibStub("LibButtonFacade")
-	self.Buffs = self.Buffs or lib:Group("Bollo", "Buffs")
-	self.Debuffs = self.Debuffs or lib:Group("Bollo", "Buffs")
+	self.buff = self.buff or lib:Group("Bollo", "buff")
+	self.debuff = self.debuff or lib:Group("Bollo", "buff")
 
 	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
 	bollo.RegisterCallback(bf, "PostCreateIcon")
 	bollo.RegisterCallback(bf, "PostSetBuff")
+	bollo.RegisterCallback(bf, "PostUpdateConfig", "OnEnable")
 
-	for k, v in pairs(groups) do
-		local group = self[k]
-		local table = self.db.profile[k]
-		group:Skin(table.Skin, table.Gloss, table.Backdrop)
-	end
-
-	for k, v in ipairs(bollo.buffs) do
-		self:PostCreateIcon(nil, nil, v)
-	end
-	for k, v in ipairs(bollo.debuffs) do
-		self:PostCreateIcon(nil, nil, v)
+	for name in pairs(bollo.icons) do
+		for k, v in ipairs(bollo.icons[name]) do
+			local table = self.db.profile[k]
+			local group = self[name]
+			group:Skin(table.Skin, table.Gloss, table.Backdrop)
+		end
 	end
 end
 
@@ -127,4 +120,5 @@ function bf:OnDisable()
 	lib:UnregisterSkinCallback("Bollo", self.UpdateSkin)
 	bollo.UnregisterCallback(bf, "PostCreateIcon")
 	bollo.UnregisterCallback(bf, "PostSetBuff")
+	bollo.RegisterCallback(bf, "PostUpdateConfig")
 end
