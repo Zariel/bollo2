@@ -144,8 +144,12 @@ function bollo:OnEnable()
 	self:PLAYER_AURAS_CHANGED()
 
 	local Update = function(self)
-		for k, v in pairs(self.icons) do
-			bollo:UpdateSettings(v)
+		for name in pairs(self.icons) do
+			for k, v in pairs(self.icons[name]) do
+				if v.UpdateSettings then
+					bollo:UpdateSettings(v)
+				end
+			end
 		end
 	end
 	self.db.RegisterCallback("", "OnProfileChanged", Update)
@@ -262,13 +266,13 @@ function bollo:PLAYER_AURAS_CHANGED()
 	self:SortBuffs(self.icons.debuff, max - 1)
 end
 
-function bollo:UpdateSettings(table)
+function bollo:UpdateSettings(table, db)
 	local name = tostring(table)
-	table.bg:SetHeight(self.db.profile[name].height)
-	table.bg:SetWidth(self.db.profile[name].width)
+	table.bg:SetHeight(db and db.height or self.db.profile[name].height)
+	table.bg:SetWidth(db and db.width or self.db.profile[name].width)
 
 	for index, buff in ipairs(table) do
-		local size = self.db.profile[name].size
+		local size = db and db.size or self.db.profile[name].size
 		buff:SetHeight(size)
 		buff:SetWidth(size)
 		buff.border:ClearAllPoints()
@@ -277,7 +281,9 @@ function bollo:UpdateSettings(table)
 		buff.icon:SetAllPoints(buff)
 	end
 
-	self:SortBuffs(table)
+	if self.db.profile[name] then
+		self:SortBuffs(table)
+	end
 
 	self.events:Fire("PostUpdateConfig", name)
 end

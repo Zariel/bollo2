@@ -37,7 +37,7 @@ function conf:AddChildOpts(name, db)
 		set = function(info, val)
 			local key = info[# info]
 			db[key] = val
-			bollo:UpdateSettings(icons)
+			bollo:UpdateSettings(icons, db)
 		end,
 		get = function(info)
 			local key = info[# info]
