@@ -44,7 +44,6 @@ function name:AddOptions(name)
 				type = "description",
 				order = self.count,
 			},
-
 			pointdesc = {
 				name = "Set Where to show the name",
 				type = "description",
