@@ -114,6 +114,7 @@ function Count:OnInitialize()
 								["TOP"] = "TOP",
 								["BOTTOM"] = "BOTTOM",
 								["CENTER"] = "CENTER",
+								["LEFT"] = "LEFT",
 							}
 						},
 						xDesc = {
@@ -125,8 +126,8 @@ function Count:OnInitialize()
 							order = 7,
 							name = "X position",
 							type = "range",
-							min = -10,
-							max = 10,
+							min = -25,
+							max = 25,
 							step = 1,
 						},
 						yDesc = {
@@ -138,8 +139,8 @@ function Count:OnInitialize()
 							order = 8,
 							name = "Y Position",
 							type = "range",
-							min = -10,
-							max = 10,
+							min = -25,
+							max = 25,
 							step = 1,
 						},
 						fontDesc = {
@@ -262,6 +263,7 @@ function Count:OnEnable()
 		self:PostSetBuff(nil, v)
 		v.count:Show()
 	end
+	self:UpdateDisplay()
 end
 
 function Count:OnDisable()
