@@ -150,7 +150,7 @@ function name:AddOptions(name)
 						type = "select",
 						values = {
 							["NONE"] = "NONE",
-			w				["OUTLINE"] = "OUTLINE",
+							["OUTLINE"] = "OUTLINE",
 							["THINOUTLINE"] = "THINOUTLINE",
 							["THICKOUTLINE"] = "THICKOUTLINE",
 						},
