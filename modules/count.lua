@@ -251,6 +251,7 @@ end
 function Count:OnEnable()
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "PostSetBuff")
+	bollo.RegisterCallback(self, "PostUpdateConfig", "UpdateDisplay")
 	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 	self:GetFonts()
@@ -271,6 +272,7 @@ end
 function Count:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "PostSetBuff")
+	bollo.UnregisterCallback(self, "PostUpdateConfig")
 	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 

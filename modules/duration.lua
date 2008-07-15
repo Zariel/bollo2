@@ -286,6 +286,7 @@ function duration:OnEnable()
 	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "OnUpdate")
+	bollo.RegisterCallback(self, "PostUpdateConfig", "UpdateDisplay")
 
 	for k, v in ipairs(bollo.buffs) do
 		self:PostCreateIcon(nil, bollo.buffs, v)
@@ -298,6 +299,7 @@ end
 function duration:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "OnUpdate")
+	bollo.UnregisterCallback(self, "PostUpdateConfig")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
 	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 

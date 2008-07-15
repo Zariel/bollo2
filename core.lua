@@ -210,6 +210,7 @@ function bollo:SortBuffs(icons, max)
 			offset = offset + 1
 		end
 	end
+	self.events:Fire("PostPositionIcons", icons)
 end
 
 function bollo:UpdateIcons(i, parent, filter)
@@ -274,6 +275,6 @@ function bollo:UpdateSettings(table)
 	if bf then
 		bf:OnEnable()
 	end
+
+	self.events:Fire("PostUpdateConfig")
 end
-
-

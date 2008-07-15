@@ -101,8 +101,8 @@ end
 
 function bf:OnEnable()
 	lib = LibStub("LibButtonFacade")
-	self.Buffs = lib:Group("Bollo", "Buffs")
-	self.Debuffs = lib:Group("Bollo", "Buffs")
+	self.Buffs = self.Buffs or lib:Group("Bollo", "Buffs")
+	self.Debuffs = self.Debuffs or lib:Group("Bollo", "Buffs")
 
 	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
 	bollo.RegisterCallback(bf, "PostCreateIcon")
