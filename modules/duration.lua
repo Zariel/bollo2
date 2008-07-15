@@ -283,6 +283,7 @@ function duration:OnEnable()
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 	self:GetFonts()
 
+	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "OnUpdate")
 
@@ -298,6 +299,7 @@ function duration:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "OnUpdate")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
+	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 
 	for k, v in ipairs(bollo.buffs) do
 		v.duration:Hide()
@@ -353,10 +355,10 @@ function duration:OnUpdate()
 		local timeLeft = buff:GetTimeLeft()
 
 		if timeLeft and timeLeft > 0 then
-				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
-				buff.duration:Show()
-			else
-				buff.duration:Hide()
-			end
+			buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile.format, timeLeft))
+			buff.duration:Show()
+		else
+			buff.duration:Hide()
+		end
 	end
 end
