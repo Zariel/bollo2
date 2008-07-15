@@ -214,23 +214,43 @@ end
 function Count:OnInitialize()
 	local defaults = {
 		profile = {
-			["Description"] = "Shows count of buffs/debuffs",
-			["font"] = STANDARD_TEXT_FONT,
-			["fontStyle"] = "OUTLINE",
-			["fontSize"] = 9,
-			["x"] = 0,
-			["y"] = 0,
-			["point"] = "CENTER",
-			["color"] = {
-				r = 1,
-				g = 1,
-				b = 1,
-				a = 1,
+			enabled = true,
+			buff = {
+				["Description"] = "Shows count of buffs/debuffs",
+				["font"] = STANDARD_TEXT_FONT,
+				["fontStyle"] = "OUTLINE",
+				["fontSize"] = 9,
+				["x"] = 0,
+				["y"] = 0,
+				["point"] = "CENTER",
+				["color"] = {
+					r = 1,
+					g = 1,
+					b = 1,
+					a = 1,
+				},
+			},
+			debuff = {
+				["Description"] = "Shows count of buffs/debuffs",
+				["font"] = STANDARD_TEXT_FONT,
+				["fontStyle"] = "OUTLINE",
+				["fontSize"] = 9,
+				["x"] = 0,
+				["y"] = 0,
+				["point"] = "CENTER",
+				["color"] = {
+					r = 1,
+					g = 1,
+					b = 1,
+					a = 1,
+				},
 			},
 		}
 	}
 
 	self.db = bollo.db:RegisterNamespace("Bollo-Count", defaults)
+
+	self.count = 2
 
 	if not self.options then
 		self.options = {
@@ -242,6 +262,27 @@ function Count:OnInitialize()
 					childGroups = "tab",
 					name = "Count",
 					args = {
+						enableDesc = {
+						name = "Enable or disable the module",
+						type = "description",
+						order = 1,
+					},
+					enable = {
+						name = "Enable",
+						type = "toggle",
+						get = function(info)
+							return self:IsEnabled()
+						end,
+						set = function(info, key)
+							if key then
+								self:Enable()
+							else
+								self:Disable()
+							end
+							self.db.profile.enabled = key
+						end,
+						order = 2,
+						}
 					}
 				}
 			}
