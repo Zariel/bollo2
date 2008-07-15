@@ -16,9 +16,9 @@ function bf:PostCreateIcon(event, parent, button)
 	}
 
 	if debuff then
-		self.Debuffs:AddButton(button, data)
+		self.debuff:AddButton(button, data)
 	else
-		self.Buffs:AddButton(button, data)
+		self.buff:AddButton(button, data)
 	end
 	self:PostSetBuff(nil, button)
 end
