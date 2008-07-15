@@ -236,7 +236,7 @@ function name:OnInitialize()
 					name = "Name module",
 					type = "group",
 					childGroups = "tab",
-					order = 1,
+					order = self.count,
 					set = function(info, val)
 						local key = info[# info]
 						self.db.profile[key] = val
