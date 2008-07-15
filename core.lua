@@ -69,8 +69,9 @@ end
 
 function bollo:OnEnable()
 	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
-	self.buffs = setmetatable({}, {__tostring = function() return "buff" end})
-	self.debuffs =setmetatable({}, {__tostring = function() return "debuff" end})
+	self.icons = setmetatable({}, {__newindex = function(self, key) end})
+	self.icons.buff = setmetatable({}, {__tostring = function() return "buff" end})
+	self.icons.debuff =setmetatable({}, {__tostring = function() return "debuff" end})
 
 	local bf = _G["BuffFrame"]
 	bf:UnregisterAllEvents()
@@ -137,8 +138,9 @@ function bollo:OnEnable()
 	self:PLAYER_AURAS_CHANGED()
 
 	local Update = function(self)
-		bollo:UpdateSettings(bollo.buffs)
-		bollo:UpdateSettings(bollo.debuffs)
+		for k, v in pairs(self.icons) do
+			bollo:UpdateSettings(v)
+		end
 	end
 	self.db.RegisterCallback("", "OnProfileChanged", Update)
 end
@@ -232,26 +234,26 @@ end
 function bollo:PLAYER_AURAS_CHANGED()
 	local max = 1
 	for i = 1, 40 do
-		if not self:UpdateIcons(i, self.buffs, "HELPFUL") then
-			for a = i,  #self.buffs do
-				self.buffs[a]:Hide()
+		if not self:UpdateIcons(i, self.icons.buff, "HELPFUL") then
+			for a = i,  #self.icons.buffs do
+				self.icons.buffs[a]:Hide()
 			end
 			break
 		end
 		max = max + 1
 	end
-	self:SortBuffs(self.buffs, max - 1)
+	self:SortBuffs(self.icons.buff, max - 1)
 	max = 1
 	for i = 1, 40 do
-		if not self:UpdateIcons(i, self.debuffs, "HARMFUL") then
-			for a = i,  #self.debuffs do
-				self.debuffs[a]:Hide()
+		if not self:UpdateIcons(i, self.icons.debuff, "HARMFUL") then
+			for a = i,  #self.icons.debuffs do
+				self.icons.debuffs[a]:Hide()
 			end
 			break
 		end
 		max = max + 1
 	end
-	self:SortBuffs(self.debuffs, max - 1)
+	self:SortBuffs(self.icons.debuff, max - 1)
 end
 
 function bollo:UpdateSettings(table)
