@@ -105,7 +105,7 @@ function bollo:OnEnable()
 
 	bbg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", bollo.db.profile.buff.x, bollo.db.profile.buff.y)
 
-	self.buffs.bg = bbg
+	self.icons.buff.bg = bbg
 
 	local dbg = CreateFrame("Frame")
 	dbg:SetWidth(bollo.db.profile.debuff.width)
@@ -132,7 +132,7 @@ function bollo:OnEnable()
 
 	dbg:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", bollo.db.profile.debuff.x, bollo.db.profile.debuff.y)
 
-	self.debuffs.bg = dbg
+	self.icons.debuff.bg = dbg
 
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self:PLAYER_AURAS_CHANGED()
@@ -235,8 +235,8 @@ function bollo:PLAYER_AURAS_CHANGED()
 	local max = 1
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, self.icons.buff, "HELPFUL") then
-			for a = i,  #self.icons.buffs do
-				self.icons.buffs[a]:Hide()
+			for a = i,  #self.icons.buff do
+				self.icons.buff[a]:Hide()
 			end
 			break
 		end
@@ -246,8 +246,8 @@ function bollo:PLAYER_AURAS_CHANGED()
 	max = 1
 	for i = 1, 40 do
 		if not self:UpdateIcons(i, self.icons.debuff, "HARMFUL") then
-			for a = i,  #self.icons.debuffs do
-				self.icons.debuffs[a]:Hide()
+			for a = i,  #self.icons.debuff do
+				self.icons.debuff[a]:Hide()
 			end
 			break
 		end

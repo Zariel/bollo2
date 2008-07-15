@@ -319,5 +319,4 @@ function bollo:AddOptions(module)
 		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(modName, module.options)
 		module.bliz = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(modName, name, "Bollo", "general")
 	end
-
 end
