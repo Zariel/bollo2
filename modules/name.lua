@@ -277,6 +277,7 @@ function name:OnEnable()
 		self:PostSetBuff(nil, v)
 		v.text:Show()
 	end
+	self:UpdateDisplay()
 end
 
 function name:OnDisable()
