@@ -47,7 +47,7 @@ function Weapon:OnInitialize()
 						g = 1,
 						b = 1,
 						a = 1,
-					}
+					},
 				},
 			}
 		}
@@ -56,6 +56,42 @@ function Weapon:OnInitialize()
 	self.db = bollo.db:RegisterNamespace("Bollo-Weapon", defaults)
 
 	bollo.icons.weapon = bollo.icons.weapon or setmetatable({}, {__tostring = function() return "weapon" end})
+
+	self.options = {
+		name = "Weapon",
+		type = "group",
+		args = {
+			general = {
+				name = "Weapons",
+				type = "group",
+				args = {
+					enableDesc = {
+						name = "Enable or disable the module",
+						type = "description",
+						order = 1,
+					},
+					enable = {
+						name = "Enable",
+						type = "toggle",
+						get = function(info)
+							return self:IsEnabled()
+						end,
+						set = function(info, key)
+							if key then
+								self:Enable()
+							else
+								self:Disable()
+							end
+							self.db.profile.enabled = key
+						end,
+						order = 2,
+					},
+				}
+			}
+		}
+	}
+
+	bollo:AddOptions(self)
 
 	self:SetEnabledState(self.db.profile.enabled)
 end
@@ -138,6 +174,12 @@ function Weapon:OnEnable()
 
 	local conf = bollo:GetModule("Config")
 	conf:AddChildOpts("weapon", Weapon.db.profile.weapon)
+
+	for k, v in bollo:IterateModules() do
+		if v.AddOptions and self.db.profile.weapon[k] then
+			v:AddOptions("weapon", self.db.profile.weapon[k], self)
+		end
+	end
 end
 
 function Weapon:OnDisable()
@@ -159,7 +201,7 @@ function Weapon:OnUpdate()
 	local offset = 0
 	local growthx = self.db.profile.weapon["growthx"] == "LEFT" and -1 or 1
 	local growthy = self.db.profile.weapon["growthy"] == "DOWN" and -1 or 1
-	local size = self.db.profile.size
+	local size = self.db.profile.weapon.size
 	local perCol = math.floor(bollo.icons.weapon.bg:GetWidth() / size + 0.5)
 	local perRow = math.floor(bollo.icons.weapon.bg:GetHeight() / size + 0.5)
 	local rowSpace = self.db.profile.weapon.rowSpace
