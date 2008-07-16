@@ -14,7 +14,7 @@ do
 	end
 end
 
-function duration:AddOptions(name, db, module)
+function duration:AddOptions(name, db, module, forced)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
@@ -381,7 +381,7 @@ end
 function duration:OnUpdate()
 	for name in pairs(RegisteredIcons) do
 		for index, buff in ipairs(bollo.icons[name]) do
-			if not buff:IsShown() or not buff.duration then break end
+			if not buff.duration then self:PostAuraCreate(nil, nil, buff) end
 			local timeLeft = buff:GetTimeLeft()
 			if timeLeft and timeLeft > 0 then
 				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))
