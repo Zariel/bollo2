@@ -14,7 +14,7 @@ do
 	end
 end
 
-function duration:AddOptions(name, db)
+function duration:AddOptions(name, db, module)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
@@ -25,6 +25,7 @@ function duration:AddOptions(name, db)
 
 	local conf = self.options.args.general.args
 	local icons = bollo.icons[name]
+	module = module or self
 
 	-- Probally not a good idea
 	if db then
@@ -32,8 +33,6 @@ function duration:AddOptions(name, db)
 	end
 
 	db = db or self.db.profile[name]
-
-	if not db then bollo:Print(name); return end
 
 	conf[name] = {
 		get = function(info)
@@ -43,6 +42,9 @@ function duration:AddOptions(name, db)
 			local key = info[# info]
 			db[key] = val
 			self:UpdateDisplay(nil, name)
+		end,
+		disabled = function()
+			return not module:IsEnabled()
 		end,
 		["name"] = name,
 		type = "group",
@@ -189,6 +191,8 @@ function duration:AddOptions(name, db)
 			},
 		},
 	}
+
+	self:UpdateDisplay(nil, name)
 end
 
 function duration:OnInitialize()
@@ -269,8 +273,6 @@ function duration:OnInitialize()
 		}
 	}
 
-	self:AddOptions("buff")
-	self:AddOptions("debuff")
 	bollo:AddOptions(self)
 	self:SetEnabledState(self.db.profile.enabled)
 end
@@ -281,7 +283,7 @@ function duration:UpdateDisplay(event, name)
 	if not RegisteredIcons[name] then return end
 
 	for i, buff in ipairs(bollo.icons[name]) do
-		if not buff.duration then break end
+		if not buff.duration then self:PostCreateIcon(nil, bollo.icons[name], buff) end
 		local font, size, flag = self.db.profile[name].font, self.db.profile[name].fontSize, self.db.profile[name].fontStyle
 		local point = self.db.profile[name].point
 		local x, y = self.db.profile[name].x, self.db.profile[name].y
@@ -316,6 +318,9 @@ function duration:PostCreateIcon(event, parent, button)
 end
 
 function duration:OnEnable()
+	self:AddOptions("buff")
+	self:AddOptions("debuff")
+
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
 			self:PostCreateIcon(nil, bollo.icons[name], v)
@@ -350,15 +355,14 @@ function duration:FormatTime(type, time)
 	local hr, m, s, text
 	if type == "M:SS" then
 		text = "%d:%02.f"
-		if time > 3600 then
-			hr = math.floor(time / 3600)
-			m = math.floor(math.fmod(time, 3600))
-			return text, hr, m
+		if time < 3600 then --1 hr
+			m = math.floor(time/60)
+			s = math.fmod(time, 60)
+		elseif time > 3660 then
+			hr = math.floor(time / 60)
+			m = math.floor(math.fmod(time, 3600) / 60)
 		end
-
-		m = math.floor(time/60)
-		s = math.floor(math.fmod(time, 60))
-		return text, m, s
+		return text, hr and hr or m, hr and m or s
 	elseif type == "MM" then
 		if time > 3600 then
 			m = math.floor(time / 3600)

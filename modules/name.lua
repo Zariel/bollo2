@@ -17,7 +17,7 @@ end
 
 local subs = setmetatable({}, {__mode = "k"})
 
-function name:AddOptions(name, db)
+function name:AddOptions(name, db, module)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
@@ -29,9 +29,11 @@ function name:AddOptions(name, db)
 	end
 
 	db = db or self.db.profile[name]
+	module = module or self
 
 	self.count = self.count + 1
 
+	local icons = bollo.icons[name]
 	local conf = self.options.args.general.args
 	conf[name] = {
 		get = function(info)
@@ -41,6 +43,9 @@ function name:AddOptions(name, db)
 			local key = info[# info]
 			db[key] = val
 			self:UpdateDisplay(nil, name, db)
+		end,
+		disabled = function()
+			return not module:IsEnabled()
 		end,
 		["name"] = name,
 		type = "group",
@@ -187,6 +192,8 @@ function name:AddOptions(name, db)
 			},
 		},
 	}
+
+	self:UpdateDisplay(nil, name)
 end
 
 
@@ -246,7 +253,7 @@ function name:OnInitialize()
 					set = function(info, val)
 						local key = info[# info]
 						self.db.profile[key] = val
-						self:UpdateDisplay(nil, nil)
+						self:UpdateDisplay(nil, name)
 					end,
 					get = function(info)
 						local key = info[# info]
@@ -281,8 +288,6 @@ function name:OnInitialize()
 	end
 
 
-	self:AddOptions("buff")
-	self:AddOptions("debuff")
 	bollo:AddOptions(self)
 	--TODO: need a way to enable/disable each type, ie diable display on
 	--buffs only.
@@ -290,6 +295,8 @@ function name:OnInitialize()
 end
 
 function name:OnEnable()
+	self:AddOptions("buff")
+	self:AddOptions("debuff")
 	for name, tbl in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
 			self:PostCreateIcon(nil, bollo.icons[name], v)
@@ -315,7 +322,9 @@ function name:OnDisable()
 
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
-			v.text:Hide()
+			if v.text then
+				v.text:Hide()
+			end
 		end
 	end
 end
