@@ -173,7 +173,7 @@ function Weapon:OnEnable()
 	TemporaryEnchantFrame:Hide()
 
 	local conf = bollo:GetModule("Config")
-	conf:AddChildOpts("weapon", Weapon.db.profile.weapon)
+	conf:AddChildOpts("weapon", Weapon.db.profile.weapon, Weapon)
 
 	for k, v in bollo:IterateModules() do
 		if v.AddOptions and self.db.profile.weapon[k] then

@@ -17,8 +17,7 @@ end
 		name - Name of what your adding, ie buff. Must be the same as what is in your db and the bollo.icons
 ]]
 
-
-function conf:AddChildOpts(name, db)
+function conf:AddChildOpts(name, db, module)
 	if type(name) ~= "string" then
 		error("Bad argument to #1 :AddChildOpts, expected string")
 	end
@@ -31,6 +30,10 @@ function conf:AddChildOpts(name, db)
 
 	self.count = (self.count or 0) + 1
 
+	if not module then
+		module = bollo
+	end
+
 	c[name] = {
 		order = self.count,
 		type = "group",
@@ -42,6 +45,9 @@ function conf:AddChildOpts(name, db)
 		get = function(info)
 			local key = info[# info]
 			return db[key]
+		end,
+		disabled = function()
+			return not module:IsEnabled()
 		end,
 		name = name .. " Settings",
 		args = {
