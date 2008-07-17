@@ -3,30 +3,135 @@ local Sort = bollo:NewModule("Sort")
 
 local table_sort = table.sort
 
+local RegisteredIcons = {}
+
+function Sort:AddOptions(name, module)
+	if type(name) ~= "string" then
+		error("Wrong argument to #1 :AddOptions, expected string")
+	end
+
+	if self.options.args.general.args[name] then return end
+
+	RegisteredIcons[name] = true
+
+	module = module or self
+	local db = module and module.db.profile[name] or self.db.profile[name]
+
+	local conf = self.options.args.general.args
+	conf[name] = {}
+end
+
 function Sort:OnInitialize()
 	local defaults = {
 		profile = {
+			method = "TimeLeft",
+			reversed = false,
+			enabled = true,
 		}
 	}
 
 	self.db = bollo.db:RegisterNamespace("Bollo-Sort", defaults)
+	self:SetEnabledState(self.db.profile.enabled)
+
+	self.options = {
+		name = "Sort",
+		type = "group",
+		args = {
+			general = {
+				name = "Sorting",
+				type = "group",
+				get = function(info)
+					local key = info[#info]
+					return self.db.profile[key]
+				end,
+				set = function(info, val)
+					local key = info[#info]
+					self.db.profile[key] = val
+					for k, v in pairs(bollo.icons) do
+						self:PreUpdateIcons(nil, v)
+					end
+				end,
+				args = {
+					enableDesc = {
+						name = "Enable or disable the module",
+						type = "description",
+						order = 1,
+					},
+					enable = {
+						name = "Enable",
+						type = "toggle",
+						get = function(info)
+							return self:IsEnabled()
+						end,
+						set = function(info, key)
+							if key then
+								self:Enable()
+							else
+								self:Disable()
+							end
+							self.db.profile.enabled = key
+						end,
+						order = 2,
+					},
+					methodDesc = {
+						name = "Sorting method to use",
+						type = "description",
+						order = 3,
+					},
+					method = {
+						name = "Sorting Method",
+						type = "select",
+						values = {
+							["TimeLeft"] = "TimeLeft",
+							["Alphabetical"] = "Alphabetical",
+						},
+						order = 4,
+					},
+					reversedDesc = {
+						name = "Reverse the sorting method",
+						type = "description",
+						order = 5,
+					},
+					reversed = {
+						name = "Reverse",
+						type = "toggle",
+						order = 6,
+					},
+				}
+			}
+		}
+	}
+
+	bollo:AddOptions(self)
 end
 
 function Sort:OnEnable()
 	bollo.RegisterCallback(self, "PreUpdateIcons")
 end
 
-local SortTimeleft = function(a, b)
-	a = a and a:GetTimeLeft() or 0
-	b = b and b:GetTimeLeft() or 0
-	return a > b
+function Sort:OnDisable()
+	bollo.UnregisterCallback(self, "PreUpdateIcons")
 end
 
-local SortAlphabetical = function(a, b)
-	return a:GetBuff() > b:GetBuff()
+Sort.TimeLeft = function(a, b)
+	a = a and a:GetTimeLeft() or 0
+	b = b and b:GetTimeLeft() or 0
+	if Sort.db.profile.reversed then
+		return a < b
+	else
+		return a > b
+	end
+end
+
+Sort.Alphabetical = function(a, b)
+	if Sort.db.profile.reversed then
+		return a:GetBuff() < b:GetBuff()
+	else
+		return a:GetBuff() > b:GetBuff()
+	end
 end
 
 function Sort:PreUpdateIcons(event, icons)
-	return table_sort(icons, SortTimeleft)
-	--return table_sort(icons, SortAlphabetical)
+	if not rIcons[tostring(icons)] then return end
+	return table_sort(icons, self[self.db.profile.method])
 end
