@@ -75,7 +75,7 @@ function bollo:OnInitialize()
 end
 
 function bollo:OnEnable()
-	self.frame = CreateFrame("Frame")       -- Frame for modules to run OnUpdate
+	self.frame = self.frame or CreateFrame("Frame")       -- Frame for modules to run OnUpdate
 
 	self.icons.buff = setmetatable({}, {__tostring = function() return "buff" end})
 	self.icons.debuff =setmetatable({}, {__tostring = function() return "debuff" end})
@@ -197,7 +197,7 @@ function bollo:GetPoint(point)
 end
 
 function bollo:SortBuffs(icons, max)
---	table.sort(icons, SortFunc)
+	self.events:Fire("PreUpdateIcons", icons)
 	local name = tostring(icons)
 	local offset = 0
 	local growthx = self.db.profile[name]["growthx"] == "LEFT" and -1 or 1
