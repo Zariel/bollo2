@@ -95,7 +95,7 @@ function prototype:SetBuff(index, filter)
 
 	self.icon:SetTexture(texture)
 
-	if self.debuff then
+	if self.name == "debuff" then
 		local col = DebuffTypeColor[GetPlayerBuffDispelType(index) or "none"]
 		self.border:SetVertexColor(col.r, col.g, col.b)
 		self.border:Show()

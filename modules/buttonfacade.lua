@@ -24,7 +24,7 @@ function bf:PostCreateIcon(event, parent, button)
 end
 
 function bf:PostSetBuff(event, button)
-	if button.debuff then
+	if button.name == "debuff" then
 		local index = button:GetID()
 		local col = DebuffTypeColor[GetPlayerBuffDispelType(index) or "none"]
 		button.border:_SetVertexColor(col.r, col.g, col.b)
