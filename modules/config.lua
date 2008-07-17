@@ -205,7 +205,9 @@ end
 function conf:OnInitialize()
 	bollo.options = self:InitCore()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", nil, nil, "general")
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", "Bollo", nil, "general")
+
+	self:RegisterChatCommand("bollo", function() InterfaceOptionsFrame_OpenToFrame(LibStub("AceConfigDialog-3.0").BlizOptions["Bollo\001general"].frame) end)
 end
 
 function conf:OnEnable()
