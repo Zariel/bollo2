@@ -18,7 +18,44 @@ function Sort:AddOptions(name, module)
 	local db = module and module.db.profile[name] or self.db.profile[name]
 
 	local conf = self.options.args.general.args
-	conf[name] = {}
+	conf[name] = {
+		name = name,
+		type = "group",
+		set = function(info, key)
+			db[info[#info]] = key
+			bollo:SortBuffs(bollo.icons[name], 0)
+		end,
+		get = function(inf)
+			return db[info[#info]]
+		end,
+		args = {
+			method_desc = {
+				name = "Set the sorting method for " .. name,
+				type = "description",
+				order = 10,
+			},
+			method = {
+				name = "Method",
+				order = 11,
+				type = "select",
+				values = {
+					["TimeLeft"] = "TimeLeft",
+					["Alphabetical"] = "Alphabetical",
+				},
+			},
+			reversed_desc = {
+				name = "Reverse the sorting method",
+				type = "description",
+				order = 20,
+			},
+			reversed = {
+				name = "Reverse",
+				type = "toggle",
+				order = 21,
+			},
+		}
+	}
+	bollo:SortBuffs(bollo.icons[name], 0)
 end
 
 function Sort:OnInitialize()
@@ -40,6 +77,7 @@ function Sort:OnInitialize()
 			general = {
 				name = "Sorting",
 				type = "group",
+				childgroups = "tab",
 				get = function(info)
 					local key = info[#info]
 					return self.db.profile[key]
@@ -47,9 +85,6 @@ function Sort:OnInitialize()
 				set = function(info, val)
 					local key = info[#info]
 					self.db.profile[key] = val
-					for k, v in pairs(bollo.icons) do
-						self:PreUpdateIcons(nil, v)
-					end
 				end,
 				args = {
 					enableDesc = {
@@ -72,30 +107,6 @@ function Sort:OnInitialize()
 							self.db.profile.enabled = key
 						end,
 						order = 2,
-					},
-					methodDesc = {
-						name = "Sorting method to use",
-						type = "description",
-						order = 3,
-					},
-					method = {
-						name = "Sorting Method",
-						type = "select",
-						values = {
-							["TimeLeft"] = "TimeLeft",
-							["Alphabetical"] = "Alphabetical",
-						},
-						order = 4,
-					},
-					reversedDesc = {
-						name = "Reverse the sorting method",
-						type = "description",
-						order = 5,
-					},
-					reversed = {
-						name = "Reverse",
-						type = "toggle",
-						order = 6,
 					},
 				}
 			}
@@ -132,6 +143,6 @@ Sort.Alphabetical = function(a, b)
 end
 
 function Sort:PreUpdateIcons(event, icons)
-	if not rIcons[tostring(icons)] then return end
+	if not RegisteredIcons[tostring(icons)] then return end
 	return table_sort(icons, self[self.db.profile.method])
 end
