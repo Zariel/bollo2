@@ -25,7 +25,7 @@ function Sort:AddOptions(name, module)
 			db[info[#info]] = key
 			bollo:SortBuffs(bollo.icons[name], 0)
 		end,
-		get = function(inf)
+		get = function(info)
 			return db[info[#info]]
 		end,
 		args = {
