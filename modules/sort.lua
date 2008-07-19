@@ -61,8 +61,14 @@ end
 function Sort:OnInitialize()
 	local defaults = {
 		profile = {
-			method = "TimeLeft",
-			reversed = false,
+			buff = {
+				method = "TimeLeft",
+				reversed = false,
+			},
+			debuff = {
+				method = "TimeLeft",
+				reversed = false,
+			},
 			enabled = true,
 		}
 	}
@@ -77,7 +83,7 @@ function Sort:OnInitialize()
 			general = {
 				name = "Sorting",
 				type = "group",
-				childgroups = "tab",
+				childGroups = "tab",
 				get = function(info)
 					local key = info[#info]
 					return self.db.profile[key]
@@ -113,6 +119,8 @@ function Sort:OnInitialize()
 		}
 	}
 
+	self:AddOptions("buff")
+	self:AddOptions("debuff")
 	bollo:AddOptions(self)
 end
 
@@ -143,6 +151,7 @@ Sort.Alphabetical = function(a, b)
 end
 
 function Sort:PreUpdateIcons(event, icons)
-	if not RegisteredIcons[tostring(icons)] then return end
-	return table_sort(icons, self[self.db.profile.method])
+	local name = tostring(icons)
+	if not RegisteredIcons[name] then return end
+	return table_sort(icons, self[self.db.profile[name].method])
 end
