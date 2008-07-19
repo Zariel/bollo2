@@ -143,10 +143,12 @@ Sort.TimeLeft = function(a, b)
 end
 
 Sort.Alphabetical = function(a, b)
+	a = a and a:GetBuff() or ""
+	b = b and b:GetBuff() or ""
 	if Sort.db.profile.reversed then
-		return a:GetBuff() < b:GetBuff()
+		return a < b
 	else
-		return a:GetBuff() > b:GetBuff()
+		return a > b
 	end
 end
 
