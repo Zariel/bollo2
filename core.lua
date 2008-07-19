@@ -198,6 +198,7 @@ end
 
 function bollo:SortBuffs(icons, max)
 	self.events:Fire("PreUpdateIcons", icons)
+	if not icons then return end
 	local name = tostring(icons)
 	local offset = 0
 	local growthx = self.db.profile[name]["growthx"] == "LEFT" and -1 or 1
