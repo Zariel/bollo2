@@ -100,11 +100,19 @@ function duration:AddOptions(name, db, module, forced)
 				type = "description",
 				order = 8,
 			},
+			format = {
+				name = "Format",
+				type = "select",
+				values = {
+					["Verbose"] = "M:SS"
+				},
+				order = 9,
+			},
 			fonts = {
 				name = "Fonts",
 				guiInline = true,
 				type = "group",
-				order = 9,
+				order = 10,
 				args = {
 					fontDesc = {
 						name = "Set the font, uses SharedMedia-3.0",
@@ -362,7 +370,7 @@ function duration:FormatTime(type, time)
 			hr = math.floor(time / 60)
 			m = math.floor(math.fmod(time, 3600) / 60)
 		end
-		return text, hr and hr or m, hr and m or s
+		return text, hr or m, hr and m or s
 	elseif type == "MM" then
 		if time > 3600 then
 			m = math.floor(time / 3600)
