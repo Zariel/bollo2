@@ -88,7 +88,7 @@ function prototype:SetBuff(index, filter)
 		error("Bad argument #2 to :SetBuff expected string")
 	end
 
-	local texture = GetPlayerBuffTexture(index)
+	local texture = GetPlayerBuffTexture(index) or [[Interface\Icons\Spell_Shadow_DeathCoil]]
 
 	self:SetID(index)
 	self.debuff = filter == "HARMFUL"
@@ -115,7 +115,7 @@ end
 ]]
 
 function prototype:GetBuff()
-	return GetPlayerBuffName(self:GetID())
+	return GetPlayerBuffName(self:GetID()) or ""
 end
 
 --[[
