@@ -104,7 +104,8 @@ function duration:AddOptions(name, db, module, forced)
 				name = "Format",
 				type = "select",
 				values = {
-					["Verbose"] = "M:SS"
+					["M:SS"] = "Verbose",
+					["MM"] = "Blizzard",
 				},
 				order = 9,
 			},
@@ -373,10 +374,10 @@ function duration:FormatTime(type, time)
 		return text, hr or m, hr and m or s
 	elseif type == "MM" then
 		if time > 3600 then
-			m = math.floor(time / 3600)
+			m = math.floor(time / 360) / 10
 			text = "%dhr"
 		elseif time > 60 then
-			m = math.floor(mod(time, 3600))
+			m = math.floor(mod(time, 3600) / 60)
 			text = "%dm"
 		else
 			m = time
