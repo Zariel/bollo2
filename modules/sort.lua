@@ -135,25 +135,34 @@ end
 Sort.TimeLeft = function(a, b)
 	a = a and a:GetTimeLeft() or 0
 	b = b and b:GetTimeLeft() or 0
-	if Sort.db.profile.reversed then
-		return a < b
-	else
-		return a > b
-	end
+	return a > b
 end
+
+Sort.TimeLeftReverse = function(b, a)
+	a = a and a:GetTimeLeft() or 0
+	b = b and b:GetTimeLeft() or 0
+	return a > b
+end
+
 
 Sort.Alphabetical = function(a, b)
 	a = a and a:GetBuff() or ""
 	b = b and b:GetBuff() or ""
-	if Sort.db.profile.reversed then
-		return a < b
-	else
-		return a > b
-	end
+	return a > b
+end
+
+Sort.AlphabeticalReverse = function(b, a)
+	a = a and a:GetBuff() or ""
+	b = b and b:GetBuff() or ""
+	return a > b
 end
 
 function Sort:PreUpdateIcons(event, icons)
 	local name = tostring(icons)
 	if not RegisteredIcons[name] then return end
-	return table_sort(icons, self[self.db.profile[name].method])
+	if self.db.profile[name].reversed then
+		table_sort(icons, self[self.db.profile[name].method .. "Reverse"])
+	else
+		table_sort(icons, self[self.db.profile[name].method)
+	end
 end
