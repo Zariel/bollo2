@@ -163,6 +163,6 @@ function Sort:PreUpdateIcons(event, icons)
 	if self.db.profile[name].reversed then
 		table_sort(icons, self[self.db.profile[name].method .. "Reverse"])
 	else
-		table_sort(icons, self[self.db.profile[name].method)
+		table_sort(icons, self[self.db.profile[name].method])
 	end
 end
