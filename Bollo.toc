@@ -18,3 +18,4 @@ modules\profiles.lua
 modules\count.lua
 modules\weapons.lua
 modules\sort.lua
+modules\dummy.lua
