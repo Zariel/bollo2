@@ -20,7 +20,7 @@ local subs = setmetatable({}, {__mode = "k"})
 function name:AddOptions(name, db, module)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
-	if self.options.args.general.args[name] then return end      -- Already have it
+	if self.options.args[name] then return end      -- Already have it
 
 
 	if db then
@@ -33,7 +33,7 @@ function name:AddOptions(name, db, module)
 	RegisteredIcons[name] = db.enabled
 
 	local icons = bollo.icons[name]
-	local conf = self.options.args.general.args
+	local conf = self.options.args
 	conf[name] = {
 		get = function(info)
 			return db[info[# info]]
@@ -254,46 +254,40 @@ function name:OnInitialize()
 
 	if not self.options then
 		self.options = {
-			name = "Duration",
+			name = "Name module",
 			type = "group",
+			childGroups = "tab",
+			order = self.count,
+			set = function(info, val)
+				local key = info[# info]
+				self.db.profile[key] = val
+				self:UpdateDisplay(nil, name)
+			end,
+			get = function(info)
+				local key = info[# info]
+				return self.db.profile[key]
+			end,
 			args = {
-				general = {
-					name = "Name module",
-					type = "group",
-					childGroups = "tab",
-					order = self.count,
-					set = function(info, val)
-						local key = info[# info]
-						self.db.profile[key] = val
-						self:UpdateDisplay(nil, name)
-					end,
+				enableDesc = {
+					name = "Enable or disable the module",
+					type = "description",
+					order = 1,
+				},
+				enable = {
+					name = "Enable",
+					type = "toggle",
 					get = function(info)
-						local key = info[# info]
-						return self.db.profile[key]
+						return self:IsEnabled()
 					end,
-					args = {
-						enableDesc = {
-							name = "Enable or disable the module",
-							type = "description",
-							order = 1,
-						},
-						enable = {
-							name = "Enable",
-							type = "toggle",
-							get = function(info)
-								return self:IsEnabled()
-							end,
-							set = function(info, key)
-								if key then
-									self:Enable()
-								else
-									self:Disable()
-								end
-								self.db.profile.enabled = key
-							end,
-							order = 2,
-						},
-					}
+					set = function(info, key)
+						if key then
+							self:Enable()
+						else
+							self:Disable()
+						end
+						self.db.profile.enabled = key
+					end,
+					order = 2,
 				},
 			},
 		}

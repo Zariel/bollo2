@@ -48,35 +48,29 @@ function bf:OnInitialize()
 		type = "group",
 		name = "Button Facade",
 		args = {
-			general = {
-				name = "Button Facade",
-				type = "group",
-				args = {
-					enableDesc = {
-						type = "description",
-						name = "Enable the Button Facade module, will only take effect after reload of UI",
-						order = 1,
-					},
-					enabled = {
-						type = "toggle",
-						name = "Enable",
-						order = 2,
-						set = function(info, val)
-							local key = info[# info]
-							self.db.profile[key] = val
-							if val then
-								self:Enable()
-							else
-								self:Disable()
-							end
-						end,
-						get = function(info)
-							local key = info[# info]
-							return self.db.profile[key]
-						end
-					},
-				}
-			}
+			enableDesc = {
+				type = "description",
+				name = "Enable the Button Facade module, will only take effect after reload of UI",
+				order = 1,
+			},
+			enabled = {
+				type = "toggle",
+				name = "Enable",
+				order = 2,
+				set = function(info, val)
+					local key = info[# info]
+					self.db.profile[key] = val
+					if val then
+						self:Enable()
+					else
+						self:Disable()
+					end
+				end,
+				get = function(info)
+					local key = info[# info]
+					return self.db.profile[key]
+				end
+			},
 		}
 	}
 

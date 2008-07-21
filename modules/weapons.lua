@@ -58,36 +58,30 @@ function Weapon:OnInitialize()
 	bollo.icons.weapon = bollo.icons.weapon or setmetatable({}, {__tostring = function() return "weapon" end})
 
 	self.options = {
-		name = "Weapon",
+		name = "Weapons",
 		type = "group",
 		args = {
-			general = {
-				name = "Weapons",
-				type = "group",
-				args = {
-					enableDesc = {
-						name = "Enable or disable the module",
-						type = "description",
-						order = 1,
-					},
-					enable = {
-						name = "Enable",
-						type = "toggle",
-						get = function(info)
-							return self:IsEnabled()
-						end,
-						set = function(info, key)
-							if key then
-								self:Enable()
-							else
-								self:Disable()
-							end
-							self.db.profile.enabled = key
-						end,
-						order = 2,
-					},
-				}
-			}
+			enableDesc = {
+				name = "Enable or disable the module",
+				type = "description",
+				order = 1,
+			},
+			enable = {
+				name = "Enable",
+				type = "toggle",
+				get = function(info)
+					return self:IsEnabled()
+				end,
+				set = function(info, key)
+					if key then
+						self:Enable()
+					else
+						self:Disable()
+					end
+					self.db.profile.enabled = key
+				end,
+				order = 2,
+			},
 		}
 	}
 

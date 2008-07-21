@@ -17,12 +17,11 @@ end
 function duration:AddOptions(name, db, module, forced)
 	-- Name must be the referance to everything else, ie if name
 	-- is Buffs then settings are created for bollo.Buffs etc.
-	if self.options.args.general.args[name] then return end      -- Already have it
+	if self.options.args[name] then return end      -- Already have it
 
 	self.count = (self.count or 0) + 1
 
-
-	local conf = self.options.args.general.args
+	local conf = self.options.args
 	local icons = bollo.icons[name]
 	module = module or self
 
@@ -265,34 +264,28 @@ function duration:OnInitialize()
 	self.options = {
 		name = "Duration",
 		type = "group",
-		args = {
-			general = {
-				type = "group",
-				childGroups = "tab",
-				name = "Duration",
-				args = {
-					enableDesc = {
-					name = "Enable or disable the module",
-					type = "description",
-					order = 1,
-					},
-					enable = {
-						name = "Enable",
-						type = "toggle",
-						get = function(info)
-							return self:IsEnabled()
-						end,
-						set = function(info, key)
-							if key then
-								self:Enable()
-							else
-								self:Disable()
-							end
-							self.db.profile.enabled = key
-						end,
-						order = 2,
-					}
-				}
+		childGroups = "tab",
+			args = {
+			enableDesc = {
+				name = "Enable or disable the module",
+				type = "description",
+				order = 1,
+			},
+			enable = {
+				name = "Enable",
+				type = "toggle",
+				get = function(info)
+					return self:IsEnabled()
+				end,
+				set = function(info, key)
+					if key then
+						self:Enable()
+					else
+						self:Disable()
+					end
+					self.db.profile.enabled = key
+				end,
+				order = 2,
 			}
 		}
 	}

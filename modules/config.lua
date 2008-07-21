@@ -22,9 +22,9 @@ function conf:AddChildOpts(name, db, module)
 		error("Bad argument to #1 :AddChildOpts, expected string")
 	end
 
-	if bollo.options.args.general.args[name] then return end -- Already added.
+	if bollo.options.args[name] then return end -- Already added.
 
-	local c = bollo.options.args.general.args
+	local c = bollo.options.args
 	local db = db or bollo.db.profile[name]
 	local icons = bollo.icons[name]
 
@@ -180,20 +180,15 @@ function conf:InitCore()
 		defaults = {
 			type = "group",
 			name = "Bollo",
+			order = 1,
+			type = "group",
+			childGroups  = "tab",
 			args = {
-				general = {
+				desc = {
 					order = 1,
-					type = "group",
-					childGroups  = "tab",
-					name = "General Settings",
-					args = {
-						desc = {
-							order = 1,
-							type = "description",
-							name = "Bollo displays Buffs and Debuffs",
-						},
-					}
-				}
+					type = "description",
+					name = "Bollo displays Buffs and Debuffs",
+				},
 			}
 		}
 	end
@@ -205,7 +200,7 @@ end
 function conf:OnInitialize()
 	bollo.options = self:InitCore()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", "Bollo", nil, "general")
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", "Bollo", nil)
 
 	self:RegisterChatCommand("bollo", function() InterfaceOptionsFrame_OpenToFrame(LibStub("AceConfigDialog-3.0").BlizOptions["Bollo\001general"].frame) end)
 end
@@ -220,6 +215,6 @@ function bollo:AddOptions(module)
 		local modName = tostring(module)
 		local name = modName:match("Bollo_(.+)")
 		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(modName, module.options)
-		module.bliz = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(modName, name, "Bollo", "general")
+		module.bliz = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(modName, name, "Bollo")
 	end
 end

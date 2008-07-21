@@ -10,14 +10,14 @@ function Sort:AddOptions(name, module)
 		error("Wrong argument to #1 :AddOptions, expected string")
 	end
 
-	if self.options.args.general.args[name] then return end
+	if self.options.args[name] then return end
 
 	RegisteredIcons[name] = true
 
 	module = module or self
 	local db = module and module.db.profile[name] or self.db.profile[name]
 
-	local conf = self.options.args.general.args
+	local conf = self.options.args
 	conf[name] = {
 		name = name,
 		type = "group",
@@ -77,45 +77,39 @@ function Sort:OnInitialize()
 	self:SetEnabledState(self.db.profile.enabled)
 
 	self.options = {
-		name = "Sort",
 		type = "group",
+		name = "Sorting",
+		childGroups = "tab",
+		get = function(info)
+			local key = info[#info]
+			return self.db.profile[key]
+		end,
+		set = function(info, val)
+			local key = info[#info]
+			self.db.profile[key] = val
+		end,
 		args = {
-			general = {
-				name = "Sorting",
-				type = "group",
-				childGroups = "tab",
+			enableDesc = {
+				name = "Enable or disable the module",
+				type = "description",
+				order = 1,
+			},
+			enable = {
+				name = "Enable",
+				type = "toggle",
 				get = function(info)
-					local key = info[#info]
-					return self.db.profile[key]
+					return self:IsEnabled()
 				end,
-				set = function(info, val)
-					local key = info[#info]
-					self.db.profile[key] = val
+				set = function(info, key)
+					if key then
+						self:Enable()
+					else
+						self:Disable()
+					end
+					self.db.profile.enabled = key
 				end,
-				args = {
-					enableDesc = {
-						name = "Enable or disable the module",
-						type = "description",
-						order = 1,
-					},
-					enable = {
-						name = "Enable",
-						type = "toggle",
-						get = function(info)
-							return self:IsEnabled()
-						end,
-						set = function(info, key)
-							if key then
-								self:Enable()
-							else
-								self:Disable()
-							end
-							self.db.profile.enabled = key
-						end,
-						order = 2,
-					},
-				}
-			}
+				order = 2,
+			},
 		}
 	}
 
