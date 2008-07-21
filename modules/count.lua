@@ -53,11 +53,12 @@ function Count:AddOptions(name)
 
 	self.count = (self.count or 0) + 1
 
-	RegisteredIcons[name] = true
-
 	local conf = self.options.args.general.args
 	local icons = bollo.icons[name]
 	local db = self.db.profile[name]
+
+	RegisteredIcons[name] = db.enabled
+
 	conf[name] = {
 		get = function(info)
 			return db[info[# info]]
@@ -74,6 +75,19 @@ function Count:AddOptions(name)
 				name = "Display Truncated name of " .. name,
 				type = "description",
 				order = 2,
+			},
+			enabled = {
+				name = "Enable",
+				type = "toggle",
+				order = 2.1,
+				get = function(info)
+					return RegisteredIcons[name]
+				end,
+				set = function(info, key)
+					RegisteredIcons[name] = key
+					db.enabled = key
+					self:UpdateDisplay(nil, name)
+				end,
 			},
 			pointdesc = {
 				name = "Set Where to show the name",
@@ -231,6 +245,7 @@ function Count:OnInitialize()
 					b = 1,
 					a = 1,
 				},
+				enabled = true,
 			},
 			debuff = {
 				["Description"] = "Shows count of buffs/debuffs",
@@ -246,6 +261,7 @@ function Count:OnInitialize()
 					b = 1,
 					a = 1,
 				},
+				enabled = true,
 			},
 		}
 	}
@@ -298,12 +314,14 @@ function Count:OnInitialize()
 end
 
 function Count:OnEnable()
-	for name in pairs(RegisteredIcons) do
-		for k, v in ipairs(bollo.icons[name]) do
-			self:PostCreateIcon(nil, bollo.icons[name], v)
-			v.count:Show()
+	for name, state in pairs(RegisteredIcons) do
+		if state then
+			for k, v in ipairs(bollo.icons[name]) do
+				self:PostCreateIcon(nil, bollo.icons[name], v)
+				v.count:Show()
+			end
+			self:UpdateDisplay(nil, name)
 		end
-		self:UpdateDisplay(nil, name)
 	end
 
 	bollo.RegisterCallback(self, "PostCreateIcon")
@@ -317,7 +335,9 @@ end
 function Count:OnDisable()
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
-			v.count:Hide()
+			if v.count then
+				v.count:Hide()
+			end
 		end
 	end
 
@@ -329,21 +349,28 @@ function Count:OnDisable()
 end
 
 function Count:UpdateDisplay(event, name)
-	if not RegisteredIcons[name] then return end
+	if not RegisteredIcons[name] then
+		for i, buff in ipairs(bollo.icons[name]) do
+			if buff.count then
+				buff.count:Hide()
+			end
+		end
+	else
+		for i, buff in ipairs(bollo.icons[name]) do
+			if not buff.text then break end
+			local db = self.db.profile[buff.name]
+			local font, size, flag = db.font, db.fontSize, db.fontStyle
+			local point = db.point
+			local x, y = db.x, db.y
+			local col = db.color
 
-	for i, buff in ipairs(bollo.icons[name]) do
-		if not buff.text then break end
-		local db = self.db.profile[buff.name]
-		local font, size, flag = db.font, db.fontSize, db.fontStyle
-		local point = db.point
-		local x, y = db.x, db.y
-		local col = db.color
+			local anchor, relative, mod = bollo:GetPoint(point)
 
-		local anchor, relative, mod = bollo:GetPoint(point)
-
-		buff.count:SetFont(font, size, flag)
-		buff.count:ClearAllPoints()
-		buff.count:SetPoint(anchor, buff, relative, mod * x, y)
-		buff.count:SetTextColor(col.r, col.g, col.b, col.a)
+			buff.count:SetFont(font, size, flag)
+			buff.count:ClearAllPoints()
+			buff.count:SetPoint(anchor, buff, relative, mod * x, y)
+			buff.count:SetTextColor(col.r, col.g, col.b, col.a)
+			buff.count:Show()
+		end
 	end
 end
