@@ -54,6 +54,19 @@ function duration:AddOptions(name, db, module, forced)
 				type = "description",
 				order = 2,
 			},
+			enabled = {
+				name = "Enable",
+				type = "toggle",
+				get = function(info)
+					return RegisteredIcons[name]
+				end,
+				set = function(info, key)
+					RegisteredIcons[name] = key
+					db.enabled = key
+					self:UpdateDisplay(nil, name)
+				end,
+				order = 2.1,
+			},
 			pointdesc = {
 				name = "Set Where to show the name",
 				type = "description",
@@ -222,7 +235,8 @@ function duration:OnInitialize()
 					g = 1,
 					b = 1,
 					a = 1,
-				}
+				},
+				enabled = true,
 			},
 			debuff = {
 				["Description"] = "Show debuff durations",
@@ -239,6 +253,7 @@ function duration:OnInitialize()
 					b = 1,
 					a = 1,
 				}
+				enabled = true,
 			},
 		}
 	}
@@ -330,12 +345,14 @@ function duration:OnEnable()
 	self:AddOptions("buff")
 	self:AddOptions("debuff")
 
-	for name in pairs(RegisteredIcons) do
-		for k, v in ipairs(bollo.icons[name]) do
-			self:PostCreateIcon(nil, bollo.icons[name], v)
-			v.duration:Show()
+	for name, state in pairs(RegisteredIcons) do
+		if state then
+			for k, v in ipairs(bollo.icons[name]) do
+				self:PostCreateIcon(nil, bollo.icons[name], v)
+				v.duration:Show()
+			end
+			self:UpdateDisplay(nil, name)
 		end
-		self:UpdateDisplay(nil, name)
 	end
 
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
@@ -355,7 +372,9 @@ function duration:OnDisable()
 
 	for name in pairs(RegisteredIcons) do
 		for k, v in ipairs(bollo.icons[name]) do
-			v.duration:Hide()
+			if v.duration then
+				v.duration:Hide()
+			end
 		end
 	end
 end
@@ -388,15 +407,17 @@ function duration:FormatTime(type, time)
 end
 
 function duration:OnUpdate()
-	for name in pairs(RegisteredIcons) do
-		for index, buff in ipairs(bollo.icons[name]) do
-			if not buff.duration then self:PostAuraCreate(nil, nil, buff) end
-			local timeLeft = buff:GetTimeLeft()
-			if timeLeft and timeLeft > 0 then
-				buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))
-				buff.duration:Show()
-			else
-				buff.duration:Hide()
+	for name, state in pairs(RegisteredIcons) do
+		if state then
+			for index, buff in ipairs(bollo.icons[name]) do
+				if not buff.duration then self:PostAuraCreate(nil, nil, buff) end
+				local timeLeft = buff:GetTimeLeft()
+				if timeLeft and timeLeft > 0 then
+					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))
+					buff.duration:Show()
+				else
+					buff.duration:Hide()
+				end
 			end
 		end
 	end
