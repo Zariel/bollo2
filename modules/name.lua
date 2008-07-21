@@ -22,7 +22,6 @@ function name:AddOptions(name, db, module)
 	-- is Buffs then settings are created for bollo.Buffs etc.
 	if self.options.args.general.args[name] then return end      -- Already have it
 
-	RegisteredIcons[name] = true
 
 	if db then
 		self.db.profile[name] = db
@@ -31,7 +30,7 @@ function name:AddOptions(name, db, module)
 	db = db or self.db.profile[name]
 	module = module or self
 
-	self.count = self.count + 1
+	RegisteredIcons[name] = db.enabled
 
 	local icons = bollo.icons[name]
 	local conf = self.options.args.general.args
@@ -53,7 +52,20 @@ function name:AddOptions(name, db, module)
 			info = {
 				name = "Display Truncated name of " .. name,
 				type = "description",
-				order = self.count,
+				order = 1,
+			},
+			enable = {
+				order = 2.1,
+				name = "Enable",
+				type = "toggle",
+				get = function(info)
+					return RegisteredIcons[name]
+				end,
+				set = function(info, key)
+					RegisteredIcons[name] = key
+					db.enabled = key
+					self:UpdateDisplay(event, name)
+				end,
 			},
 			pointdesc = {
 				name = "Set Where to show the name",
@@ -188,7 +200,7 @@ function name:AddOptions(name, db, module)
 						self:UpdateDisplay(nil, name, db)
 					end,
 					}
-				}
+				},
 			},
 		},
 	}
@@ -297,12 +309,14 @@ end
 function name:OnEnable()
 	self:AddOptions("buff")
 	self:AddOptions("debuff")
-	for name, tbl in pairs(RegisteredIcons) do
-		for k, v in ipairs(bollo.icons[name]) do
-			self:PostCreateIcon(nil, bollo.icons[name], v)
-			v.text:Show()
+	for name, state in pairs(RegisteredIcons) do
+		if state then
+			for k, v in ipairs(bollo.icons[name]) do
+				self:PostCreateIcon(nil, bollo.icons[name], v)
+				v.text:Show()
+			end
+			self:UpdateDisplay(nil, name)
 		end
-		self:UpdateDisplay(nil, name)
 	end
 
 	bollo.RegisterCallback(self, "PostCreateIcon")
@@ -344,6 +358,7 @@ local truncate = function(b)
 end
 
 function name:PostSetBuff(event, buff, index, filter)
+	if not RegisteredIcons[buff.name] then return end
 	if not buff.text then
 		self:PostCreateIcon(event, nil, buff)
 	end
@@ -383,18 +398,27 @@ function name:UpdateDisplay(event, name, db)
 		return
 	end
 	db = db or self.db.profile[name]
-	for i, buff in ipairs(bollo.icons[name]) do
-		if not buff.text then self:PostSetBuff(nil, buff) end
-		local font, size, flag = db.font, db.fontSize, db.fontStyle
-		local point = db.point
-		local x, y = db.x, db.y
-		local col = db.color
+	if not RegisteredIcons[name] then
+		for i, buff in ipairs(bollo.icons[name]) do
+			if buff.text then
+				buff.text:Hide()
+			end
+		end
+	else
+		for i, buff in ipairs(bollo.icons[name]) do
+			if not buff.text then self:PostSetBuff(nil, buff) end
+			local font, size, flag = db.font, db.fontSize, db.fontStyle
+			local point = db.point
+			local x, y = db.x, db.y
+			local col = db.color
 
-		local anchor, relative, mod = bollo:GetPoint(point)
+			local anchor, relative, mod = bollo:GetPoint(point)
 
-		buff.text:SetFont(font, size, flag)
-		buff.text:ClearAllPoints()
-		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
-		buff.text:SetTextColor(col.r, col.g, col.b, col.a)
+			buff.text:SetFont(font, size, flag)
+			buff.text:ClearAllPoints()
+			buff.text:SetPoint(anchor, buff, relative, mod * x, y)
+			buff.text:SetTextColor(col.r, col.g, col.b, col.a)
+			buff.text:Show()
+		end
 	end
 end
