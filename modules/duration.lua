@@ -21,7 +21,6 @@ function duration:AddOptions(name, db, module, forced)
 
 	self.count = (self.count or 0) + 1
 
-	RegisteredIcons[name] = true
 
 	local conf = self.options.args.general.args
 	local icons = bollo.icons[name]
@@ -33,6 +32,7 @@ function duration:AddOptions(name, db, module, forced)
 	end
 
 	db = db or self.db.profile[name]
+	RegisteredIcons[name] = db.enabled
 
 	conf[name] = {
 		get = function(info)
