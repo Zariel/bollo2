@@ -252,7 +252,7 @@ function duration:OnInitialize()
 					g = 1,
 					b = 1,
 					a = 1,
-				}
+				},
 				enabled = true,
 			},
 		}
@@ -304,21 +304,28 @@ end
 function duration:UpdateDisplay(event, name)
 	if not name then return end
 
-	if not RegisteredIcons[name] then return end
+	if not RegisteredIcons[name] then
+		for i, buff in ipairs(bollo.icons[name]) do
+			if buff.duration then
+				buff.duration:Hide()
+			end
+		end
+	else
+		for i, buff in ipairs(bollo.icons[name]) do
+			if not buff.duration then self:PostCreateIcon(nil, bollo.icons[name], buff) end
+			local font, size, flag = self.db.profile[name].font, self.db.profile[name].fontSize, self.db.profile[name].fontStyle
+			local point = self.db.profile[name].point
+			local x, y = self.db.profile[name].x, self.db.profile[name].y
+			local col = self.db.profile[name].color
 
-	for i, buff in ipairs(bollo.icons[name]) do
-		if not buff.duration then self:PostCreateIcon(nil, bollo.icons[name], buff) end
-		local font, size, flag = self.db.profile[name].font, self.db.profile[name].fontSize, self.db.profile[name].fontStyle
-		local point = self.db.profile[name].point
-		local x, y = self.db.profile[name].x, self.db.profile[name].y
-		local col = self.db.profile[name].color
+			local anchor, relative, mod = bollo:GetPoint(point)
 
-		local anchor, relative, mod = bollo:GetPoint(point)
-
-		buff.duration:SetFont(font, size, flag)
-		buff.duration:ClearAllPoints()
-		buff.duration:SetPoint(anchor, buff, relative, mod * x, y)
-		buff.duration:SetTextColor(col.r, col.g, col.b, col.a)
+			buff.duration:SetFont(font, size, flag)
+			buff.duration:ClearAllPoints()
+			buff.duration:SetPoint(anchor, buff, relative, mod * x, y)
+			buff.duration:SetTextColor(col.r, col.g, col.b, col.a)
+			buff.duration:Show()
+		end
 	end
 end
 
