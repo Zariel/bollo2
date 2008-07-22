@@ -4,7 +4,7 @@ local lib
 local SetVertexColor
 
 function bf:PostCreateIcon(event, parent, button)
-	local debuff = button.debuff
+	local debuff = tostring(parent) == "debuff"
 
 	button.border._SetVertexColor = button.border.SetVertexColor
 
@@ -98,8 +98,13 @@ function bf:OnEnable()
 	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
 	bollo.RegisterCallback(bf, "PostCreateIcon")
 	bollo.RegisterCallback(bf, "PostSetBuff")
-	bollo.RegisterCallback(bf, "PostUpdateConfig", "OnEnable")
+	bollo.RegisterCallback(bf, "PostUpdateConfig", "UpdateSkins")
+	bollo.RegisterCallback(bf, "NewIconGroup")
 
+	self:UpdateSkins()
+end
+
+function bf:UpdateSkins()
 	for name in pairs(bollo.icons) do
 		local group = self[name]
 		if group then
@@ -110,6 +115,9 @@ function bf:OnEnable()
 			end
 		end
 	end
+end
+
+function bf:NewIconGroup(event, name, table)
 end
 
 function bf:OnDisable()
