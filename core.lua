@@ -36,7 +36,6 @@ function bollo:OnInitialize()
 				["height"] = 100,
 				["width"] = 350,
 				["rowSpace"] = 20,
-
 			}
 		},
 	}
@@ -46,6 +45,7 @@ function bollo:OnInitialize()
 	self.icons = setmetatable({}, {
 		__newindex = function(t, key, val)
 			rawset(t, key, val)
+			self.events:Fire("NewIconGroup", key, val)
 		end
 	})
 
