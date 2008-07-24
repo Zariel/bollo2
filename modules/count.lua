@@ -17,6 +17,13 @@ end
 function Count:PostSetBuff(event, buff, index, filter)
 	local count = buff:GetCount()
 	if count > 1 then
+		local db = self.db.profile[buff.name]
+		local point = db.point
+		local x, y = db.x, db.y
+		local anchor, relative, mod = bollo:GetPoint(point)
+		buff.count:ClearAllPoints()
+		buff.count:SetPoint(anchor, buff, relative, mod * x, y)
+
 		buff.count:SetText(count)
 		buff.count:Show()
 	else
