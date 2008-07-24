@@ -1,5 +1,5 @@
 ## Title: Bollo
-## Version: 1
+## Version: 2.4.3-15Beta
 ## Interface: 20400
 ## OptionalDeps: Ace3
 ## SavedVariables: BolloDB
