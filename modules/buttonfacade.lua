@@ -104,7 +104,7 @@ function bf:OnEnable()
 	self:UpdateSkins()
 end
 
-function bf:UpdateSkins()
+function bf:UpdateSkins(event)
 	for name in pairs(bollo.icons) do
 		local group = self[name]
 		if group then
