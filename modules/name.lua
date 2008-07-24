@@ -365,7 +365,7 @@ function name:PostSetBuff(event, buff, index, filter)
 end
 
 function name:PostCreateIcon(event, parent, buff)
-	if buff.text then return end
+	if buff.text then return buff.text:Show() end
 
 	local name = buff.name
 	if not RegisteredIcons[name] then return end
@@ -392,7 +392,7 @@ function name:UpdateDisplay(event, name, db)
 		return
 	end
 	db = db or self.db.profile[name]
-	if not RegisteredIcons[name] then
+	if not RegisteredIcons[name] or not self:IsEnabled() then
 		for i, buff in ipairs(bollo.icons[name]) do
 			if buff.text then
 				buff.text:Hide()
