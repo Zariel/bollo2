@@ -358,7 +358,7 @@ function Count:UpdateDisplay(event, name)
 		end
 	else
 		for i, buff in ipairs(bollo.icons[name]) do
-			if not buff.text then break end
+			if not buff.text then self:PostCreateIcon(nil, nil, buff) end
 			local db = self.db.profile[buff.name]
 			local font, size, flag = db.font, db.fontSize, db.fontStyle
 			local point = db.point
@@ -371,7 +371,6 @@ function Count:UpdateDisplay(event, name)
 			buff.count:ClearAllPoints()
 			buff.count:SetPoint(anchor, buff, relative, mod * x, y)
 			buff.count:SetTextColor(col.r, col.g, col.b, col.a)
-			buff.count:Show()
 		end
 	end
 end
