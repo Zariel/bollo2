@@ -383,10 +383,13 @@ function duration:FormatTime(type, time)
 	local hr, m, s, text
 	if type == "M:SS" then
 		text = "%d:%02.f"
-		if time < 3600 then --1 hr
+		if time < 60 then
+			m = 0
+			s = time
+		elseif time < 3600 then --1 hr
 			m = math.floor(time/60)
 			s = math.fmod(time, 60)
-		elseif time > 3660 then
+		elseif time >= 3660 then
 			hr = math.floor(time / 60)
 			m = math.floor(math.fmod(time, 3600) / 60)
 		end
@@ -412,7 +415,7 @@ function duration:OnUpdate()
 			for index, buff in ipairs(bollo.icons[name]) do
 				if not buff.duration then self:PostAuraCreate(nil, nil, buff) end
 				local timeLeft = buff:GetTimeLeft()
-				if timeLeft and type(timeLeft) == "number" and timeLeft > 0 then
+				if timeLeft and (type(timeLeft) == "number" and timeLeft > 0) then
 					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))
 					buff.duration:Show()
 				else
