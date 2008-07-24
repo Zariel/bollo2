@@ -187,8 +187,8 @@ function Weapon:OnDisable()
 		end
 	end
 
-	TemporaryEnchantFrame:Show()
-	TemporaryEnchantFrame:SetScript("OnUpdate", BuffFrame_Enchant_OnUpdate)
+	--TemporaryEnchantFrame:Show()
+	--TemporaryEnchantFrame:SetScript("OnUpdate", BuffFrame_Enchant_OnUpdate)
 end
 
 local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges
