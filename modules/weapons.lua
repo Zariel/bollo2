@@ -88,6 +88,9 @@ function Weapon:OnInitialize()
 	bollo:AddOptions(self)
 
 	self:SetEnabledState(self.db.profile.enabled)
+
+	TemporaryEnchantFrame:SetScript("OnUpdate", nil)
+	TemporaryEnchantFrame:Hide()
 end
 
 local GetTimeLeft = function(self)
@@ -163,8 +166,7 @@ function Weapon:OnEnable()
 
 	bollo.RegisterCallback(self, "OnUpdate")
 
-	TemporaryEnchantFrame:SetScript("OnUpdate", nil)
-	TemporaryEnchantFrame:Hide()
+
 
 	local conf = bollo:GetModule("Config")
 	conf:AddChildOpts("weapon", Weapon.db.profile.weapon, Weapon)
