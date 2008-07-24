@@ -182,7 +182,9 @@ function Weapon:OnDisable()
 	bollo.icons.weapon.bg:Hide()
 
 	for k, v in pairs(bollo.icons.weapon) do
-		v:Hide()
+		if v then
+			v:Hide()
+		end
 	end
 
 	TemporaryEnchantFrame:Show()
