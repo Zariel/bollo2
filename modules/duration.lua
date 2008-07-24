@@ -412,7 +412,7 @@ function duration:OnUpdate()
 			for index, buff in ipairs(bollo.icons[name]) do
 				if not buff.duration then self:PostAuraCreate(nil, nil, buff) end
 				local timeLeft = buff:GetTimeLeft()
-				if timeLeft and timeLeft > 0 then
+				if timeLeft and type(timeLeft) == "number" and timeLeft > 0 then
 					buff.duration:SetFormattedText(duration:FormatTime(duration.db.profile[name].format, timeLeft))
 					buff.duration:Show()
 				else
