@@ -127,9 +127,10 @@ function Sort:OnDisable()
 end
 
 Sort.TimeLeft = function(a, b)
-	a = a and a:GetTimeLeft() or 0
-	b = b and b:GetTimeLeft() or 0
-	return a > b
+	if not b or not b:GetTimeLeft() then return false end
+	if not a or not a:GetTimeLeft() then return true end
+
+	return a:GetTimeLeft() > b:GetTimeLeft()
 end
 
 Sort.TimeLeftReverse = function(b, a)
