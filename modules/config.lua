@@ -202,7 +202,7 @@ function conf:OnInitialize()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo", defaults)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Bollo", "Bollo", nil)
 
-	self:RegisterChatCommand("bollo", function() InterfaceOptionsFrame_OpenToFrame(LibStub("AceConfigDialog-3.0").BlizOptions["Bollo\001general"].frame) end)
+	self:RegisterChatCommand("bollo", function() InterfaceOptionsFrame_OpenToFrame(LibStub("AceConfigDialog-3.0").BlizOptions["Bollo"].frame) end)
 end
 
 function conf:OnEnable()
