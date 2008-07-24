@@ -113,6 +113,7 @@ function bf:UpdateSkins(event)
 			for k, v in ipairs(bollo.icons[name]) do
 				self:PostCreateIcon(nil, nil, v)
 			end
+			if not event then bollo.events:Fire("PostUpdateConfig", name) end
 		end
 	end
 end
