@@ -134,22 +134,24 @@ Sort.TimeLeft = function(a, b)
 end
 
 Sort.TimeLeftReverse = function(b, a)
-	a = a and a:GetTimeLeft() or 0
-	b = b and b:GetTimeLeft() or 0
-	return a > b
+	if not b or not b:GetTimeLeft() then return false end
+	if not a or not a:GetTimeLeft() then return true end
+
+	return a:GetTimeLeft() > b:GetTimeLeft()
 end
 
-
 Sort.Alphabetical = function(a, b)
-	a = a and a:GetBuff() or ""
-	b = b and b:GetBuff() or ""
-	return a > b
+	if not b or not b:GetBuff() then return false end
+	if not a or not a:GetBuff() then return true end
+
+	return a:GetBuff() > b:GetBuff()
 end
 
 Sort.AlphabeticalReverse = function(b, a)
-	a = a and a:GetBuff() or ""
-	b = b and b:GetBuff() or ""
-	return a > b
+	if not b or not b:GetBuff() then return false end
+	if not a or not a:GetBuff() then return true end
+
+	return a:GetBuff() > b:GetBuff()
 end
 
 function Sort:PreUpdateIcons(event, icons)
