@@ -127,7 +127,7 @@ end
 function prototype:GetTimeLeft()
 	local id = self:GetID()
 	if select(2, GetPlayerBuff(id)) > 0 then
-		return 0
+		return nil
 	else
 		return GetPlayerBuffTimeLeft(id) or 0
 	end
