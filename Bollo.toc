@@ -1,5 +1,5 @@
 ## Title: Bollo
-## Version: 2.4.3-15Beta
+## Version: 2.4.3-16Beta
 ## Interface: 20400
 ## OptionalDeps: Ace3
 ## SavedVariables: BolloDB
@@ -11,11 +11,11 @@ prototype.lua
 
 modules\config.lua
 
+modules\buttonfacade.lua
 modules\name.lua
 modules\duration.lua
-modules\buttonfacade.lua
 modules\profiles.lua
 modules\count.lua
 modules\weapons.lua
 modules\sort.lua
-modules\dummy.lua
+modules\totems.lua
