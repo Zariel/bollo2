@@ -149,21 +149,17 @@ function Totem:SetupIcons()
 	end
 end
 
-local totems = {}
-
 local _, name, start, duration
 function Totem:PLAYER_TOTEM_UPDATE()
 	-- Madness
 	for i = 1, 4 do
 		_, name, startTime, duration, icon = GetTotemInfo(i)
-		if (not totems[i] or totems[i] ~= name) and duration > 0 then
+		if name ~= "" and duration > 0 then
 			local buff = icons[i]
 			buff.icon:SetTexture(icon)
 			buff:Show()
-			totems[i] = name
-		elseif totems[i] and duration == 0 then
+		else
 			icons[i]:Hide()
-			totems[i] = nil
 		end
 		bollo.events:Fire("PostSetBuff", icons[i], i, nil)
 	end
@@ -182,13 +178,18 @@ function Totem:PLAYER_TOTEM_UPDATE()
 
 	for i, buff in ipairs(icons) do
 		if buff:IsShown() then
-			if offset == perCol then
-				rows = rows + 1
-				offset = 0
-			end
+			if buff:GetTimeLeft() then
+				if offset == perCol then
+					rows = rows + 1
+					offset = 0
+				end
 
-			buff:SetPoint(point, icons.bg, point, (offset * (size + self.db.profile.totem.spacing) * growthx), (rows * (size + rowSpace) * growthy))
-			offset = offset + 1
+				buff:SetPoint(point, icons.bg, point, (offset * (size + self.db.profile.totem.spacing) * growthx), (rows * (size + rowSpace) * growthy))
+				offset = offset + 1
+			else
+				-- When you change zones.
+				buff:Hide()
+			end
 		end
 	end
 end
