@@ -4,8 +4,6 @@ local lib
 local SetVertexColor
 
 function bf:PostCreateIcon(event, parent, button)
-	local debuff = tostring(parent) == "debuff"
-
 	button.border._SetVertexColor = button.border.SetVertexColor
 
 	local data = {
@@ -15,12 +13,12 @@ function bf:PostCreateIcon(event, parent, button)
 		["Count"] = button.count,
 	}
 
-	if debuff then
-		self.debuff:AddButton(button, data)
-	else
-		self.buff:AddButton(button, data)
+	lib:Group("Bollo", button.name):AddButton(button, data)
+
+	if self.db.profile[button.name] then
+		local db = self.db.profile[button.name]
+		lib:Group("Bollo", button.name):Skin(db.Skin, db.Gloss, db.Backdrop)
 	end
-	self:PostSetBuff(nil, button)
 end
 
 function bf:PostSetBuff(event, button)
@@ -34,10 +32,6 @@ end
 function bf:OnInitialize()
 	local defaults = {
 		profile = {
-			debuff = {
-			},
-			buff = {
-			},
 			enabled = true,
 		}
 	}
@@ -71,7 +65,7 @@ function bf:OnInitialize()
 					return self.db.profile[key]
 				end
 			},
-		}
+		},
 	}
 
 	bollo:AddOptions(self)
@@ -92,28 +86,20 @@ end
 
 function bf:OnEnable()
 	lib = lib or LibStub("LibButtonFacade")
-	self.buff = self.buff or lib:Group("Bollo", "buff")
-	self.debuff = self.debuff or lib:Group("Bollo", "debuff")
 
 	lib:RegisterSkinCallback("Bollo", self.UpdateSkin, self)
 	bollo.RegisterCallback(bf, "PostCreateIcon")
 	bollo.RegisterCallback(bf, "PostSetBuff")
 	bollo.RegisterCallback(bf, "PostUpdateConfig", "UpdateSkins")
-	bollo.RegisterCallback(bf, "NewIconGroup")
+	bollo.RegisterCallback(bf, "NewIconGroup", "UpdateSkins")
 
 	self:UpdateSkins()
 end
 
 function bf:UpdateSkins(event)
 	for name in pairs(bollo.icons) do
-		local group = self[name]
-		if group then
-			local table = self.db.profile[name]
-			group:Skin(table.Skin, table.Gloss, table.Backdrop)
-			for k, v in ipairs(bollo.icons[name]) do
-				self:PostCreateIcon(nil, nil, v)
-			end
-			if not event then bollo.events:Fire("PostUpdateConfig", name) end
+		for k, v in ipairs(bollo.icons[name]) do
+			self:PostCreateIcon(nil, bollo.icons[name], v)
 		end
 	end
 end
