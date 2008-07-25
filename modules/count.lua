@@ -15,6 +15,7 @@ do
 end
 
 function Count:PostSetBuff(event, buff, index, filter)
+	if not RegisteredIcons[buff.name] then return end
 	local count = buff:GetCount()
 	if count > 1 then
 		local db = self.db.profile[buff.name]
