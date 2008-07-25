@@ -316,6 +316,7 @@ function name:OnEnable()
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "PostSetBuff")
 	bollo.RegisterCallback(self, "PostUpdateConfig", "UpdateDisplay")
+	bollo.RegisterCallback(self, "UpdateIconPosition")
 	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	SML.RegisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 	self:GetFonts()
@@ -325,6 +326,7 @@ function name:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "PostSetBuff")
 	bollo.UnregisterCallback(self, "PostUpdateConfig")
+	bollo.UnregisterCallback(self, "UpdateIconPosition")
 	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered", "GetFonts")
 
@@ -361,6 +363,18 @@ function name:PostSetBuff(event, buff, index, filter)
 	if buff.text:GetText() ~= tru then
 		buff.text:SetText(tru)
 		buff.text:Show()
+	end
+end
+
+function name:UpdateIconPosition(event, index, buff, icons)
+	if RegisteredIcons[buff.name] then
+		local db = self.db.profile[buff.name]
+		local point = db.point
+		local x, y = db.x, db.y
+		local anchor, relative, mod = bollo:GetPoint(point)
+
+		buff.text:ClearAllPoints()
+		buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 	end
 end
 
@@ -412,7 +426,6 @@ function name:UpdateDisplay(event, name, db)
 			buff.text:ClearAllPoints()
 			buff.text:SetPoint(anchor, buff, relative, mod * x, y)
 			buff.text:SetTextColor(col.r, col.g, col.b, col.a)
-			buff.text:Show()
 		end
 	end
 end

@@ -361,12 +361,14 @@ function duration:OnEnable()
 	bollo.db.RegisterCallback(self, "OnProfileChanged", "UpdateDisplay")
 	bollo.RegisterCallback(self, "PostCreateIcon")
 	bollo.RegisterCallback(self, "OnUpdate")
+	bollo.RegisterCallback(self, "UpdateIconPosition")
 end
 
 function duration:OnDisable()
 	bollo.UnregisterCallback(self, "PostCreateIcon")
 	bollo.UnregisterCallback(self, "OnUpdate")
 	bollo.UnregisterCallback(self, "PostUpdateConfig")
+	bollo.UnregisterCallback(self, "UpdateIconPosition")
 	SML.UnregisterCallback(self, "LibSharedMedia_Registered")
 	bollo.db.UnregisterCallback(self, "OnProfileChanged")
 
@@ -376,6 +378,18 @@ function duration:OnDisable()
 				v.duration:Hide()
 			end
 		end
+	end
+end
+
+function duration:UpdateIconPosition(event, index, buff, icons)
+	if RegisteredIcons[buff.name] then
+		local db = self.db.profile[buff.name]
+		local point = db.point
+		local x, y = db.x, db.y
+		local anchor, relative, mod = bollo:GetPoint(point)
+
+		buff.duration:ClearAllPoints()
+		buff.duration:SetPoint(anchor, buff, relative, mod * x, y)
 	end
 end
 
