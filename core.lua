@@ -221,6 +221,7 @@ function bollo:SortBuffs(icons, max)
 			end
 
 			buff:SetPoint(point, icons.bg, point, (offset * (size + self.db.profile[name].spacing) * growthx), (rows * (size + rowSpace) * growthy))
+			self.events:Fire("UpdateIconPosition", i, buff, icons)
 			offset = offset + 1
 		end
 	end
@@ -230,6 +231,7 @@ end
 function bollo:UpdateIcons(i, parent, filter)
 	local index = GetPlayerBuff(i, filter)
 	local icon = parent[i]
+	bollo.events:Fire("PreUpddate")
 
 	if index > 0 then
 		icon = icon or self:CreateIcon(parent)
