@@ -136,7 +136,7 @@ function Weapon:OnEnable()
 	end
 
 	if not bollo.icons.weapon.bg then
-		local bg = CreateFrame("Frame")
+		local bg = CreateFrame("Frame", nil, UIParent)
 		bg:SetWidth(Weapon.db.profile.weapon.width)
 		bg:SetHeight(Weapon.db.profile.weapon.height)
 		bg:SetBackdrop({
@@ -165,8 +165,6 @@ function Weapon:OnEnable()
 	end
 
 	bollo.RegisterCallback(self, "OnUpdate")
-
-
 
 	local conf = bollo:GetModule("Config")
 	conf:AddChildOpts("weapon", Weapon.db.profile.weapon, Weapon)
