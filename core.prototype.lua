@@ -98,8 +98,29 @@ function BuffProto:SetBuff(index)
 end
 
 function BuffProto:GetBuff()
-	local n, r = UnitBuff("player", self:GetID())
-	return n, r
+	return self.name, self.rank
+end
+
+function BuffProto:Update(id)
+	self:SetID(id)
+
+	local name, rank, icon, duration, timeleft = UnitBuff("player", id)
+
+	if not name or name == "" then
+		return true
+	end
+
+	self.name = name
+	self.rank = rank
+	self.icon = icon
+	self.duration = duration
+	self.timeleft = timeleft
+
+	self:SetNormalTexture(icon)
+
+	self:Show()
+
+	return
 end
 
 function IconPrototype:SetType(kind)
@@ -117,7 +138,9 @@ function prototype:CreateBackground()
 	bg:SetWidth(300)
 	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT")
 
-	return { bg = bg }
+	return {
+		bg = bg
+	}
 end
 
 Bollo.Auras = class(prototype)
