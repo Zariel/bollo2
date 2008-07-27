@@ -91,12 +91,6 @@ do
 	end
 end
 
-function BuffProto:SetBuff(index)
-	self:SetID(index)
-	local name, rank, icon = UnitBuff("player", index)
-	self:SetNormalTexture(icon)
-end
-
 function BuffProto:GetBuff()
 	return self.name, self.rank
 end
