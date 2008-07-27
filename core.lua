@@ -15,8 +15,43 @@ do
 	end
 end
 
+local LCH = LibStub("LibCallbackHandler-1.0", true)
+
+if not LCH then
+	return error("Bollo requires LibCallbackHandler-1.0")
+end
+
 local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo")
+
 Bollo.class = class
+
+function Bollo:OnInitialize()
+	self.events = LCH:New(Bollo)
+	self.db = LibStub("AceDB-3.0"):New("BolloDB2", {})
+
+	self.frame = CreateFrame("Frame")
+
+	local timer = 1
+
+	local OnUpdate = function(self, elapsed)
+		timer = timer + elapsed
+		if timer >= 1 then
+			self.event:Fire("OnUpdate")
+		end
+	end
+
+	function Bollo.events:OnUsed(target, event)
+		if event == "OnUpdate" then
+			self.frame:SetScript("OnUpdate", OnUpdate)
+		end
+	end
+
+	function Bollo.events:OnUnuse(target, event)
+		if event == "OnUpdate" then
+			self.frame:SetScript("OnUpdate", nil)
+		end
+	end
+end
 
 function Bollo:OnEnable()
 	local bf = _G["BuffFrame"]
