@@ -8,13 +8,16 @@ function buff:OnEnable()
 end
 
 function buff:PLAYER_AURAS_CHANGED()
-	local i = 1
-	while UnitBuff("player", i) do
-		local name = UnitBuff("player", i)
-		local c = self.icons[i] or Bollo.Auras:CreateIcon("buff")
-		c:SetBuff(i)
-		self.icons[i] = c
+	local i = 0
+	while true do
 		i = i + 1
+		local c = self.icons[i] or Bollo.Auras:CreateIcon("buff")
+
+		if c:Update(i) then
+			break
+		end
+
+		self.icons[i] = c
 	end
 
 	while self.icons[i] do
