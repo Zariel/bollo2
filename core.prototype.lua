@@ -14,7 +14,6 @@ local class = function(parent)
 	return c
 end
 
--- Buff prototype
 local IconPrototype = CreateFrame("Button", nil, UIParent)
 local prototype = {}
 
@@ -58,6 +57,35 @@ function BuffProto:Setup()
 			CancelPlayerBuff(self:GetID())
 		end
 	end)
+
+	self:SetScript("OnEnter", function(self)
+		if self:IsVisible() then
+			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
+			GameTooltip:SetUnitBuff("player", self:SetID())
+		end
+	end)
+
+	self:SetScript("OnLeave", function(self)
+		if GameTooltip:IsOwned(self) then
+			GameTooltip:Hide()
+		end
+	end)
+
+	self:SetHeight(32)
+	self:SetWidth(32)
+end
+
+function BuffProto:Update()
+	local id = self:GetID()
+	local name, rank, icon, count, duration, timeleft = UnitBuff("player", id)
+	self:SetNormalTexture(icon)
+
+	self.name = name
+	self.rank = rank
+	self.icon = icon
+	self.count = count
+	self.duration = duration
+	self.timeleft = timeleft
 end
 
 function prototype:SetType(kind)
@@ -66,7 +94,6 @@ function prototype:SetType(kind)
 		self:Setup()
 	end
 end
-
 
 Bollo.Auras = class(prototype)
 Bollo.Class = class
