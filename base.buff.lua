@@ -5,6 +5,8 @@ local buff = Bollo:NewModule("Buff", "AceEvent-3.0", "AceConsole-3.0")
 function buff:OnEnable()
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
 	self.icons = Bollo.Auras:CreateBackground()
+	local defaults = {}
+	self.db = Bollo.db:RegisterNamespace("Buff", defaults)
 end
 
 function buff:PLAYER_AURAS_CHANGED()
@@ -15,6 +17,10 @@ function buff:PLAYER_AURAS_CHANGED()
 
 		if c:Update(i) then
 			break
+		end
+
+		if GameTooltip:IsOwned(c) then
+			GameTooltip:SetUnitBuff("player", c:GetID())
 		end
 
 		self.icons[i] = c
