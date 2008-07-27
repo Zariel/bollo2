@@ -2,7 +2,7 @@
 ## Version: 2.4.3-16Beta
 ## Interface: 20400
 ## OptionalDeps: Ace3, LibSharedMedia-3.0
-## SavedVariables: BolloDB
+## SavedVariables: BolloDB2
 
 lib.xml
 
