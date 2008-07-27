@@ -7,15 +7,6 @@
 lib.xml
 
 core.lua
-prototype.lua
+core.prototype.lua
 
-modules\config.lua
-
-modules\buttonfacade.lua
-modules\name.lua
-modules\duration.lua
-modules\profiles.lua
-modules\count.lua
-modules\weapons.lua
-modules\sort.lua
-modules\totems.lua
+base.buff.lua
