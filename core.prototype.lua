@@ -1,26 +1,10 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
+local class = Bollo.class
 
 local UnitBuff = UnitBuff
 
-local class
-do
-	local new = function(c)
-		local o = {}
-		local mt = {__index = c}
-		setmetatable(o, mt)
-		return o
-	end
-
-	class = function(parent)
-		local c = { new = new }
-		local mt = {__index = parent}
-		setmetatable(c, mt)
-		return c
-	end
-end
-
 local IconPrototype = CreateFrame("Button", nil, UIParent)
-
+local BuffProto = class(IconPrototype)
 local prototype = {}
 
 do
@@ -58,8 +42,6 @@ do
 	end
 end
 
-local BuffProto = class(IconPrototype)
-
 do
 	local OnEnter = function(self)
 		if self:IsShown() then
@@ -77,7 +59,7 @@ do
 
 	local OnMouseUp = function(self, button)
 		if button == "RightButton" then
-			CancelPlayerBuff(self:GetID())
+			CancelPlayerBuff(self.name)
 		end
 	end
 
@@ -101,6 +83,7 @@ function BuffProto:Update(id)
 	local name, rank, icon, duration, timeleft = UnitBuff("player", id)
 
 	if not name or name == "" then
+		self:SetID(0)
 		return true
 	end
 
@@ -108,13 +91,11 @@ function BuffProto:Update(id)
 	self.rank = rank
 	self.icon = icon
 	self.duration = duration
-	self.timeleft = timeleft
+	self.timeleft = timeleft or 0
 
 	self:SetNormalTexture(icon)
 
 	self:Show()
-
-	return
 end
 
 function IconPrototype:SetType(kind)
