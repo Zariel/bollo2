@@ -15,10 +15,10 @@ do
 	end
 end
 
-local LCH = LibStub("LibCallbackHandler-1.0", true)
+local LCH = LibStub("CallbackHandler-1.0", true)
 
 if not LCH then
-	return error("Bollo requires LibCallbackHandler-1.0")
+	return error("Bollo requires CallbackHandler-1.0")
 end
 
 local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo")
@@ -36,19 +36,19 @@ function Bollo:OnInitialize()
 	local OnUpdate = function(self, elapsed)
 		timer = timer + elapsed
 		if timer >= 1 then
-			self.event:Fire("OnUpdate")
+			Bollo.events:Fire("OnUpdate")
 		end
 	end
 
 	function Bollo.events:OnUsed(target, event)
 		if event == "OnUpdate" then
-			self.frame:SetScript("OnUpdate", OnUpdate)
+			Bollo.frame:SetScript("OnUpdate", OnUpdate)
 		end
 	end
 
 	function Bollo.events:OnUnuse(target, event)
 		if event == "OnUpdate" then
-			self.frame:SetScript("OnUpdate", nil)
+			Bollo.frame:SetScript("OnUpdate", nil)
 		end
 	end
 end
