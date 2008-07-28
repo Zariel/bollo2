@@ -9,4 +9,7 @@ lib.xml
 core.lua
 core.prototype.lua
 
+
 base.buff.lua
+
+modules\duration.lua
