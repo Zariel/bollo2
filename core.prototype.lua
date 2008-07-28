@@ -16,10 +16,13 @@ do
 			f:Show()
 		else
 			f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = IconPrototype})
+			f.modules = {}
 		end
 
 		f:SetType(type)
 		f:Setup()
+
+		Bollo.events:Fire("PostCreateIcon", f)
 
 		return f
 	end
@@ -74,13 +77,21 @@ do
 end
 
 function BuffProto:GetBuff()
-	return self.name, self.rank
+	local name, rank = UnitBuff("player", self:GetID())
+	self.name, self.rank = name, rank
+	return name, rank
+end
+
+function BuffProto:GetTimeLeft()
+	local timeleft = math.floor((select(6, UnitBuff("player", self:GetID())) or 0) + 0.5)
+	self.timeleft = timeleft
+	return timeleft
 end
 
 function BuffProto:Update(id)
 	self:SetID(id)
 
-	local name, rank, icon, duration, timeleft = UnitBuff("player", id)
+	local name, rank, icon, count, duration, timeleft = UnitBuff("player", id)
 
 	if not name or name == "" then
 		self:SetID(0)
@@ -105,7 +116,7 @@ function IconPrototype:SetType(kind)
 	end
 end
 
-function prototype:CreateBackground()
+function prototype:CreateBackground(name)
 	if self.bg then return self.bg end
 
 	local bg = CreateFrame("Frame", nil, UIParent)
@@ -113,9 +124,11 @@ function prototype:CreateBackground()
 	bg:SetWidth(300)
 	bg:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT")
 
-	return {
+	return setmetatable({
 		bg = bg
-	}
+	},{
+		__tostring = function() return name end
+	})
 end
 
 Bollo.Auras = class(prototype)
