@@ -1,12 +1,14 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
-
 local buff = Bollo:NewModule("Buff", "AceEvent-3.0", "AceConsole-3.0")
 
 function buff:OnEnable()
 	self:RegisterEvent("PLAYER_AURAS_CHANGED")
-	self.icons = Bollo.Auras:CreateBackground()
+	self.icons = Bollo.Auras:CreateBackground("buff")
 	local defaults = {}
-	self.db = Bollo.db:RegisterNamespace("Buff", defaults)
+	self.db = Bollo.db:RegisterNamespace("buff", defaults)
+
+	self.type = "buff"
+	Bollo:GetModule("Duration"):Register(buff)
 end
 
 function buff:PLAYER_AURAS_CHANGED()
@@ -41,6 +43,7 @@ function buff:PositionIcons()
 		if icon:IsShown() then
 			icon:ClearAllPoints()
 			icon:SetPoint("TOPRIGHT", self.icons.bg, "TOPRIGHT", -(32 * offset + 5), 0)
+			Bollo.events:Fire("PostUpdateBuffPosition", icon)
 			offset = offset + 1
 		end
 	end
