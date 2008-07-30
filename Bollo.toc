@@ -7,8 +7,8 @@
 lib.xml
 
 core.lua
-core.prototype.lua
 
+button.prototype.lua
 
 base.buff.lua
 

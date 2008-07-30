@@ -1,40 +1,50 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
 local buff = Bollo:NewModule("Buff", "AceEvent-3.0", "AceConsole-3.0")
+local units = {}
 
 function buff:OnEnable()
-	self:RegisterEvent("PLAYER_AURAS_CHANGED")
-	self.icons = Bollo.Auras:CreateBackground("buff")
+	self:RegisterUnit("player")
+	self:RegisterEvent("UNIT_AURA")
+
 	local defaults = {}
 	self.db = Bollo.db:RegisterNamespace("buff", defaults)
 
-	self.type = "buff"
-	Bollo:GetModule("Duration"):Register(buff)
+	self.icons = {}
+	self:UNIT_AURA(nil, "player")
+
 end
 
-function buff:PLAYER_AURAS_CHANGED()
-	local i = 0
+function buff:RegisterUnit(unit)
+	units[unit] = true
+end
+
+function buff:UNIT_AURA(event, unit)
+	if not units[unit] then return end
+
+	local i = 1
 	while true do
+		local name = UnitBuff(unit, i)
+		if not name then break end
+
+		local icon, id = Bollo.Auras:NewIcon()
+		icon:SetUnit(unit)
+		icon:SetID(i)
+		icon:SetBase("buff")
+		icon:Update()
+		icon:SetNormalTexture(icon.info.icon)
+		icon:Show()
+
 		i = i + 1
-		local c = self.icons[i] or Bollo.Auras:CreateIcon("buff")
 
-		if c:Update(i) then
-			break
-		end
-
-		if GameTooltip:IsOwned(c) then
-			GameTooltip:SetUnitBuff("player", c:GetID())
-		end
-
-		self.icons[i] = c
+		self.icons[id] = icon
 	end
 
 	while self.icons[i] do
-		Bollo.Auras:RemoveIcon(self.icons[i])
-		self.icons[i] = nil
+		local id = Bollo.Auras:DelIcon(self.icons[i])
+		self.icons[id] = nil
+
 		i = i + 1
 	end
-
-	self:PositionIcons()
 end
 
 function buff:PositionIcons()
@@ -42,8 +52,7 @@ function buff:PositionIcons()
 	for index, icon in ipairs(self.icons) do
 		if icon:IsShown() then
 			icon:ClearAllPoints()
-			icon:SetPoint("TOPRIGHT", self.icons.bg, "TOPRIGHT", -(32 * offset + 5), 0)
-			Bollo.events:Fire("PostUpdateBuffPosition", icon)
+			icon:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -(32 * offset + 5) - 200, -10)
 			offset = offset + 1
 		end
 	end

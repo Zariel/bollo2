@@ -19,8 +19,6 @@ function Duration:PostCreateIcon(event, buff)
 	t:SetFont(STANDARD_TEXT_FONT, 14)
 	t:ClearAllPoints()
 	t:SetPoint("TOP", buff, "BOTTOM", 0, -2)
-	t:SetPoint("LEFT", buff, "LEFT")
-	t:SetPoint("RIGHT", buff, "RIGHT")
 
 	buff.modules.duration = t
 end
@@ -65,7 +63,7 @@ function Duration:OnUpdate()
 					end
 
 					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-						GameTooltip:SetUnitBuff("player", buff:GetID())
+						GameTooltip:SetUnitBuff("player", buff.id)
 					end
 				end
 			end
