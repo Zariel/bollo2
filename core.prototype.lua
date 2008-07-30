@@ -32,6 +32,11 @@ do
 		f:SetID(0)
 		f:SetNormalTexture("")
 		f:ClearAllPoints()
+		for k, v in pairs(f.modules) do
+
+			v:Hide()
+			v:ClearAllPoints()
+		end
 
 		cache[f] = true
 	end
@@ -83,20 +88,20 @@ function BuffProto:GetBuff()
 end
 
 function BuffProto:GetTimeLeft()
-	local timeleft = math.floor((select(6, UnitBuff("player", self:GetID())) or 0) + 0.5)
+	local timeleft = tonumber(math.floor((select(6, UnitBuff("player", self:GetID())) or 0) + 0.5))
 	self.timeleft = timeleft
 	return timeleft
 end
 
 function BuffProto:Update(id)
-	self:SetID(id)
-
 	local name, rank, icon, count, duration, timeleft = UnitBuff("player", id)
 
 	if not name or name == "" then
 		self:SetID(0)
 		return true
 	end
+
+	self:SetID(id)
 
 	self.name = name
 	self.rank = rank
