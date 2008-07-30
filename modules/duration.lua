@@ -9,16 +9,15 @@ function Duration:OnEnable()
 	Bollo.RegisterCallback(self, "PostUpdateBuffPosition")
 end
 
-
 function Duration:PostUpdateBuffPosition(event, icon)
 end
-
 
 function Duration:PostCreateIcon(event, buff)
 	if buff.modules.duration then return end
 
 	local t = buff:CreateFontString(nil, "OVERLAY")
 	t:SetFont(STANDARD_TEXT_FONT, 14)
+	t:ClearAllPoints()
 	t:SetPoint("TOP", buff, "BOTTOM", 0, -2)
 	t:SetPoint("LEFT", buff, "LEFT")
 	t:SetPoint("RIGHT", buff, "RIGHT")
@@ -36,17 +35,38 @@ function Duration:Register(module)
 	end
 end
 
+function Duration:FormatTime(time)
+	local text, m
+	if time > 3600 then
+		m = math.floor(time / 360) / 10
+		text = "%dhr"
+	elseif time > 60 then
+		m = math.floor(mod(time, 3600) / 60)
+		text = "%dm"
+	else
+		m = time
+		text = "%ds"
+	end
+	return text, m
+end
+
 function Duration:OnUpdate()
 	for module, state in pairs(registered) do
 		if state then
 			for index, buff in ipairs(module.icons) do
-				if not buff.modules.duration then self:PostCreateIcon("update", buff) end
-				local timeleft = buff:GetTimeLeft()
-				if timeleft and timeleft > 0 then
-					buff.modules.duration:SetFormattedText(SecondsToTimeAbbrev(timeleft))
-					buff.modules.duration:Show()
-				else
-					buff.modules.duration:Hide()
+				if buff:IsShown() then
+					if not buff.modules.duration then self:PostCreateIcon("update", buff) end
+					local timeleft = buff:GetTimeLeft()
+					if timeleft and timeleft > 0 then
+						buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
+						buff.modules.duration:Show()
+					else
+						buff.modules.duration:Hide()
+					end
+
+					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
+						GameTooltip:SetUnitBuff("player", buff:GetID())
+					end
 				end
 			end
 		end
