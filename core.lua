@@ -34,9 +34,10 @@ function Bollo:OnInitialize()
 	local timer = 1
 
 	local OnUpdate = function(self, elapsed)
-		timer = timer + elapsed
 		if timer >= 1 then
 			Bollo.events:Fire("OnUpdate")
+		else
+			timer = timer + elapsed
 		end
 	end
 
