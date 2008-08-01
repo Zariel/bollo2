@@ -24,9 +24,8 @@ end
 do
 	local OnEnter = function(self)
 		if self:IsShown() then
-			GameTooltip:SetAnchor(self, "ANCHOR_BOTTOMLEFT")
-			GameTooltip:SetOwner(self)
-			GameTooltip:Show()
+			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+			GameTooltip:SetPlayerBuff(self.id)
 		end
 	end
 
@@ -41,6 +40,7 @@ do
 	end
 
 	function prototype:Init()
+		self:EnableMouse(true)
 		self:SetScript("OnMouseUp", OnMouseUp)
 		self:SetScript("OnEnter", OnEnter)
 		self:SetScript("OnLeave", OnLeave)
