@@ -3,10 +3,16 @@ local Duration = Bollo:NewModule("Duration", "AceConsole-3.0")
 
 local registered = {}
 
-function Duration:OnEnable()
-	Bollo.RegisterCallback(self, "OnUpdate")
+function Duration:OnInitialize()
+	local defaults = {
+		profile = {}
+	}
 
 	self.db = Bollo.db:RegisterNamespace("Duration", defaults)
+end
+
+function Duration:OnEnable()
+	Bollo.RegisterCallback(self, "OnUpdate")
 end
 
 function Duration:PostCreateIcon(event, buff)
