@@ -5,6 +5,8 @@ local registered = {}
 
 function Duration:OnEnable()
 	Bollo.RegisterCallback(self, "OnUpdate")
+
+	self.db = Bollo.db:RegisterNamespace("Duration", defaults)
 end
 
 function Duration:PostCreateIcon(event, buff)
@@ -19,9 +21,9 @@ function Duration:PostCreateIcon(event, buff)
 end
 
 function Duration:Register(module)
-	if registered[module] then return end
+	if registered[tostring(module)] then return end
 
-	registered[module] = true
+	registered[tostring(module)] = module
 
 	for i, b in ipairs(module.icons) do
 		self:PostCreateIcon("init", b)
@@ -31,10 +33,10 @@ end
 function Duration:FormatTime(time)
 	local text, m
 	if time > 3600 then
-		m = math.floor(time / 360) / 10
+		m = math.floor(time / 360 + 0.5) / 10
 		text = "%dhr"
 	elseif time > 60 then
-		m = math.floor(mod(time, 3600) / 60)
+		m = math.floor(mod(time, 3600) / 60 + 0.5)
 		text = "%dm"
 	else
 		m = time
@@ -43,23 +45,24 @@ function Duration:FormatTime(time)
 	return text, m
 end
 
-function Duration:OnUpdate()
-	for module, state in pairs(registered) do
-		if state then
-			for index, buff in ipairs(module.icons) do
-				if buff:IsShown() then
-					if not buff.modules.duration then self:PostCreateIcon("update", buff) end
-					local timeleft = buff:GetTimeleft()
-					if timeleft and timeleft > 0 then
-						buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
-						buff.modules.duration:Show()
-					else
-						buff.modules.duration:Hide()
-					end
+function Duration:UpdateConfig()
+end
 
-					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-						GameTooltip["SetUnit" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")]("player", buff.id)
-					end
+function Duration:OnUpdate()
+	for name, module in pairs(registered) do
+		for index, buff in ipairs(module.icons) do
+			if buff:IsShown() then
+				if not buff.modules.duration then self:PostCreateIcon("update", buff) end
+				local timeleft = buff:GetTimeleft()
+				if timeleft and timeleft > 0 then
+					buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
+					buff.modules.duration:Show()
+				else
+					buff.modules.duration:Hide()
+				end
+
+				if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
+					GameTooltip["SetUnit" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")]("player", buff.id)
 				end
 			end
 		end
