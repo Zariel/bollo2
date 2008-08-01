@@ -59,9 +59,10 @@ function Bollo:NewIcon()
 		cache[f] = nil
 	else
 		f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = prototype})
+		f.modules = {}
+		f:Init()
 	end
 
-	f:Init()
 	f:Show()
 
 	return f
