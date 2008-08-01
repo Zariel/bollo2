@@ -62,7 +62,7 @@ function Duration:OnUpdate()
 				end
 
 				if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-					GameTooltip["SetUnit" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")]("player", buff.id)
+					GameTooltip["SetUnit" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")](GameTooltip, "player", buff.id)
 				end
 			end
 		end
