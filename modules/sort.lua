@@ -11,7 +11,7 @@ function Sort:Register(module)
 	local name = tostring(module)
 	if registered[name] then return end
 
-	registeredp[name] = module
+	registered[name] = module
 end
 
 local SortTimeLeft = function(a, b)
@@ -21,7 +21,7 @@ local SortTimeLeft = function(a, b)
 	return a:GetTimeleft() > b:GetTimeleft()
 end
 
-function Sort:SortIcons(event, icons. module)
+function Sort:SortIcons(event, icons, module)
 	if not registered[tostring(module)] then return end
 
 	table.sort(icons, SortTimeLeft)
