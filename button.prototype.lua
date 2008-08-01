@@ -18,7 +18,11 @@ function prototype:SetID(id)
 end
 
 function prototype:GetTimeleft()
-	return math.floor(GetPlayerBuffTimeLeft(self.id) + 0.5)
+	if select(2, GetPlayerBuff(self.id)) > 0 then
+		return nil
+	else
+		return math.floor(GetPlayerBuffTimeLeft(self.id) + 0.5)
+	end
 end
 
 function prototype:SetBase(base)
