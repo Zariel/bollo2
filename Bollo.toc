@@ -10,6 +10,4 @@ core.lua
 
 button.prototype.lua
 
-base.buff.lua
-
-modules\duration.lua
+base\buff.lua
