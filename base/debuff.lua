@@ -1,43 +1,41 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
-local Buff = Bollo:NewModule("Buff", "AceEvent-3.0")
-local cache = {}
+local Debuff = Bollo:NewModule("Debuff", "AceEvent-3.0")
 
-function Buff:OnInitialize()
+function Debuff:OnInitialize()
 	local defaults = {
 		profile = {
 			size = 32,
 			spacing = 20,
-			rowSpacing = 25,
 			growthX = "LEFT",
 			growthY = "DOWN",
+			rowSpacing = 25,
 			scale = 1,
 			x = 0,
 			y = 0,
 		},
 	}
 
-	self.db = Bollo.db:RegisterNamespace("Buff", defaults)
+	self.db = Bollo.db:RegisterNamespace("Debuff", defaults)
 end
 
-function Buff:OnEnable()
+function Debuff:OnEnable()
 	self:RegisterEvent("PLAYER_AURAS_CHANGED", "Update")
-	self.icons = self.icons or Bollo:CreateBackground("buff", self.db.profile)
+	self.icons = self.icons or Bollo:CreateBackground("debuff", self.db.profile)
 
 	for name, module in Bollo:IterateModules() do
 		if module.Register then
-			module:Register(Buff)
+			module:Register(Debuff)
 		end
 	end
-
 	local config = Bollo:GetModule("Config")
-	config.options.args.icons.args.buff = config:GenerateOptions("Buff", Buff)
+	config.options.args.icons.args.debuff = config:GenerateOptions("Debuff", Debuff)
 end
 
-function Buff:Update()
+function Debuff:Update()
 	for i = 1, 40 do
-		if GetPlayerBuff(i, "HELPFUL") > 0 then
+		if GetPlayerBuff(i, "HARMFUL") > 0 then
 			local icon = self.icons[i] or Bollo:NewIcon()
-			icon:SetBase("HELPFUL")
+			icon:SetBase("HARMFUL")
 			icon:SetID(i)
 			icon:Setup(self.db.profile)
 			self.icons[i] = icon
@@ -55,8 +53,8 @@ function Buff:Update()
 	self:UpdatePosition()
 end
 
-function Buff:UpdatePosition()
-	Bollo.events:Fire("PrePositionIcons", self.icons, Buff)
+function Debuff:UpdatePosition()
+	Bollo.events:Fire("PrePositionIcons", self.icons, Debuff)
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
 	local perRow = math.floor(self.icons.bg:GetWidth() / (size + spacing) + 0.5)
@@ -73,11 +71,4 @@ function Buff:UpdatePosition()
 		buff:SetPoint("TOPRIGHT", self.icons.bg, "TOPRIGHT", ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
 		offset = offset + 1
 	end
-end
-
-function Buff:UpdateConfig()
-	for i, buff in ipairs(self.icons) do
-		buff:Setup(self.db.profile)
-	end
-	self:UpdatePosition()
 end
