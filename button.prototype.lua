@@ -17,6 +17,10 @@ function prototype:SetID(id)
 	self:SetNormalTexture(icon)
 end
 
+function prototype:GetTimeleft()
+	return math.floor(GetPlayerBuffTimeLeft(self.id) + 0.5)
+end
+
 function prototype:SetBase(base)
 	self.base = base
 end
