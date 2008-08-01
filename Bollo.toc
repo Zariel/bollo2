@@ -11,6 +11,8 @@ core.lua
 button.prototype.lua
 
 base\buff.lua
+base\debuff.lua
 
 modules\duration.lua
 modules\sort.lua
+modules\config.lua
