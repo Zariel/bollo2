@@ -14,7 +14,8 @@ function Duration:PostCreateIcon(event, buff)
 
 	local t = buff:CreateFontString(nil, "OVERLAY")
 	t:SetFont(STANDARD_TEXT_FONT, 14)
-	t:ClearAllPoints()
+	t:SetShadowColor(0, 0, 0, 1)
+	t:SetShadowOffset(1, -1)
 	t:SetPoint("TOP", buff, "BOTTOM", 0, -2)
 
 	buff.modules.duration = t
@@ -62,7 +63,7 @@ function Duration:OnUpdate()
 				end
 
 				if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-					GameTooltip["SetUnit" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")](GameTooltip, "player", buff.id)
+					GameTooltip["SetPlayer" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")](GameTooltip, buff.id)
 				end
 			end
 		end
