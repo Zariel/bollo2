@@ -21,10 +21,17 @@ function Duration:PostCreateIcon(event, buff)
 	buff.modules.duration = t
 end
 
-function Duration:Register(module)
+function Duration:Register(module, defaults)
 	if registered[tostring(module)] then return end
 
 	registered[tostring(module)] = module
+
+	if not self.db.profile[tostring(module)] then
+		self.db.profile[tostring(module)] = {
+			size = 14,
+			font = STANDARD_TEXT_FONT,
+		}
+	end
 
 	for i, b in ipairs(module.icons) do
 		self:PostCreateIcon("init", b)
