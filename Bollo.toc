@@ -13,6 +13,8 @@ button.prototype.lua
 base\buff.lua
 base\debuff.lua
 
+locale\enUS.lua
+
 modules\duration.lua
 modules\sort.lua
 modules\config.lua
