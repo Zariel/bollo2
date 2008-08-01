@@ -13,3 +13,4 @@ button.prototype.lua
 base\buff.lua
 
 modules\duration.lua
+modules\sort.lua
