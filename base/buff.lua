@@ -1,18 +1,17 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
-local Buff = Bollo:NewModule("Buff")
+local Buff = Bollo:NewModule("Buff", "AceEvent-3.0")
 local cache = {}
 
 function Buff:OnInitialize()
-	local bf = _G["BuffFrame"]
-	bf:Hide()
-	bf:SetScript("OnEvent", nil)
-
 	local defaults = {
 		profile = {
 			size = 32,
-			spacing = 5,
+			spacing = 10,
 			growthX = "LEFT",
 			growthY = "DOWN",
+			scale = 1,
+			x = 0,
+			y = 0,
 		},
 	}
 
@@ -21,7 +20,7 @@ end
 
 function Buff:OnEnable()
 	self:RegisterEvent("PLAYER_AURAS_CHANGED", "Update")
-	self.icons = self.icons or {}
+	self.icons = self.icons or Bollo:CreateBackground("buff", self.db.profile)
 end
 
 function Buff:Update()
@@ -51,7 +50,7 @@ function Buff:UpdatePosition()
 	local offset = 0
 	for index, buff in ipairs(self.icons) do
 		buff:ClearAllPoints()
-		buff:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", (size + spacing) * offset - 200, 0)
+		buff:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", (buff:GetEffectiveScale() * (size + spacing)) * offset * growthX - 200, 0)
 		offset = offset + 1
 	end
 end
