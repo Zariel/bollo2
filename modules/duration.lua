@@ -5,11 +5,6 @@ local registered = {}
 
 function Duration:OnEnable()
 	Bollo.RegisterCallback(self, "OnUpdate")
-	Bollo.RegisterCallback(self, "PostCreateIcon")
-	Bollo.RegisterCallback(self, "PostUpdateBuffPosition")
-end
-
-function Duration:PostUpdateBuffPosition(event, icon)
 end
 
 function Duration:PostCreateIcon(event, buff)
@@ -54,7 +49,7 @@ function Duration:OnUpdate()
 			for index, buff in ipairs(module.icons) do
 				if buff:IsShown() then
 					if not buff.modules.duration then self:PostCreateIcon("update", buff) end
-					local timeleft = buff:GetTimeLeft()
+					local timeleft = buff:GetTimeleft()
 					if timeleft and timeleft > 0 then
 						buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
 						buff.modules.duration:Show()
@@ -63,7 +58,7 @@ function Duration:OnUpdate()
 					end
 
 					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-						GameTooltip:SetUnitBuff("player", buff.id)
+						GameTooltip["SetUnit" .. (buff.base == "HELPFUL" and "Buff" or "Debuff")]("player", buff.id)
 					end
 				end
 			end
