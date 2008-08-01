@@ -52,11 +52,18 @@ end
 function Buff:UpdatePosition()
 	local size, spacing = self.db.profile.size, self.db.profile.spacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
+	local perRow = math.floor(self.icons.bg:GetWidth() / (size + spacing) + 0.5)
 
 	local offset = 0
+	local rows = 0
 	for index, buff in ipairs(self.icons) do
+		if offset == perRow then
+			rows = rows + 1
+			offset = 0
+		end
+
 		buff:ClearAllPoints()
-		buff:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", (buff:GetEffectiveScale() * size + spacing) * offset * growthX - 200, 0)
+		buff:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", buff:GetEffectiveScale() * (size + spacing) * offset * growthX - 200, buff:GetEffectiveScale() * (size + spacing) * rows * growthY - 10)
 		offset = offset + 1
 	end
 end
