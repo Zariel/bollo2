@@ -21,6 +21,33 @@ function prototype:SetBase(base)
 	self.base = base
 end
 
+do
+	local OnEnter = function(self)
+		if self:IsShown() then
+			GameTooltip:SetAnchor(self, "ANCHOR_BOTTOMLEFT")
+			GameTooltip:SetOwner(self)
+			GameTooltip:Show()
+		end
+	end
+
+	local OnLeave = function(self)
+		GameTooltip:Hide()
+	end
+
+	local OnMouseUp = function(self, button)
+		if button == "RightButton" then
+			CancelPlayerBuff(self.id)
+		end
+	end
+
+	function prototype:Init()
+		self:SetScript("OnMouseUp", OnMouseUp)
+		self:SetScript("OnEnter", OnEnter)
+		self:SetScript("OnLeave", OnLeave)
+	end
+end
+
+
 local cache = setmetatable({}, {__mode = "k"})
 function Bollo:NewIcon()
 	local f = next(cache)
@@ -30,6 +57,7 @@ function Bollo:NewIcon()
 		f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = prototype})
 	end
 
+	f:Init()
 	f:Show()
 
 	return f
