@@ -12,6 +12,12 @@ function Debuff:OnInitialize()
 			scale = 1,
 			x = 0,
 			y = 0,
+			color = {
+				r = 0,
+				g = 1,
+				b = 1,
+				a = 0
+			},
 		},
 	}
 

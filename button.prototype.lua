@@ -7,6 +7,15 @@ function prototype:Setup(db)
 	self:SetHeight(size)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
+	if self.base ~= "HARMFUL" then
+		local col = db.color
+		self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+		self.Border:ClearAllPoints()
+		self.Border:SetPoint("TOP", 0, 2)
+		self.Border:SetPoint("RIGHT", 2, 0)
+		self.Border:SetPoint("BOTTOM", 0, -2)
+		self.Border:SetPoint("LEFT", -2, 0)
+	end
 end
 
 function prototype:SetID(id)
@@ -15,6 +24,13 @@ function prototype:SetID(id)
 
 	local icon = GetPlayerBuffTexture(self.id)
 	self:SetNormalTexture(icon)
+
+	if self.base == "HELPFUL" then
+		self.Border:SetVertexColor(0, 1, 0, 1)
+	else
+		local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+		self.Border:SetVertexColor(col.r, col.g, col.b)
+	end
 end
 
 function prototype:GetTimeleft()
@@ -64,6 +80,16 @@ function Bollo:NewIcon()
 	else
 		f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = prototype})
 		f.modules = {}
+
+		local b = f:CreateTexture(nil, "OVERLAY")
+		b:SetTexture([[Interface\Buttons\UI-Debuff-Overlays]])
+		b:SetPoint("TOP", 0, 2)
+		b:SetPoint("RIGHT", 2, 0)
+		b:SetPoint("BOTTOM", 0, -2)
+		b:SetPoint("LEFT", -2, 0)
+		b:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
+
+		f.Border = b
 		f:Init()
 	end
 

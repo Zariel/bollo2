@@ -119,7 +119,8 @@ function Config:GenerateOptions(name, module)
 				max = 300,
 				step = 1,
 				order = 70,
-			}
+			},
+
 		}
 	}
 

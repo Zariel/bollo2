@@ -13,6 +13,12 @@ function Buff:OnInitialize()
 			scale = 1,
 			x = 0,
 			y = 0,
+			color = {
+				r = 0,
+				g = 1,
+				b = 1,
+				a = 0
+			},
 		},
 	}
 
@@ -31,6 +37,24 @@ function Buff:OnEnable()
 
 	local config = Bollo:GetModule("Config")
 	config.options.args.icons.args.buff = config:GenerateOptions("Buff", Buff)
+	config.options.args.icons.args.buff.args.color = {
+		name = "Border Color",
+		type = "color",
+		order = 80,
+		hasAlpha = true,
+		set = function(info, r, g, b, a)
+			local t = Buff.db.profile[info[#info]]
+			t.r = r
+			t.g = g
+			t.b = b
+			t.a = a
+			self:UpdateConfig(name)
+		end,
+		get = function(info)
+			local t = Buff.db.profile[info[#info]]
+			return t.r, t.g, t.b, t.a
+		end,
+	}
 end
 
 function Buff:Update()
