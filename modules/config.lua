@@ -39,54 +39,77 @@ function Config:GenerateOptions(name, module)
 		["get"] = get,
 		["order"] = self.count,
 		["args"] = {
-			lock = {
-				name = "Lock",
-				type = "toggle",
-				get = function()
-					return not module.icons.bg:IsShown()
-				end,
-				set = function(info, state)
-					if state then
-						module.icons.bg:Hide()
-					else
-						module.icons.bg:Show()
-					end
-				end,
+			anchor = {
+				type = "group",
+				name = "Anchor",
+				guiInline = true,
 				order = 10,
-			},
-			height = {
-				name = "Height",
-				type = "range",
-				min = 10,
-				max = 1000,
-				step = 5,
-				order = 20,
-				set = function(info, val)
-					local key = info[#info]
-					module.db.profile[key] = val
-					module.icons.bg:SetHeight(val)
-					self:UpdateConfig(name)
-				end,
-				get = function()
-					return module.icons.bg:GetHeight()
-				end,
-			},
-			width = {
-				name = "Width",
-				type = "range",
-				min = 10,
-				max = 1000,
-				step = 5,
-				order = 30,
-				set = function(info, val)
-					local key = info[#info]
-					module.db.profile[key] = val
-					module.icons.bg:SetWidth(val)
-					self:UpdateConfig(name)
-				end,
-				get = function()
-					return module.icons.bg:GetWidth()
-				end,
+				args = {
+					lock_desc = {
+						name = "Lock the anchor frame",
+						type = "description",
+						order = 9,
+					},
+					lock = {
+						name = "Lock",
+						type = "toggle",
+						get = function()
+							return not module.icons.bg:IsShown()
+						end,
+						set = function(info, state)
+							if state then
+								module.icons.bg:Hide()
+							else
+								module.icons.bg:Show()
+							end
+						end,
+						order = 10,
+					},
+					height_desc = {
+						order = 19,
+						type = "description",
+						name = "Set the max height buffs will takeup",
+					},
+					height = {
+						name = "Height",
+						type = "range",
+						min = 10,
+						max = 1000,
+						step = 5,
+						order = 20,
+						set = function(info, val)
+							local key = info[#info]
+							module.db.profile[key] = val
+							module.icons.bg:SetHeight(val)
+							self:UpdateConfig(name)
+						end,
+						get = function()
+							return module.icons.bg:GetHeight()
+						end,
+					},
+					width_desc = {
+						name = "Set the max width buffs will takeup",
+						type = "description",
+						order = 29,
+					},
+					width = {
+						name = "Width",
+						type = "range",
+						min = 10,
+						max = 1000,
+						step = 5,
+						order = 30,
+						set = function(info, val)
+							local key = info[#info]
+							module.db.profile[key] = val
+							module.icons.bg:SetWidth(val)
+							self:UpdateConfig(name)
+						end,
+						get = function()
+							return module.icons.bg:GetWidth()
+						end,
+					},
+				}
 			},
 			size = {
 				name = "Size",
@@ -120,7 +143,32 @@ function Config:GenerateOptions(name, module)
 				step = 1,
 				order = 70,
 			},
-
+			color = {
+				name = "Border Color",
+				type = "color",
+				order = 80,
+				hasAlpha = true,
+				set = function(info, r, g, b, a)
+					local t = module.db.profile[info[#info]]
+					t.r = r
+					t.g = g
+					t.b = b
+					t.a = a
+					self:UpdateConfig(name)
+				end,
+				get = function(info)
+					local t = module.db.profile[info[#info]]
+					return t.r, t.g, t.b, t.a
+				end,
+				disabled = function()
+					return not module.db.profile.dispellColor
+				end,
+			},
+			dispellColor = {
+				type = "toggle",
+				name = "Dispell Color",
+				order = 90,
+			},
 		}
 	}
 
