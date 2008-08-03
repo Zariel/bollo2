@@ -5,6 +5,8 @@ local cache = {}
 function Buff:OnInitialize()
 	local defaults = {
 		profile = {
+			max = 40,
+			perRow = 20,
 			size = 32,
 			spacing = 20,
 			rowSpacing = 25,
@@ -40,7 +42,7 @@ function Buff:OnEnable()
 end
 
 function Buff:Update()
-	for i = 1, 40 do
+	for i = 1, self.db.profile.max do
 		if GetPlayerBuff(i, "HELPFUL") > 0 then
 			local icon = self.icons[i] or Bollo:NewIcon()
 			icon:SetBase("HELPFUL")
@@ -65,7 +67,7 @@ function Buff:UpdatePosition()
 	Bollo.events:Fire("PrePositionIcons", self.icons, Buff)
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
-	local perRow = math.floor(self.icons.bg:GetWidth() / (size + spacing) + 0.5)
+	local perRow = self.db.profile.perRow
 
 	local offset = 0
 	local rows = 0
@@ -85,5 +87,37 @@ function Buff:UpdateConfig()
 	for i, buff in ipairs(self.icons) do
 		buff:Setup(self.db.profile)
 	end
+	if self.config then
+		self:EnableSetupConfig()
+	end
 	self:UpdatePosition()
+end
+
+function Buff:EnableSetupConfig()
+	self.config = true
+	self:UnregisterEvent("PLAYER_AURAS_CHANGED")
+
+	for i = 1, self.db.profile.max do
+		local icon = self.icons[i] or Bollo:NewIcon()
+		icon:Setup(self.db.profile)
+		icon:SetID(0)
+		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
+		icon:Show()
+		self.icons[i] = icon
+	end
+
+	local i = self.db.profile.max + 1
+	while self.icons[i] do
+		Bollo:DelIcon(self.icons[i])
+		self.icons[i] = nil
+		i = i + 1
+	end
+
+	self:UpdatePosition()
+end
+
+function Buff:DisableSetupConfig()
+	self.config = false
+	self:Update()
+	self:RegisterEvent("PLAYER_AURAS_CHANGED", "Update")
 end

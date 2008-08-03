@@ -4,6 +4,8 @@ local Debuff = Bollo:NewModule("Debuff", "AceEvent-3.0")
 function Debuff:OnInitialize()
 	local defaults = {
 		profile = {
+			max = 40,
+			perRow = 20,
 			size = 32,
 			spacing = 20,
 			growthX = "LEFT",
@@ -38,7 +40,7 @@ function Debuff:OnEnable()
 end
 
 function Debuff:Update()
-	for i = 1, 40 do
+	for i = 1, self.db.profile.max do
 		if GetPlayerBuff(i, "HARMFUL") > 0 then
 			local icon = self.icons[i] or Bollo:NewIcon()
 			icon:SetBase("HARMFUL")
@@ -63,7 +65,7 @@ function Debuff:UpdatePosition()
 	Bollo.events:Fire("PrePositionIcons", self.icons, Debuff)
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
-	local perRow = math.floor(self.icons.bg:GetWidth() / (size + spacing) + 0.5)
+	local perRow = self.db.profile.perRow
 
 	local offset = 0
 	local rows = 0
@@ -77,4 +79,43 @@ function Debuff:UpdatePosition()
 		buff:SetPoint("TOPRIGHT", self.icons.bg, "TOPRIGHT", ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
 		offset = offset + 1
 	end
+end
+
+function Debuff:UpdateConfig()
+	for i, buff in ipairs(self.icons) do
+		buff:Setup(self.db.profile)
+	end
+	if self.config then
+		self:EnableSetupConfig()
+	end
+	self:UpdatePosition()
+end
+
+function Debuff:EnableSetupConfig()
+	self.config = true
+	self:UnregisterEvent("PLAYER_AURAS_CHANGED")
+
+	for i = 1, self.db.profile.max do
+		local icon = self.icons[i] or Bollo:NewIcon()
+		icon:Setup(self.db.profile)
+		icon:SetID(0)
+		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
+		icon:Show()
+		self.icons[i] = icon
+	end
+
+	local i = self.db.profile.max + 1
+	while self.icons[i] do
+		Bollo:DelIcon(self.icons[i])
+		self.icons[i] = nil
+		i = i + 1
+	end
+
+	self:UpdatePosition()
+end
+
+function Debuff:DisableSetupConfig()
+	self.config = false
+	self:Update()
+	self:RegisterEvent("PLAYER_AURAS_CHANGED", "Update")
 end
