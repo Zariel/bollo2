@@ -39,77 +39,53 @@ function Config:GenerateOptions(name, module)
 		["get"] = get,
 		["order"] = self.count,
 		["args"] = {
-			anchor = {
-				type = "group",
-				name = "Anchor",
-				guiInline = true,
+			lock_desc = {
+				name = "Lock the anchor frame",
+				type = "description",
+				order = 9,
+			},
+			lock = {
+				name = "Lock",
+				type = "toggle",
+				get = function()
+					return not module.icons.bg:IsShown()
+				end,
+				set = function(info, state)
+					if state then
+						module.icons.bg:Hide()
+						module:DisableSetupConfig()
+					else
+						module.icons.bg:Show()
+						module:EnableSetupConfig()
+					end
+				end,
 				order = 10,
-				args = {
-					lock_desc = {
-						name = "Lock the anchor frame",
-						type = "description",
-						order = 9,
-					},
-					lock = {
-						name = "Lock",
-						type = "toggle",
-						get = function()
-							return not module.icons.bg:IsShown()
-						end,
-						set = function(info, state)
-							if state then
-								module.icons.bg:Hide()
-							else
-								module.icons.bg:Show()
-							end
-						end,
-						order = 10,
-					},
-					height_desc = {
-						order = 19,
-						type = "description",
-						name = "Set the max height buffs will takeup",
-					},
-					height = {
-						name = "Height",
-						type = "range",
-						min = 10,
-						max = 1000,
-						step = 5,
-						order = 20,
-						set = function(info, val)
-							local key = info[#info]
-							module.db.profile[key] = val
-							module.icons.bg:SetHeight(val)
-							self:UpdateConfig(name)
-						end,
-						get = function()
-							return module.icons.bg:GetHeight()
-						end,
-					},
-					width_desc = {
-						name = "Set the max width buffs will takeup",
-						type = "description",
-						order = 29,
-					},
-					width = {
-						name = "Width",
-						type = "range",
-						min = 10,
-						max = 1000,
-						step = 5,
-						order = 30,
-						set = function(info, val)
-							local key = info[#info]
-							module.db.profile[key] = val
-							module.icons.bg:SetWidth(val)
-							self:UpdateConfig(name)
-						end,
-						get = function()
-							return module.icons.bg:GetWidth()
-						end,
-					},
-				}
+			},
+			perRow_desc = {
+				name = "Set the max buffs per row to display",
+				type = "description",
+				order = 19,
+			},
+			perRow = {
+				name = "Per Row",
+				type = "range",
+				min = 1,
+				max = 40,
+				step = 1,
+				order = 20
+			},
+			max_desc = {
+				name = "Set the max buffs to display",
+				type = "description",
+				order = 29,
+			},
+			max = {
+				name = "Max",
+				type = "range",
+				min = 1,
+				max = 40,
+				step = 1,
+				order = 30
 			},
 			size = {
 				name = "Size",
@@ -166,7 +142,7 @@ function Config:GenerateOptions(name, module)
 			},
 			dispellColor = {
 				type = "toggle",
-				name = "Dispell Color",
+				name = "Border Color",
 				order = 90,
 			},
 		}
@@ -176,20 +152,20 @@ function Config:GenerateOptions(name, module)
 end
 
 function Config:OnInitialize()
-	db = Bollo.db.profile
+db = Bollo.db.profile
 
-	options.plugins.profiles = {profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Bollo.db)}
+options.plugins.profiles = {profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Bollo.db)}
 
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo2", options)
+LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo2", options)
 
-	self:RegisterChatCommand("bollo", function() LibStub("AceConfigDialog-3.0"):Open("Bollo2") end )
+self:RegisterChatCommand("bollo", function() LibStub("AceConfigDialog-3.0"):Open("Bollo2") end )
 
-	self.options = options
+self.options = options
 end
 
 function Config:UpdateConfig(name)
-	if not name or name == "Bollo" then
-		Bollo:UpdateConfig()
+if not name or name == "Bollo" then
+Bollo:UpdateConfig()
 	elseif name == "all" then
 		for name, module in Bollo:IterateModules() do
 			if module.UpdateConfig then
