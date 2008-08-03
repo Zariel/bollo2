@@ -37,14 +37,6 @@ function Duration:Register(module, defaults)
 
 	registered[tostring(module)] = module
 
-	--[[
-	if not self.db.profile[tostring(module)] then
-		self.db.profile[tostring(module)] = {
-			size = 14,
-			font = STANDARD_TEXT_FONT,
-		}
-	end]]
-
 	for i, b in ipairs(module.icons) do
 		self:PostCreateIcon("init", b)
 	end
