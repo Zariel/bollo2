@@ -38,6 +38,7 @@ function prototype:SetID(id)
 end
 
 function prototype:GetTimeleft()
+	if not self.id then return 666 end      -- Assume config
 	if select(2, GetPlayerBuff(self.id)) > 0 then
 		return nil
 	else
