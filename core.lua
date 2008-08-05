@@ -15,11 +15,38 @@ do
 	end
 end
 
+local new, del
+do
+	local cache = setmetatable({}, {__mode = "k"})
+	new = function()
+		local t = next(cache)
+		if t then
+			cache[t] = nil
+		else
+			t = {}
+		end
+		return t
+	end
+
+	del = function(t)
+		for k, v in pairs(t) do
+			if type(v) == "table" then
+				del(v)
+			end
+			t[k] = nil
+		end
+		cache[t] = true
+		return nil
+	end
+end
+
+
 local LCH = LibStub("CallbackHandler-1.0", true)
 assert(LCH, "Bollo requires CallbackHandler-1.0")
 
 local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo")
 
+Bollo.New, Bollo.Del = new, del
 Bollo.Class = class
 
 function Bollo:OnInitialize()
