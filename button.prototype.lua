@@ -8,25 +8,13 @@ function prototype:Setup(db)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
 
---[[	if self.base ~= "HARMFUL" then
-		local col = db.color
-		self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
-	end]]
-
-	local col
-	if db.dispellColor then
-		col = db.color
-	else
-		col = DebuffTypeColor[GetPlayerBuffDispelType(self.id)] or {r = 0, g =1 , b =0 , a = 0.9}
+	if self.base == "HARMFUL" then
+		self.Border:ClearAllPoints()
+		self.Border:SetPoint("TOP", 0, 2)
+		self.Border:SetPoint("RIGHT", 2, 0)
+		self.Border:SetPoint("BOTTOM", 0, -2)
+		self.Border:SetPoint("LEFT", -2, 0)
 	end
-
-	self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
-
-	self.Border:ClearAllPoints()
-	self.Border:SetPoint("TOP", 0, 2)
-	self.Border:SetPoint("RIGHT", 2, 0)
-	self.Border:SetPoint("BOTTOM", 0, -2)
-	self.Border:SetPoint("LEFT", -2, 0)
 end
 
 function prototype:SetID(id)
@@ -35,6 +23,12 @@ function prototype:SetID(id)
 
 	local icon = GetPlayerBuffTexture(self.id)
 	self:SetNormalTexture(icon)
+
+	if self.base == "HARMFUL" then
+		local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+		self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+		self.Border:Show()
+	end
 end
 
 function prototype:GetTimeleft()
@@ -93,8 +87,10 @@ function Bollo:NewIcon()
 		b:SetPoint("BOTTOM", 0, -2)
 		b:SetPoint("LEFT", -2, 0)
 		b:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
+		b:Hide()
 
 		f.Border = b
+
 		f:Init()
 	end
 
@@ -105,6 +101,7 @@ end
 
 function Bollo:DelIcon(f)
 	f:Hide()
+	f.Border:Hide()
 
 	f.id = 0
 	f.base = nil
