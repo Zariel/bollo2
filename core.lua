@@ -86,6 +86,30 @@ function Bollo:OnEnable()
 	bf:SetScript("OnEvent", nil)
 	_G.BuffButton_OnUpdate = nil
 
+	local defaults = {
+		profile = {
+			["*"] = {
+				max = 40,
+				perRow = 20,
+				size = 32,
+				spacing = 20,
+				rowSpacing = 25,
+				growthX = "LEFT",
+				growthY = "DOWN",
+				scale = 1,
+				x = 0,
+				y = 0,
+				color = {
+					r = 0,
+					g = 1,
+					b = 1,
+					a = 0
+				},
+			}
+		},
+	}
+
+	self:NewDisplay("Buff", "HELPFUL", defaults)
 	Bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
 end
 

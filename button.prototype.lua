@@ -70,7 +70,6 @@ do
 	end
 end
 
-
 local cache = setmetatable({}, {__mode = "k"})
 function Bollo:NewIcon()
 	local f = next(cache)
@@ -95,6 +94,8 @@ function Bollo:NewIcon()
 	end
 
 	f:Show()
+
+	Bollo.events:Fire("ButtonCreated", f)
 
 	return f
 end
