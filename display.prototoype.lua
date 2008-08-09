@@ -61,6 +61,7 @@ function prototype:CreateBackground(name)
 end
 
 function prototype:Update()
+	if self.config then return end
 	local base = self.base
 	for i = 1, self.db.profile.max do
 		if GetPlayerBuff(i, base) > 0 then
@@ -104,8 +105,46 @@ function prototype:UpdateDisplayPosition()
 	end
 end
 
+function prototype:UpdateConfig()
+	for i, buff in ipairs(self.icons) do
+		buff:Setup(self.db.profile)
+	end
+	if self.config then
+		self:EnableSetupConfig()
+	end
+	self:UpdatePosition()
+end
+
+function prototype:EnableSetupConfig()
+	self.config = true
+
+	for i = 1, self.db.profile.max do
+		local icon = self.icons[i] or Bollo:NewIcon()
+		icon:Setup(self.db.profile)
+		icon:SetID(0)
+		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
+		icon:Show()
+		self.icons[i] = icon
+	end
+
+	local i = self.db.profile.max + 1
+	while self.icons[i] do
+		Bollo:DelIcon(self.icons[i])
+		self.icons[i] = nil
+		i = i + 1
+	end
+
+	self:UpdatePosition()
+end
+
+function prototype:DisableSetupConfig()
+	self.config = false
+	self:Update()
+end
+
 function Bollo:NewDisplay(name, base, defaults)
 	local t = setmetatable({},{__index = prototype})
+	t.name = name
 	t.base = base
 	t.db = self:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
