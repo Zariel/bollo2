@@ -142,12 +142,11 @@ function prototype:DisableSetupConfig()
 	self:Update()
 end
 
-ChatFrame1:AddMessage(GetTime() .. " INIT1")
 function Bollo:NewDisplay(name, base, defaults)
 	local t = setmetatable({},{__index = prototype})
 	t.name = name
 	t.base = base
-	t.db = self:RegisterNamespace(name, defaults)
+	t.db = self.db:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
 	table.insert(self.registry, t)
 end
