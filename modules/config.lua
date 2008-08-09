@@ -152,30 +152,34 @@ function Config:GenerateOptions(name, module)
 end
 
 function Config:OnInitialize()
-db = Bollo.db.profile
+	db = Bollo.db.profile
 
-options.plugins.profiles = {profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Bollo.db)}
+	options.plugins.profiles = {profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Bollo.db)}
 
-LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo2", options)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Bollo2", options)
 
-self:RegisterChatCommand("bollo", function() LibStub("AceConfigDialog-3.0"):Open("Bollo2") end )
+	self:RegisterChatCommand("bollo", function() LibStub("AceConfigDialog-3.0"):Open("Bollo2") end )
 
-self.options = options
+	self.options = options
 end
 
 function Config:UpdateConfig(name)
-if not name or name == "Bollo" then
-Bollo:UpdateConfig()
+	if not name or name == "Bollo" then
+		Bollo:UpdateConfig()
 	elseif name == "all" then
-		for name, module in Bollo:IterateModules() do
+		for _, module in ipairs(Bollo.registery) do
 			if module.UpdateConfig then
 				module:UpdateConfig()
 			end
 		end
 	else
-		local mod = Bollo:GetModule(name, true)
-		if mod.UpdateConfig then
-			mod:UpdateConfig()
+		for _, mod in ipairs(Bollo.registery) do
+			if mod.name == name then
+				if mod.UpdateConfig then
+					mod:UpdateConfig()
+					break
+				end
+			end
 		end
 	end
 end
