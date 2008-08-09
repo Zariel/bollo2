@@ -12,9 +12,6 @@ button.prototype.lua
 
 display.prototype.lua
 
-base\buff.lua
-base\debuff.lua
-
 locale\enUS.lua
 
 modules\duration.lua
