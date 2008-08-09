@@ -82,6 +82,13 @@ function prototype:Update()
 		end
 	end
 
+	local i = self.db.profile.max + 1
+	while self.icons[i] do
+		Bollo:DelIcon(self.icons[i])
+		self.icons[i] = nil
+		i = i + 1
+	end
+
 	self:UpdatePosition()
 end
 
@@ -111,6 +118,8 @@ function prototype:UpdateConfig()
 	end
 	if self.config then
 		self:EnableSetupConfig()
+	else
+		self:Update()
 	end
 	self:UpdatePosition()
 end
