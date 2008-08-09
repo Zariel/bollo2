@@ -1,20 +1,13 @@
-local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
+local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local prototype = {}
 
-local registry = setmetatable({}, {
+Bollo.registry = setmetatable({}, {
 	__newindex = function(self, k, v)
 		rawset(self, k, v)
 		self:Update()
 	end}
 )
 
-Bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
-
-function Bollo:PLAYER_AURAS_CHANGED()
-	for _, mod in ipairs(registry) do
-		mod:Update()
-	end
-end
 
 function prototype:CreateBackground(name)
 	local db = self.db.profile
@@ -114,7 +107,7 @@ end
 function Bollo:NewDisplay(name, base, defaults)
 	local t = setmetatable({},{__index = prototype})
 	t.base = base
-	t.db = Bollo:RegisterNamespace(name, defaults)
+	t.db = self:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
-	table.insert(registry, t)
+	table.insert(self.registry, t)
 end

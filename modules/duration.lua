@@ -1,4 +1,4 @@
-local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo")
+local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local Duration = Bollo:NewModule("Duration", "AceConsole-3.0")
 
 local registered = {}
