@@ -148,6 +148,8 @@ function Config:GenerateOptions(name, module)
 		}
 	}
 
+	self.options.args.icons.args[name] = t
+
 	return t
 end
 
@@ -167,13 +169,13 @@ function Config:UpdateConfig(name)
 	if not name or name == "Bollo" then
 		Bollo:UpdateConfig()
 	elseif name == "all" then
-		for _, module in ipairs(Bollo.registery) do
+		for _, module in ipairs(Bollo.registry) do
 			if module.UpdateConfig then
 				module:UpdateConfig()
 			end
 		end
 	else
-		for _, mod in ipairs(Bollo.registery) do
+		for _, mod in ipairs(Bollo.registry) do
 			if mod.name == name then
 				if mod.UpdateConfig then
 					mod:UpdateConfig()
