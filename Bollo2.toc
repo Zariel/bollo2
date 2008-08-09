@@ -10,6 +10,8 @@ core.lua
 
 button.prototype.lua
 
+display.prototype.lua
+
 base\buff.lua
 base\debuff.lua
 
