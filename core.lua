@@ -108,6 +108,7 @@ function Bollo:OnEnable()
 	}
 
 	self:NewDisplay("Buff", "HELPFUL", defaults)
+	self:NewDisplay("Debuff", "HERMFUL", defaults)
 	Bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
 end
 
