@@ -88,24 +88,22 @@ function Bollo:OnEnable()
 
 	local defaults = {
 		profile = {
-			["*"] = {
-				max = 40,
-				perRow = 20,
-				size = 32,
-				spacing = 20,
-				rowSpacing = 25,
-				growthX = "LEFT",
-				growthY = "DOWN",
-				scale = 1,
-				x = 0,
-				y = 0,
-				color = {
-					r = 0,
-					g = 1,
-					b = 1,
-					a = 0
-				},
-			}
+			max = 40,
+			perRow = 20,
+			size = 32,
+			spacing = 20,
+			rowSpacing = 25,
+			growthX = "LEFT",
+			growthY = "DOWN",
+			scale = 1,
+			x = 0,
+			y = 0,
+			color = {
+				r = 0,
+				g = 1,
+				b = 1,
+				a = 0
+			},
 		},
 	}
 
