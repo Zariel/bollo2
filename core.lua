@@ -44,7 +44,7 @@ end
 local LCH = LibStub("CallbackHandler-1.0", true)
 assert(LCH, "Bollo requires CallbackHandler-1.0")
 
-local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2")
+local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
 
 Bollo.New, Bollo.Del = new, del
 Bollo.Class = class
