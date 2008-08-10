@@ -157,6 +157,7 @@ function Bollo:NewDisplay(name, base, defaults)
 	t.base = base
 	t.db = self.db:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
+	t.modules = {}
 	Bollo:GetModule("Config"):GenerateOptions(name, t)
 	table.insert(self.registry, t)
 end
