@@ -1,7 +1,6 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
-local Duration = Bollo:NewModule("Duration", "AceConsole-3.0")
-
-local registered = {}
+local Duration = Bollo:NewModule("Duration")
+Duration.registry = {}
 
 function Duration:OnInitialize()
 	local defaults = {
@@ -14,6 +13,22 @@ function Duration:OnInitialize()
 	}
 
 	self.db = Bollo.db:RegisterNamespace("Duration", defaults)
+
+	local conf = Bollo:GetModule("Config")
+	local t = {
+		duration = {
+			name = "Duration",
+			type = "group",
+			args = {
+				desc = {
+					name = "Test",
+					type = "description",
+				}
+			},
+		}
+	}
+
+	conf.options.plugins.duration = t
 end
 
 function Duration:OnEnable()
@@ -32,10 +47,41 @@ function Duration:PostCreateIcon(event, buff)
 	buff.modules.duration = t
 end
 
-function Duration:Register(module, defaults)
-	if registered[tostring(module)] then return end
+function Duration:GenerateOptions(name)
+	local set = function(info, val)
+		local k = info[# info]
+		self.db.profile[name][k] = val
+		self:UpdateConfig()
+	end
+	local get = function(info)
+		return self.db.profile[name][info[# info]]
+	end
 
-	registered[tostring(module)] = module
+	local t = {
+		name = name,
+		type = "group",
+		set = set,
+		get = get,
+		args = {
+			face = {
+				name = "Faceaids",
+				type = "description",
+			},
+		}
+	}
+
+	local conf = Bollo:GetModule("Config")
+	conf.options.plugins.duration.duration.args[name] = t
+end
+
+function Duration:Register(module, defaults)
+	local name = tostring(module)
+	if self.registry[name] then return end
+
+	self.registry[name] = module
+	module.modules.duration = true
+
+	self:GenerateOptions(name)
 
 	for i, b in ipairs(module.icons) do
 		self:PostCreateIcon("init", b)
@@ -61,20 +107,22 @@ function Duration:UpdateConfig()
 end
 
 function Duration:OnUpdate()
-	for name, module in pairs(registered) do
-		for index, buff in ipairs(module.icons) do
-			if buff:IsShown() then
-				if not buff.modules.duration then self:PostCreateIcon("update", buff) end
-				local timeleft = buff:GetTimeleft()
-				if timeleft and timeleft > 0 then
-					buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
-					buff.modules.duration:Show()
-				else
-					buff.modules.duration:Hide()
-				end
+	for name, module in pairs(self.registry) do
+		if module.modules.duration then
+			for index, buff in ipairs(module.icons) do
+				if buff:IsShown() then
+					if not buff.modules.duration then self:PostCreateIcon("update", buff) end
+					local timeleft = buff:GetTimeleft()
+					if timeleft and timeleft > 0 then
+						buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
+						buff.modules.duration:Show()
+					else
+						buff.modules.duration:Hide()
+					end
 
-				if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-					GameTooltip:SetPlayerBuff(buff.id)
+					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
+						GameTooltip:SetPlayerBuff(buff.id)
+					end
 				end
 			end
 		end
