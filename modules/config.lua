@@ -185,3 +185,28 @@ function Config:UpdateConfig(name)
 		end
 	end
 end
+
+function Config:GetFont(db, name)
+	local t = {
+		name = "Font",
+		type = "group",
+		args = {
+			font = {
+				type = "select",
+				values = {
+					["Default"] = STANDARD_TEXT_FONT,
+				},
+				get = function(info)
+					return db[info[# info]]
+				end,
+				set = function(info, val)
+					db[info[# info]] = val
+					self:UpdateConfig(name)
+				end,
+				order = 10,
+			}
+		}
+	}
+
+	return t
+end
