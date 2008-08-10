@@ -1,3 +1,7 @@
+do
+	return
+end
+
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local BF = Bollo:NewModule("ButtonFacade")
 local lib = LibStub("LibButtonFacade-1.0", true)
@@ -8,16 +12,13 @@ local BaseToName = {
 }
 
 function BF:OnInitialize()
+	self.registered = {}
 	if lib then
 		self.db = Bollo.db:RegisterNamespace("Buttonfacade", {})
 	end
 end
 
 function BF:OnEnable()
-	if not lib then
-		return
-		--return error("Require Buttonfacade")
-	end
 	Bollo.RegisterCallback(self, "ButtonCreated")
 	lib:RegisterSkinCallback("Bollo2", self.UpdateSkin, self)
 end
@@ -45,7 +46,7 @@ function BF:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
 end
 
 function BF:ButtonCreated(button)
-	button.name = BaseToName[button.base] .. button:GetID()
+	button.name = BaseToName[button.base] .. button.id
 
 	local G = lib:Group("Bollo2", button.name)
 
