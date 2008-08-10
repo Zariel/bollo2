@@ -152,12 +152,24 @@ function prototype:DisableSetupConfig()
 end
 
 function Bollo:NewDisplay(name, base, defaults)
-	local t = setmetatable({},{__index = prototype})
+	local t = setmetatable({},{
+		__index = prototype,
+		__tostring = function()
+			return name
+		end,
+	})
 	t.name = name
 	t.base = base
 	t.db = self.db:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
 	t.modules = {}
 	Bollo:GetModule("Config"):GenerateOptions(name, t)
+
+	for k, v in Bollo:IterateModules() do
+		if v.Register then
+			v:Register(t)
+		end
+	end
+
 	table.insert(self.registry, t)
 end
