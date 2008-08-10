@@ -28,7 +28,15 @@ function prototype:SetID(id)
 		local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
 		self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 		self.Border:Show()
+	elseif self.Border:IsShown() then
+		self.Border:Hide()
 	end
+
+	Bollo.events:Fire("PostUpdateIcon", self)
+end
+
+function prototype:GetCount()
+	return GetPlayerBuffApplications(self.id)
 end
 
 function prototype:GetTimeleft()
