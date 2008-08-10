@@ -6,7 +6,7 @@ function count:OnInitialize()
 		profile = {
 			["*"] = {
 				font = STANDARD_TEXT_FONT,
-				fontSize = 15,
+				fontSize = 18,
 				style = "none",
 				point = "TOP",
 				x = 0,
@@ -22,14 +22,14 @@ function count:OnInitialize()
 end
 
 function count:OnEnable()
-	bollo.RegisterCallback(self, "ButtonCreated")
+	bollo.RegisterCallback(self, "PostUpdateIcon")
 end
 
 function count:ButtonCreated(event, button)
 	local f = button:CreateFontString(nil, "OVERLAY")
 	f:SetFont(self.db.profile[button.base or "default"].font, self.db.profile[button.base or "default"].fontSize)
-	--f:SetShadowColor(0, 0, 0, 1)
-	--f:SetShadowOffset(1, -1)
+	f:SetShadowColor(0, 0, 0, 1)
+	f:SetShadowOffset(1, -1)
 	f:SetPoint("CENTER")
 	button.modules.count = f
 end
