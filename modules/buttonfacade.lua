@@ -3,8 +3,8 @@ local BF = Bollo:NewModule("ButtonFacade")
 local lib = LibStub("LibButtonFacade-1.0", true)
 
 local BaseToName = {
-	"HARMFUL" = "Debuff",
-	"HELPFUL" = "Buff",
+	["HARMFUL"] = "Debuff",
+	["HELPFUL"] = "Buff",
 }
 
 function BF:OnInitialize()
@@ -14,7 +14,10 @@ function BF:OnInitialize()
 end
 
 function BF:OnEnable()
-	assert(lib, "Buttonfacade module requires LibButtonFacade-1.0")
+	if not lib then
+		return
+		--return error("Require Buttonfacade")
+	end
 	Bollo.RegisterCallback(self, "ButtonCreated")
 	lib:RegisterSkinCallback("Bollo2", self.UpdateSkin, self)
 end
@@ -42,7 +45,7 @@ function BF:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
 end
 
 function BF:ButtonCreated(button)
-	button.name = BaseToName[button.base]
+	button.name = BaseToName[button.base] .. button:GetID()
 
 	local G = lib:Group("Bollo2", button.name)
 
