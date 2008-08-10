@@ -16,4 +16,6 @@ locale\enUS.lua
 
 modules\duration.lua
 modules\sort.lua
+modules\count.lua
+modules\buttonfacade.lua
 modules\config.lua
