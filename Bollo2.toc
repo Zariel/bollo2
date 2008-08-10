@@ -1,7 +1,7 @@
 ## Title: Bollo2
 ## Version: 2.4.3-3Alpha
 ## Interface: 20400
-## OptionalDeps: Ace3, LibSharedMedia-3.0
+## OptionalDeps: Ace3, LibSharedMedia-3.0, ButtonFacade
 ## SavedVariables: BolloDB2
 
 lib.xml
@@ -14,8 +14,8 @@ display.prototype.lua
 
 locale\enUS.lua
 
+modules\config.lua
 modules\duration.lua
 modules\sort.lua
 modules\count.lua
 modules\buttonfacade.lua
-modules\config.lua
