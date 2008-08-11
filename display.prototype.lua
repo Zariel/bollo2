@@ -93,7 +93,7 @@ function prototype:Update()
 end
 
 function prototype:UpdatePosition()
-	Bollo.events:Fire("PrePositionIcons", self.icons, self)
+	Bollo.events:Fire("PrePositionIcons", self)
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
 	local perRow = self.db.profile.perRow
