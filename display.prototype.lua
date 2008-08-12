@@ -172,4 +172,6 @@ function Bollo:NewDisplay(name, base, defaults)
 	end
 
 	table.insert(self.registry, t)
+
+	return t
 end
