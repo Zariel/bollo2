@@ -137,12 +137,13 @@ function Config:GenerateOptions(name, module)
 					return t.r, t.g, t.b, t.a
 				end,
 				disabled = function()
-					return not module.db.profile.dispellColor
+					return not module.db.profile.borderColor
 				end,
 			},
-			dispellColor = {
+			borderColor = {
 				type = "toggle",
 				name = "Border Color",
+				tristate = true,
 				order = 90,
 			},
 		}
