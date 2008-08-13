@@ -1,27 +1,31 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local w = Bollo:NewModule("Weapons", "AceConsole-3.0")
-local defaults = {
-	profile = {
-		max = 2,
-		perRow = 2,
-		size = 32,
-		spacing = 20,
-		rowSpacing = 25,
-		growthX = "LEFT",
-		growthY = "DOWN",
-		scale = 1,
-		x = 0,
-		y = 0,
-		color = {
-			r = 1,
-			g = 0,
-			b = 1,
-			a = 0
-		}
-	}
-}
+
+local GetWeaponEnchantInfo = GetWeaponEnchantInfo
+local GetInventoryItemTexture = GetInventoryItemTexture
 
 function w:OnEnable()
+	local defaults = {
+		profile = {
+			max = 2,
+			perRow = 2,
+			size = 32,
+			spacing = 20,
+			rowSpacing = 25,
+			growthX = "LEFT",
+			growthY = "DOWN",
+			scale = 1,
+			x = 0,
+			y = 0,
+			color = {
+				r = 1,
+				g = 0,
+				b = 1,
+				a = 0
+			}
+		}
+	}
+
 	local weapon = Bollo:NewDisplay("Weapon", "TEMP", defaults)
 	Bollo.RegisterCallback(weapon, "OnUpdate", "Update")
 
@@ -30,7 +34,7 @@ function w:OnEnable()
 	local NewIcon
 	do
 		local GetTimeleft = function(self)
-			local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges = GetWeaponEnchantInfo()
+			--hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges = GetWeaponEnchantInfo()
 
 			local id = self.id
 			if id == 16 then
@@ -64,6 +68,7 @@ function w:OnEnable()
 		end
 	end
 
+	-- Fucking OnUpdate gief events and UnitTempBuff
 	function weapon:Update()
 		if self.config then return end
 
@@ -71,7 +76,7 @@ function w:OnEnable()
 
 		for i = 1, 2 do
 			local index = i + 15
-			if i == 1 and hasMainHandEnchant or hasOffHandEnchant then
+			if i == 1 and hasMainHandEnchant or i == 2 and hasOffHandEnchant then
 				local icon = self.icons[i] or NewIcon()
 				icon.id = index
 				icon:SetNormalTexture(GetInventoryItemTexture("player", icon.id))
