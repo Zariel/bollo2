@@ -1,5 +1,5 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
-local w = Bollo:NewModule("Weapons", "AceConsole-3.0")
+local w = Bollo:NewModule("Weapons", "AceConsole-3.0", "AceEvent-3.0")
 
 local GetWeaponEnchantInfo = GetWeaponEnchantInfo
 local GetInventoryItemTexture = GetInventoryItemTexture
@@ -26,8 +26,13 @@ function w:OnEnable()
 		}
 	}
 
+	TemporaryEnchantFrame:SetScript("OnUpdate", nil)
+	TemporaryEnchantFrame:Hide()
+
 	local weapon = Bollo:NewDisplay("Weapon", "TEMP", defaults)
 	Bollo.RegisterCallback(weapon, "OnUpdate", "Update")
+	weapon:Update()
+
 
 	local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges
 
