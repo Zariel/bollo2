@@ -134,7 +134,11 @@ function Duration:OnUpdate()
 					end
 
 					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-						GameTooltip:SetPlayerBuff(buff.id)
+						if buff.base == "TEMP" then
+							GameTooltip:SetInventoryItem("player", buff.id)
+						else
+							GameTooltip:SetPlayerBuff(buff.id)
+						end
 					end
 				end
 			end
