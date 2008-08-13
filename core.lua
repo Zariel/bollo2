@@ -49,6 +49,7 @@ function Bollo:OnEnable()
 			rowSpacing = 25,
 			growthX = "LEFT",
 			growthY = "DOWN",
+			anchor = "TOPRIGHT",
 			scale = 1,
 			x = 0,
 			y = 0,

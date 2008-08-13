@@ -97,6 +97,7 @@ function prototype:UpdatePosition()
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
 	local perRow = self.db.profile.perRow
+	local anchor = self.db.profile.anchor
 
 	local offset = 0
 	local rows = 0
@@ -107,7 +108,7 @@ function prototype:UpdatePosition()
 		end
 
 		buff:ClearAllPoints()
-		buff:SetPoint("TOPRIGHT", self.icons.bg, "TOPRIGHT", ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
+		buff:SetPoint(anchor, self.icons.bg, anchor, ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
 		offset = offset + 1
 	end
 end
