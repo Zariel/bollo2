@@ -111,6 +111,24 @@ function Config:GenerateOptions(name, module)
 				step = 1,
 				order = 60,
 			},
+			growthX = {
+				name = "GrowthX",
+				type = "select",
+				values = {
+					LEFT = "LEFT",
+					RIGHT = "RIGHT",
+				},
+				order = 65
+			},
+			growthY = {
+				name = "GrowthY",
+				type = "select",
+				values = {
+					DOWN = "DOWN",
+					UP = "UP",
+				},
+				order = 67
+			},
 			rowSpacing = {
 				name = "Row Spacing",
 				type = "range",
