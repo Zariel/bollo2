@@ -1,5 +1,5 @@
 ## Title: Bollo2
-## Version: 2.4.3-4Alpha
+## Version: 2.4.3-5Alhpa
 ## Interface: 20400
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, ButtonFacade
 ## SavedVariables: BolloDB2
