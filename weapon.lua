@@ -1,5 +1,5 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
-local w = Bollo:NewModule("Weapons")
+local w = Bollo:NewModule("Weapons", "AceConsole-3.0")
 local defaults = {
 	profile = {
 		max = 2,
@@ -32,7 +32,7 @@ function w:OnEnable()
 		local GetTimeleft = function(self)
 			local hasMainHandEnchant, mainHandExpiration, mainHandCharges, hasOffHandEnchant, offHandExpiration, offHandCharges = GetWeaponEnchantInfo()
 
-			local id = self:GetID()
+			local id = self.id
 			if id == 16 then
 				return hasMainHandEnchant and mainHandExpiration / 1000 or 0
 			else
@@ -41,8 +41,8 @@ function w:OnEnable()
 		end
 
 		local OnEnter = function(self)
-			if self:IsVisible() then
-				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+			if self:IsShown() then
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
 				GameTooltip:SetInventoryItem("player", self.id)
 			end
 		end
@@ -55,7 +55,7 @@ function w:OnEnable()
 
 		NewIcon = function()
 			local icon = Bollo:NewIcon()
-			icon:EnableMouse(true)
+			icon.modules = {}
 			icon:SetScript("OnEnter", OnEnter)
 			icon:SetScript("OnMouseUp", OnMouseUp)
 			icon.GetTimeleft = GetTimeleft
@@ -84,8 +84,6 @@ function w:OnEnable()
 				self.icons[i] = nil
 			end
 		end
-
 		self:UpdatePosition()
 	end
-
 end
