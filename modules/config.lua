@@ -137,17 +137,6 @@ function Config:GenerateOptions(name, module)
 				step = 1,
 				order = 70,
 			},
-			anchor = {
-				name = "Anchor",
-				type = "select",
-				values = {
-					TOPRIGHT = "TOPRIGHT",
-					TOPLEFT = "TOPLEFT",
-					BOTTOMRIGHT = "BOTTOMRIGHT",
-					BOTTOMLEFT = "BOTTOMLEFT",
-				},
-				order = 71,
-			},
 			color = {
 				name = "Border Color",
 				type = "color",
