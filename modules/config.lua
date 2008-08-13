@@ -146,6 +146,7 @@ function Config:GenerateOptions(name, module)
 					BOTTOMRIGHT = "BOTTOMRIGHT",
 					BOTTOMLEFT = "BOTTOMLEFT",
 				},
+				order = 71,
 			},
 			color = {
 				name = "Border Color",
