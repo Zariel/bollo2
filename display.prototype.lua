@@ -98,7 +98,9 @@ function prototype:UpdatePosition()
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
 	local perRow = self.db.profile.perRow
 
-	local point = self.db.profile.growthX .. self.db.profile.growthY
+	local anchor = growthX > 0 and "LEFT" or "RIGHT"
+	local relative = growthY  > 0 and "BOTTOM" or "TOP"
+	local point = relative .. anchor
 
 	local offset = 0
 	local rows = 0
