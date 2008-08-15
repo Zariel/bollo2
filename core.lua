@@ -49,6 +49,7 @@ function Bollo:OnEnable()
 			rowSpacing = 25,
 			growthX = "LEFT",
 			growthY = "DOWN",
+			anchor = "TOPRIGHT",
 			scale = 1,
 			x = 0,
 			y = 0,
@@ -62,7 +63,7 @@ function Bollo:OnEnable()
 	}
 
 	self:NewDisplay("Buff", "HELPFUL", defaults)
-	self:NewDisplay("Debuff", "HERMFUL", defaults)
+	self:NewDisplay("Debuff", "HARMFUL", defaults)
 	Bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
 end
 

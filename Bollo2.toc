@@ -1,5 +1,5 @@
 ## Title: Bollo2
-## Version: 2.4.3-3Alpha
+## Version: 2.4.3-5Alhpa
 ## Interface: 20400
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, ButtonFacade
 ## SavedVariables: BolloDB2
@@ -13,6 +13,8 @@ button.prototype.lua
 display.prototype.lua
 
 locale\enUS.lua
+
+weapon.lua
 
 modules\config.lua
 modules\duration.lua

@@ -51,7 +51,7 @@ function Duration:GenerateOptions(name)
 	local set = function(info, val)
 		local k = info[# info]
 		self.db.profile[name][k] = val
-		self:UpdateConfig()
+		self:UpdateConfig(name)
 	end
 	local get = function(info)
 		return self.db.profile[name][info[# info]]
@@ -104,6 +104,19 @@ function Duration:FormatTime(time)
 end
 
 function Duration:UpdateConfig()
+	for name, module in pairs(self.registry) do
+		for index, buff in ipairs(module.icons) do
+			local d = buff.modules.duration
+			local db = self.db.profile[name]
+			local font, size, flag = db.font, db.size, db.flag
+			local point = db.point
+			local x, y = db.x, db.y
+
+			d:ClearAllPoints()
+			d:SetPoint(point, buff, point, x, y)
+			d:SetFont(font, size, flag)
+		end
+	end
 end
 
 function Duration:OnUpdate()
@@ -121,7 +134,11 @@ function Duration:OnUpdate()
 					end
 
 					if GameTooltip:IsShown() and GameTooltip:IsOwned(buff) then
-						GameTooltip:SetPlayerBuff(buff.id)
+						if buff.base == "TEMP" then
+							GameTooltip:SetInventoryItem("player", buff.id)
+						else
+							GameTooltip:SetPlayerBuff(buff.id)
+						end
 					end
 				end
 			end

@@ -8,12 +8,27 @@ function prototype:Setup(db)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
 
-	if self.base == "HARMFUL" then
+	if db.borderColor ~= nil then
 		self.Border:ClearAllPoints()
 		self.Border:SetPoint("TOP", 0, 2)
 		self.Border:SetPoint("RIGHT", 2, 0)
 		self.Border:SetPoint("BOTTOM", 0, -2)
 		self.Border:SetPoint("LEFT", -2, 0)
+
+		if db.borderColor then
+			local col = db.color
+			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+			self.Border:Show()
+			self.Border.col = col
+		else
+			local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+			self.Border:Show()
+			self.Border.col = "dispell"
+		end
+	else
+		self.Border:Hide()
+		self.Border.col = nil
 	end
 end
 
@@ -24,9 +39,14 @@ function prototype:SetID(id)
 	local icon = GetPlayerBuffTexture(self.id)
 	self:SetNormalTexture(icon)
 
-	if self.base == "HARMFUL" then
-		local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
-		self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+	if self.Border.col then
+		if type(self.Border.col) == "table" then
+			local col = self.Border.col
+			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+		else
+			local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+		end
 		self.Border:Show()
 	elseif self.Border:IsShown() then
 		self.Border:Hide()
