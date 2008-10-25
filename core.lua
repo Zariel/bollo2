@@ -1,7 +1,7 @@
 local LCH = LibStub("CallbackHandler-1.0", true)
 assert(LCH, "Bollo requires CallbackHandler-1.0")
 
-local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
+Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
 
 function Bollo:OnInitialize()
 	self.events = LCH:New(Bollo)

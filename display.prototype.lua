@@ -8,7 +8,6 @@ Bollo.registry = setmetatable({}, {
 	end}
 )
 
-
 function prototype:CreateBackground(name)
 	local db = self.db.profile
 
@@ -63,8 +62,9 @@ end
 function prototype:Update()
 	if self.config then return end
 	local base = self.base
+
 	for i = 1, self.db.profile.max do
-		if GetPlayerBuff(i, base) > 0 then
+		if UnitAura("player", i, base) then
 			local icon = self.icons[i] or Bollo:NewIcon()
 			icon:SetBase(base)
 			icon:SetID(i)

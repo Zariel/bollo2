@@ -137,7 +137,7 @@ function Duration:OnUpdate()
 						if buff.base == "TEMP" then
 							GameTooltip:SetInventoryItem("player", buff.id)
 						else
-							GameTooltip:SetPlayerBuff(buff.id)
+							GameTooltip:SetUnitAura("player", buff.id, buff.base)
 						end
 					end
 				end
