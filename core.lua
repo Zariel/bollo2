@@ -64,12 +64,16 @@ function Bollo:OnEnable()
 
 	self:NewDisplay("Buff", "HELPFUL", defaults)
 	self:NewDisplay("Debuff", "HARMFUL", defaults)
-	Bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
+	--self:RegisterEvent("PLAYER_AURAS_CHANGED")
+	self:UNIT_AURA("player")
+	self:RegisterEvent("UNIT_AURA")
 end
 
 
-function Bollo:PLAYER_AURAS_CHANGED()
-	for _, mod in ipairs(self.registry) do
-		mod:Update()
+function Bollo:UNIT_AURA(unit)
+	if unit == "player" then
+	    for _, mod in ipairs(self.registry) do
+		    mod:Update()
+	    end
 	end
 end
