@@ -8,7 +8,6 @@ Bollo.registry = setmetatable({}, {
 	end}
 )
 
-
 function prototype:CreateBackground(name)
 	local db = self.db.profile
 
@@ -135,7 +134,7 @@ function prototype:EnableSetupConfig()
 		local icon = self.icons[i] or Bollo:NewIcon()
 		icon:Setup(self.db.profile)
 		icon:SetID(0)
-		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
+		icon.Icon:SetTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
 		icon:Show()
 		self.icons[i] = icon
 	end

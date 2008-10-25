@@ -1,5 +1,5 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
-local BF = Bollo:NewModule("ButtonFacade")
+local BF = Bollo:NewModule("ButtonFacade", "AceConsole-3.0")
 local lib = LibStub("LibButtonFacade", true)
 
 function BF:OnInitialize()
@@ -8,13 +8,13 @@ function BF:OnInitialize()
 			["*"] = {
 			}
 		}
-	},
+	}
 
 	self.db = Bollo.db:RegisterNamespace("ButtonFacade", defaults)
 end
 
 function BF:OnEnable()
-	local lib = lib or LibStub("LibButtonFacade")
+	lib = lib or LibStub("LibButtonFacade")
 
 	lib:RegisterSkinCallback("Bollo2", self.UpdateSkin, self)
 	Bollo.RegisterCallback(self, "ButtonCreated")
@@ -22,18 +22,17 @@ end
 
 function BF:ButtonCreated(event, icon)
 	local data = {
-		["Icon"] = icon:GetNormalTexture(),
-		["Border"] = icon.Border,
-		["normalTexture"] = icon:GetNormalTexture(),
-		["Count"] = icon.modules.count,
+		["Icon"] = icon.Icon,
+		["Border"] = icon.Border or nil,
+		["Count"] = icon.modules.count or nil,
 	}
 
-	local G = lib:Group("Bollo2", button.name)
+	local G = lib:Group("Bollo2", icon.base)
 
-	G:AddButton(button, data)
+	G:AddButton(icon, data)
 
-	if self.db.profile[button.name] then
-		local db = self.db.profile[button.name]
+	if self.db.profile[icon.base] then
+		local db = self.db.profile[icon.base]
 		G:Skin(unpack(db))
 	end
 end

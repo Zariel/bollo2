@@ -2,11 +2,40 @@ local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local prototype = CreateFrame("Button", nil, UIParent)
 Bollo.IconPrototype = prototype
 
+local Base = {
+	HELPFUL = "Buff",
+	HARMFUL = "Debuff",
+	TEMP = "Weapon",
+}
+
+function prototype:GetName()
+	if not self.name then
+		self:SetName(true)
+	end
+
+	return self.name
+end
+
+function prototype:SetName(temp)
+	local name
+	if temp or not self.base then
+		name = "BolloBuff" .. 1
+	else
+		name = "Bollo" .. Base[self.base] .. self.id
+	end
+
+	self.name = name
+end
+
 function prototype:Setup(db)
 	local size = db.size
 	self:SetHeight(size)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
+	self.Icon:ClearAllPoints()
+	self.Icon:SetAllPoints(self)
+	self.Border:ClearAllPoints()
+	self.Border:SetAllPoints(self.Icon)
 
 	if db.borderColor ~= nil then
 		self.Border:ClearAllPoints()
@@ -36,8 +65,10 @@ function prototype:SetID(id)
 	local base = self.base or "HELPFUL"
 	self.id = GetPlayerBuff(id, base)
 
+	self:SetName()
+
 	local icon = GetPlayerBuffTexture(self.id)
-	self:SetNormalTexture(icon)
+	self.Icon:SetTexture(icon)
 
 	if self.Border.col then
 		if type(self.Border.col) == "table" then
@@ -107,6 +138,12 @@ function Bollo:NewIcon()
 		f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = prototype})
 		f.modules = {}
 
+		local i = f:CreateTexture(nil, "OVERLAY")
+		i:SetAllPoints(f)
+		i:SetTexture("")
+
+		f.Icon = i
+
 		local b = f:CreateTexture(nil, "OVERLAY")
 		b:SetTexture([[Interface\Buttons\UI-Debuff-Overlays]])
 		b:SetPoint("TOP", 0, 2)
@@ -123,6 +160,9 @@ function Bollo:NewIcon()
 
 	f:Show()
 
+	f:SetNormalTexture("")
+
+	f:SetName(true)
 	Bollo.events:Fire("ButtonCreated", f)
 
 	return f
@@ -130,7 +170,6 @@ end
 
 function Bollo:DelIcon(f)
 	f:Hide()
-	f.Border:Hide()
 
 	f.id = 0
 	f.base = nil
