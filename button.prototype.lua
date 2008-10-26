@@ -24,7 +24,8 @@ function prototype:Setup(db)
 			self.Border:Show()
 			self.Border.col = col
 		else
-			local col = DebuffTypeColor[select(5, UnitAura("player", self.id, self.base)) or "none"]
+			-- Doesnt have an ID yet
+			local col = DebuffTypeColor["none"]
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 			self.Border:Show()
 			self.Border.col = "dispell"
