@@ -24,7 +24,7 @@ function prototype:Setup(db)
 			self.Border:Show()
 			self.Border.col = col
 		else
-			local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+			local col = DebuffTypeColor[select(5, UnitAura("player", self.id, self.base)) or "none"]
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 			self.Border:Show()
 			self.Border.col = "dispell"
@@ -47,7 +47,7 @@ function prototype:SetID(id)
 			local col = self.Border.col
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 		else
-			local col = DebuffTypeColor[debuffType]
+			local col = DebuffTypeColor[debuffType or "none"]
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 		end
 		self.Border:Show()
