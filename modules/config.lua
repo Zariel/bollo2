@@ -212,11 +212,16 @@ function Config:GetFont(db, name)
 		args = {
 			font = {
 				type = "select",
+				name = "font",
 				values = {
-					["Default"] = STANDARD_TEXT_FONT,
+					[STANDARD_TEXT_FONT] = "Default",
 				},
 				get = function(info)
-					return db[info[# info]]
+					if db.font == STANDARD_TEXT_FONT then
+						return "Default"
+					else
+						return db.font
+					end
 				end,
 				set = function(info, val)
 					db[info[# info]] = val
