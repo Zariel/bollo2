@@ -62,8 +62,9 @@ end
 function prototype:Update()
 	if self.config then return end
 	local base = self.base
+
 	for i = 1, self.db.profile.max do
-		if GetPlayerBuff(i, base) > 0 then
+		if UnitAura("player", i, base) then
 			local icon = self.icons[i] or Bollo:NewIcon()
 			icon:SetBase(base)
 			icon:SetID(i)
@@ -93,6 +94,7 @@ end
 
 function prototype:UpdatePosition()
 	Bollo.events:Fire("PrePositionIcons", self)
+
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
 	local growthX, growthY = self.db.profile.growthX == "LEFT" and -1 or 1, self.db.profile.growthY == "DOWN" and -1 or 1
 	local perRow = self.db.profile.perRow

@@ -1,7 +1,7 @@
 local LCH = LibStub("CallbackHandler-1.0", true)
 assert(LCH, "Bollo requires CallbackHandler-1.0")
 
-local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
+Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
 
 function Bollo:OnInitialize()
 	self.events = LCH:New(Bollo)
@@ -64,12 +64,16 @@ function Bollo:OnEnable()
 
 	self:NewDisplay("Buff", "HELPFUL", defaults)
 	self:NewDisplay("Debuff", "HARMFUL", defaults)
-	Bollo:RegisterEvent("PLAYER_AURAS_CHANGED")
+	--self:RegisterEvent("PLAYER_AURAS_CHANGED")
+	self:UNIT_AURA(nil, "player")
+	self:RegisterEvent("UNIT_AURA")
 end
 
 
-function Bollo:PLAYER_AURAS_CHANGED()
-	for _, mod in ipairs(self.registry) do
-		mod:Update()
+function Bollo:UNIT_AURA(event, unit)
+	if unit == "player" then
+	    for _, mod in ipairs(self.registry) do
+		    mod:Update()
+	    end
 	end
 end

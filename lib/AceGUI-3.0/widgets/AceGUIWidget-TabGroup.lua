@@ -30,7 +30,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 
 do
 	local Type = "TabGroup"
-	local Version = 14
+	local Version = 15
 
 	local PaneBackdrop  = {
 		bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
@@ -55,7 +55,7 @@ do
 	
 	local function Tab_SetText(self, text)
 		self:_SetText(text)
-		PanelTemplates_TabResize(0, self)
+		PanelTemplates_TabResize(self, 0)
 	end
 	
 	local function UpdateTabLook(self)
@@ -238,8 +238,8 @@ do
 			--equal padding for each tab to fill the available width
 			local padding = (width - rowwidths[row]) / (endtab - starttab+1)
 			for i = starttab, endtab do
-				PanelTemplates_TabResize(padding, tabs[i])
-			end	
+				PanelTemplates_TabResize(tabs[i], padding)
+			end
 			starttab = endtab + 1
 		end
 		

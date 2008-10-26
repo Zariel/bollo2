@@ -2,6 +2,9 @@ local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local prototype = CreateFrame("Button", nil, UIParent)
 Bollo.IconPrototype = prototype
 
+local GetTime = GetTime
+local UnitAura = UnitAura
+
 local Base = {
 	HELPFUL = "Buff",
 	HARMFUL = "Debuff",
@@ -50,7 +53,7 @@ function prototype:Setup(db)
 			self.Border:Show()
 			self.Border.col = col
 		else
-			local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+			local col = DebuffTypeColor[select(5, UnitAura("player", self.id, self.base)) or "none"]
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 			self.Border:Show()
 			self.Border.col = "dispell"
@@ -63,19 +66,17 @@ end
 
 function prototype:SetID(id)
 	local base = self.base or "HELPFUL"
-	self.id = GetPlayerBuff(id, base)
+	self.id = id
 
-	self:SetName()
-
-	local icon = GetPlayerBuffTexture(self.id)
-	self.Icon:SetTexture(icon)
+	local _, _, icon, _, debuffType = UnitAura("player", self.id, base)
+	self:SetNormalTexture(icon)
 
 	if self.Border.col then
 		if type(self.Border.col) == "table" then
 			local col = self.Border.col
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 		else
-			local col = DebuffTypeColor[GetPlayerBuffDispelType(self.id) or "none"]
+			local col = DebuffTypeColor[debuffType or "none"]
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 		end
 		self.Border:Show()
@@ -87,15 +88,16 @@ function prototype:SetID(id)
 end
 
 function prototype:GetCount()
-	return GetPlayerBuffApplications(self.id)
+	return select(4, UnitAura("player", self.id, self.base))
 end
 
 function prototype:GetTimeleft()
 	if not self.id then return 666 end      -- Assume config
-	if select(2, GetPlayerBuff(self.id)) > 0 then
+	if not UnitAura("player", self.id, self.base) then
 		return nil
 	else
-		return math.floor(GetPlayerBuffTimeLeft(self.id) + 0.5)
+	        local _, _, _, _, _, _, expirationTime = UnitAura("player", self.id, self.base)
+		return expirationTime and expirationTime> 0 and math.floor(expirationTime - GetTime() + 0.5)
 	end
 end
 
@@ -107,7 +109,7 @@ do
 	local OnEnter = function(self)
 		if self:IsShown() then
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-			GameTooltip:SetPlayerBuff(self.id)
+			GameTooltip:SetUnitAura("player", self.id, self.base)
 		end
 	end
 
