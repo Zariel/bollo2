@@ -25,9 +25,18 @@ local options = {
 
 local SML = LibStub("LibSharedMedia-3.0", true)
 
-local fonts = {
+local fonts = setmetatable({
 	[STANDARD_TEXT_FONT] = "Default",
-}
+}, {
+	__call = function(self)
+		if SML then
+			for k, v in ipairs(SML:List("font")) do
+				fonts[SML:Fetch("font", v)] = v
+			end
+		end
+		return fonts
+	end
+})
 
 if SML then
 	for k, v in ipairs(SML:List("font")) do
@@ -225,7 +234,7 @@ function Config:GetFont(db, name)
 			font = {
 				type = "select",
 				name = "font",
-				values = fonts,
+				values = fonts(),
 				get = function(info)
 					if db.font == STANDARD_TEXT_FONT then
 						return "Default"
