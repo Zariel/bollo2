@@ -23,6 +23,18 @@ local options = {
 	plugins = {},
 }
 
+local SML = LibStub("LibSharedMedia-3.0", true)
+
+local fonts = {
+	[STANDARD_TEXT_FONT] = "Default",
+}
+
+if SML then
+	for k, v in ipairs(SML:List("font")) do
+		fonts[SML:Fetch("font", v)] = v
+	end
+end
+
 function Config:GenerateOptions(name, module)
 	self.count = self.count or 0 + 10
 	local get = function(info)
@@ -213,9 +225,7 @@ function Config:GetFont(db, name)
 			font = {
 				type = "select",
 				name = "font",
-				values = {
-					[STANDARD_TEXT_FONT] = "Default",
-				},
+				values = fonts,
 				get = function(info)
 					if db.font == STANDARD_TEXT_FONT then
 						return "Default"
