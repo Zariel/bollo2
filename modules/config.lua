@@ -31,10 +31,10 @@ local fonts = setmetatable({
 	__call = function(self)
 		if SML then
 			for k, v in ipairs(SML:List("font")) do
-				fonts[SML:Fetch("font", v)] = v
+				self[SML:Fetch("font", v)] = v
 			end
 		end
-		return fonts
+		return self
 	end
 })
 
@@ -236,11 +236,7 @@ function Config:GetFont(db, name)
 				name = "font",
 				values = fonts(),
 				get = function(info)
-					if db.font == STANDARD_TEXT_FONT then
-						return "Default"
-					else
-						return db.font
-					end
+					return db.font
 				end,
 				set = function(info, val)
 					db[info[# info]] = val

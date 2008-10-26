@@ -19,10 +19,12 @@ function Duration:OnInitialize()
 		duration = {
 			name = "Duration",
 			type = "group",
+			childGroups = "tab",
 			args = {
 				desc = {
 					name = "Test",
 					type = "description",
+					order = 0,
 				}
 			},
 		}
