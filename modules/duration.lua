@@ -48,6 +48,8 @@ function Duration:PostCreateIcon(event, buff)
 end
 
 function Duration:GenerateOptions(name)
+	local conf = Bollo:GetModule("Config")
+
 	local set = function(info, val)
 		local k = info[# info]
 		self.db.profile[name][k] = val
@@ -63,14 +65,14 @@ function Duration:GenerateOptions(name)
 		set = set,
 		get = get,
 		args = {
-			face = {
-				name = "Faceaids",
+			font = conf:GetFont(self.db.profile[name], name),
+			info = {
 				type = "description",
+				name = "TEST",
 			},
 		}
 	}
 
-	local conf = Bollo:GetModule("Config")
 	conf.options.plugins.duration.duration.args[name] = t
 end
 
