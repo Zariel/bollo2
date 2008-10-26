@@ -119,7 +119,7 @@ do
 
 	local OnMouseUp = function(self, button)
 		if button == "RightButton" then
-			CancelPlayerBuff(self.id)
+			CancelUnitBuff("player", self.id)
 		end
 	end
 
@@ -140,7 +140,7 @@ function Bollo:NewIcon()
 		f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = prototype})
 		f.modules = {}
 
-		local i = f:CreateTexture(nil, "OVERLAY")
+		local i = f:CreateTexture(nil, "BACKGROUND")
 		i:SetAllPoints(f)
 		i:SetTexture("")
 
@@ -148,11 +148,12 @@ function Bollo:NewIcon()
 
 		local b = f:CreateTexture(nil, "OVERLAY")
 		b:SetTexture([[Interface\Buttons\UI-Debuff-Overlays]])
-		b:SetPoint("TOP", 0, 2)
+	--[[	b:SetPoint("TOP", 0, 2)
 		b:SetPoint("RIGHT", 2, 0)
 		b:SetPoint("BOTTOM", 0, -2)
 		b:SetPoint("LEFT", -2, 0)
-		b:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
+		b:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)]]
+		b:SetAllPoints(f)
 		b:Hide()
 
 		f.Border = b

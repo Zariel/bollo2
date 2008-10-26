@@ -185,6 +185,7 @@ function Config:OnInitialize()
 end
 
 function Config:UpdateConfig(name)
+	Bollo.events:Fire("UpdateConfig", name)
 	if not name or name == "Bollo" then
 		Bollo:UpdateConfig()
 	elseif name == "all" then
