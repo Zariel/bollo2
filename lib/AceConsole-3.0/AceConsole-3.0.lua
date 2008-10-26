@@ -1,4 +1,4 @@
---[[ $Id: AceConsole-3.0.lua 74633 2008-05-21 08:20:50Z nevcairiel $ ]]
+--[[ $Id: AceConsole-3.0.lua 708 2008-10-19 10:59:58Z arrowmaster $ ]]
 local MAJOR,MINOR = "AceConsole-3.0", 6
 
 local AceConsole, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
@@ -55,8 +55,8 @@ function AceConsole:RegisterChatCommand( command, func, persist )
 	local name = "ACECONSOLE_"..command:upper()
 	
 	if type( func ) == "string" then
-		SlashCmdList[name] = function(input)
-			self[func](self, input)
+		SlashCmdList[name] = function(input, editBox)
+			self[func](self, input, editBox)
 		end
 	else
 		SlashCmdList[name] = func
