@@ -6,9 +6,9 @@ local GetTime = GetTime
 local UnitAura = UnitAura
 
 local BASE = {
-	HELPFUL = "buff",
-	HARMFUL = "debuff",
-	TEMP = "weapon",
+	HELPFUL = "Buff",
+	HARMFUL = "Debuff",
+	TEMP = "Weapon",
 }
 
 function prototype:Setup(db)
