@@ -7,7 +7,10 @@ function Duration:OnInitialize()
 		profile = {
 			["*"] = {
 				size = 14,
-				font = STANDARD_TEXT_FONT
+				font = STANDARD_TEXT_FONT,
+				point = "TOP",
+				x = 0,
+				y = -2,
 			}
 		}
 	}
@@ -44,6 +47,7 @@ function Duration:PostCreateIcon(event, buff)
 	t:SetFont(STANDARD_TEXT_FONT, 14)
 	t:SetShadowColor(0, 0, 0, 1)
 	t:SetShadowOffset(1, -1)
+
 	t:SetPoint("TOP", buff, "BOTTOM", 0, -2)
 
 	buff.modules.duration = t
@@ -67,11 +71,7 @@ function Duration:GenerateOptions(name)
 		set = set,
 		get = get,
 		args = {
-			font = conf:GetFont(self.db.profile[name], name),
-			info = {
-				type = "description",
-				name = "TEST",
-			},
+			font = conf:GetFont(self.db.profile[name], name, self),
 		}
 	}
 
@@ -107,18 +107,23 @@ function Duration:FormatTime(time)
 	return text, m
 end
 
-function Duration:UpdateConfig()
-	for name, module in pairs(self.registry) do
-		for index, buff in ipairs(module.icons) do
-			local d = buff.modules.duration
-			local db = self.db.profile[name]
-			local font, size, flag = db.font, db.size, db.flag
-			local point = db.point
-			local x, y = db.x, db.y
+function Duration:UpdateConfig(name)
+	if name then
+	else
+		-- all
+		for name, module in pairs(self.registry) do
+			for index, buff in ipairs(module.icons) do
+				local d = buff.modules.duration
+				local db = self.db.profile[name]
+				local font, size, flag = db.font, db.size, db.flag
+				local x, y = db.x, db.y
+				local p, a, m = unpack(Bollo.Points[db.point])
 
-			d:ClearAllPoints()
-			d:SetPoint(point, buff, point, x, y)
-			d:SetFont(font, size, flag)
+				d:ClearAllPoints()
+				d:SetPoint(p, buff, a, x, y * m)
+				d:SetFont(font, size, flag)
+				self:Print(font)
+			end
 		end
 	end
 end

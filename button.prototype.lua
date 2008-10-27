@@ -5,6 +5,12 @@ Bollo.IconPrototype = prototype
 local GetTime = GetTime
 local UnitAura = UnitAura
 
+local BASE = {
+	HELPFUL = "buff",
+	HARMFUL = "debuff",
+	TEMP = "weapon",
+}
+
 function prototype:Setup(db)
 	local size = db.size
 	self:SetHeight(size)
@@ -75,6 +81,7 @@ end
 
 function prototype:SetBase(base)
 	self.base = base
+	self.name = BASE[base]
 end
 
 do
