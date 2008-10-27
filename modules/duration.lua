@@ -24,11 +24,6 @@ function Duration:OnInitialize()
 			type = "group",
 			childGroups = "tab",
 			args = {
-				desc = {
-					name = "Test",
-					type = "description",
-					order = 0,
-				}
 			},
 		}
 	}
@@ -129,7 +124,6 @@ function Duration:UpdateConfig(name)
 				d:ClearAllPoints()
 				d:SetPoint(p, buff, a, x, y * m)
 				d:SetFont(font, size, flag)
-				self:Print(font)
 			end
 		end
 	end
