@@ -44,11 +44,17 @@ function Duration:PostCreateIcon(event, buff)
 	if buff.modules.duration then return end
 
 	local t = buff:CreateFontString(nil, "OVERLAY")
-	t:SetFont(STANDARD_TEXT_FONT, 14)
+
+	local db = self.db.profile[buff.name]
+	local p, a, m = unpack(Bollo.Points[db.point])
+	local font, size, flag = db.font, db.size, db.flag
+	local x, y = db.x, db.y
+
+	t:SetPoint(p, buff, a, x, y * m)
+	t:SetFont(font, size, flag)
+
 	t:SetShadowColor(0, 0, 0, 1)
 	t:SetShadowOffset(1, -1)
-
-	t:SetPoint("TOP", buff, "BOTTOM", 0, -2)
 
 	buff.modules.duration = t
 end
@@ -61,6 +67,7 @@ function Duration:GenerateOptions(name)
 		self.db.profile[name][k] = val
 		self:UpdateConfig(name)
 	end
+
 	local get = function(info)
 		return self.db.profile[name][info[# info]]
 	end
