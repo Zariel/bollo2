@@ -1,5 +1,6 @@
 local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local count = bollo:NewModule("Count")
+count.registry = {}
 
 function count:OnInitialize()
 	local defaults = {
@@ -18,7 +19,20 @@ function count:OnInitialize()
 
 	self.db = bollo.db:RegisterNamespace("Count", defaults)
 
-	self:SetEnabledState(self.db.profile.enabled)
+	local conf = bollo:GetModule("Config")
+	local t = {
+		count = {
+			name = "Count",
+			type = "group",
+			childGroups = "tab",
+			args = {
+			},
+		}
+	}
+
+	conf.options.plugins.count = t
+
+	--self:SetEnabledState(self.db.profile.enabled)
 end
 
 function count:OnEnable()
@@ -27,7 +41,7 @@ end
 
 function count:ButtonCreated(event, button)
 	local f = button:CreateFontString(nil, "OVERLAY")
-	f:SetFont(self.db.profile[button.base].font, self.db.profile[button.base].fontSize)
+	f:SetFont(self.db.profile[button.name].font, self.db.profile[button.name].fontSize)
 	f:SetShadowColor(0, 0, 0, 1)
 	f:SetShadowOffset(1, -1)
 	f:SetPoint("CENTER")
@@ -45,4 +59,79 @@ function count:PostUpdateIcon(event, button)
 	elseif button.modules.count and button.modules.count:IsShown() then
 		button.modules.count:Hide()
 	end
+end
+
+function count:Register(module, defaults)
+	local name = tostring(module)
+	if self.registry[name] then return end
+
+	self.registry[name] = module
+	module.modules.count = true
+
+	self:GenerateOptions(name)
+
+	for i, b in ipairs(module.icons) do
+		self:ButtonCreated("init", b)
+	end
+end
+
+function count:GenerateOptions(name)
+	local conf = bollo:GetModule("Config")
+
+	local set = function(info, val)
+		local k = info[# info]
+		self.db.profile[name][k] = val
+		self:UpdateConfig(name)
+	end
+
+	local get = function(info)
+		return self.db.profile[name][info[# info]]
+	end
+
+	local t = {
+		name = name,
+		type = "group",
+		set = set,
+		get = get,
+		args = {
+			font = conf:GetFont(self.db.profile[name], name, self),
+			point = {
+				type = "group",
+				name = "point",
+				guiInline = true,
+				args = {
+					point = {
+						name = "point",
+						type = "select",
+						values = {
+							TOP = "TOP",
+							RIGHT = "RIGHT",
+							BOTTOM = "BOTTOM",
+							LEFT = "LEFT",
+							CENTER = "CENTER",
+						},
+						order = 10,
+					},
+					x = {
+						name = "x",
+						type = "range",
+						min = -15,
+						max = 15,
+						step = 1,
+						order = 20
+					},
+					y = {
+						name = "y",
+						type = "range",
+						min = -15,
+						max = 15,
+						step = 1,
+						order = 30,
+					}
+				}
+			}
+		}
+	}
+
+	conf.options.plugins.count.count.args[name] = t
 end
