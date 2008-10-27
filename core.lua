@@ -1,7 +1,22 @@
 local LCH = LibStub("CallbackHandler-1.0", true)
 assert(LCH, "Bollo requires CallbackHandler-1.0")
 
-Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
+local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
+
+do
+	local proto = {}
+	function proto:Print(...)
+		local str = "|cff33ff99" .. tostring(self) .. "|r: "
+
+		for i = 1, select("#", ...) do
+			str = str .. tostring(select(i, ...)) .. " "
+		end
+
+		ChatFrame1:AddMessage(str)
+	end
+
+	Bollo:SetDefaultModulePrototype(proto)
+end
 
 function Bollo:OnInitialize()
 	self.events = LCH:New(Bollo)
@@ -77,3 +92,12 @@ function Bollo:UNIT_AURA(event, unit)
 	    end
 	end
 end
+
+Bollo.Points = {
+	TOP = {"TOP", "BOTTOM", 1},
+	RIGHT = {"RIGHT", "RIGHT", 1},
+	BOTTOM = {"BOTTOM", "TOP", -1},
+	LEFT = {"LEFT", "RIGHT", 1},
+	CENTER = {"CENTER", "CENTER", 1},
+}
+
