@@ -75,16 +75,39 @@ function Duration:GenerateOptions(name)
 		args = {
 			font = conf:GetFont(self.db.profile[name], name, self),
 			point = {
+				type = "group",
 				name = "point",
-				type = "select",
-				values = {
-					TOP = "TOP",
-					RIGHT = "RIGHT",
-					BOTTOM = "BOTTOM",
-					LEFT = "LEFT",
-					CENTER = "CENTER",
-				},
-				order = 20,
+				guiInline = true,
+				args = {
+					point = {
+						name = "point",
+						type = "select",
+						values = {
+							TOP = "TOP",
+							RIGHT = "RIGHT",
+							BOTTOM = "BOTTOM",
+							LEFT = "LEFT",
+							CENTER = "CENTER",
+						},
+						order = 10,
+					},
+					x = {
+						name = "x",
+						type = "range",
+						min = -15,
+						max = 15,
+						step = 1,
+						order = 20
+					},
+					y = {
+						name = "y",
+						type = "range",
+						min = -15,
+						max = 15,
+						step = 1,
+						order = 30,
+					}
+				}
 			}
 		}
 	}
@@ -146,7 +169,6 @@ function Duration:UpdateConfig(name)
 
 				d:ClearAllPoints()
 				d:SetPoint(p, buff, a, x, y * m)
-				self:Print(p, a)
 				d:SetFont(font, size, flag)
 			end
 		end
