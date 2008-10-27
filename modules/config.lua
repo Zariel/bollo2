@@ -206,6 +206,7 @@ function Config:OnInitialize()
 end
 
 function Config:UpdateConfig(name)
+	-- This is flawed
 	if not name or name == "Bollo" then
 		Bollo:UpdateConfig()
 	elseif name == "all" then
@@ -214,11 +215,18 @@ function Config:UpdateConfig(name)
 				module:UpdateConfig()
 			end
 		end
+	elseif type(name) == "table" then
+		--Modules
+		if name.UpdateConfig then
+			name:UpdateConfig()
+		end
 	else
 		for _, mod in ipairs(Bollo.registry) do
+			self:Print(mod, mod.UpdateConfig)
 			if mod.name == name then
 				if mod.UpdateConfig then
 					mod:UpdateConfig()
+					self:Print("Update", name)
 					break
 				end
 			end
@@ -226,23 +234,45 @@ function Config:UpdateConfig(name)
 	end
 end
 
-function Config:GetFont(db, name)
+function Config:GetFont(db, name, mod)
+	local get = function(info)
+		return db[info[#info]]
+	end
+
+	local set = function(info, val)
+		db[info[# info]] = val
+		self:Print(info[#info], val)
+		self:UpdateConfig(mod or name)
+	end
+
 	local t = {
 		name = "Font",
 		type = "group",
+		guiInline = true,
+		get = get,
+		set = set,
 		args = {
 			font = {
 				type = "select",
 				name = "font",
 				values = fonts(),
-				get = function(info)
-					return db.font
-				end,
-				set = function(info, val)
-					db[info[# info]] = val
-					self:UpdateConfig(name)
-				end,
 				order = 10,
+			},
+			size = {
+				type = "range",
+				name = "size",
+				min = 8,
+				max = 35,
+				step = 1,
+			},
+			flag = {
+				type = "select",
+				name = "style",
+				values = {
+					OUTLINE = "Outline",
+					THICKOUTLINE = "Thick Outline",
+					NONE = "Default",
+				},
 			}
 		}
 	}
