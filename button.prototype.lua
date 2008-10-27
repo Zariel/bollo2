@@ -98,7 +98,7 @@ do
 
 	local OnMouseUp = function(self, button)
 		if button == "RightButton" then
-			CancelPlayerBuff(self.id)
+			CancelUnitBuff("player", self.id)
 		end
 	end
 
