@@ -157,7 +157,7 @@ function prototype:DisableSetupConfig()
 end
 
 function Bollo:NewDisplay(name, base, defaults)
-	local t = setmetatable({},{
+	local t = setmetatable({}, {
 		__index = prototype,
 		__tostring = function()
 			return name
