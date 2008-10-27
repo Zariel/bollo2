@@ -45,7 +45,7 @@ function Duration:PostCreateIcon(event, buff)
 	local font, size, flag = db.font, db.size, db.flag
 	local x, y = db.x, db.y
 
-	t:SetPoint(p, buff, a, x, y * m)
+	t:SetPoint(a, buff, p, x, y * m)
 	t:SetFont(font, size, flag)
 
 	t:SetShadowColor(0, 0, 0, 1)
@@ -74,6 +74,18 @@ function Duration:GenerateOptions(name)
 		get = get,
 		args = {
 			font = conf:GetFont(self.db.profile[name], name, self),
+			point = {
+				name = "point",
+				type = "select",
+				values = {
+					TOP = "TOP",
+					RIGHT = "RIGHT",
+					BOTTOM = "BOTTOM",
+					LEFT = "LEFT",
+					CENTER = "CENTER",
+				},
+				order = 20,
+			}
 		}
 	}
 
@@ -111,6 +123,17 @@ end
 
 function Duration:UpdateConfig(name)
 	if name then
+		for index, buff in ipairs(self.registry[name].icons) do
+			local d = buff.modules.duration
+			local db = self.db.profile[name]
+			local font, size, flag = db.font, db.size, db.flag
+			local x, y = db.x, db.y
+			local p, a, m = unpack(Bollo.Points[db.point])
+
+			d:ClearAllPoints()
+			d:SetPoint(a, buff, p, x, y * m)
+			d:SetFont(font, size, flag)
+		end
 	else
 		-- all
 		for name, module in pairs(self.registry) do
@@ -123,6 +146,7 @@ function Duration:UpdateConfig(name)
 
 				d:ClearAllPoints()
 				d:SetPoint(p, buff, a, x, y * m)
+				self:Print(p, a)
 				d:SetFont(font, size, flag)
 			end
 		end

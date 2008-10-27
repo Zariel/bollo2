@@ -86,9 +86,9 @@ end
 
 function Bollo:UNIT_AURA(event, unit)
 	if unit == "player" then
-	    for _, mod in ipairs(self.registry) do
-		    mod:Update()
-	    end
+		for _, mod in ipairs(self.registry) do
+			mod:Update()
+		end
 	end
 end
 

@@ -241,7 +241,6 @@ function Config:GetFont(db, name, mod)
 
 	local set = function(info, val)
 		db[info[# info]] = val
-		self:Print(info[#info], val)
 		self:UpdateConfig(mod or name)
 	end
 
@@ -264,10 +263,12 @@ function Config:GetFont(db, name, mod)
 				min = 8,
 				max = 35,
 				step = 1,
+				order = 20,
 			},
 			flag = {
 				type = "select",
 				name = "style",
+				order = 30,
 				values = {
 					OUTLINE = "Outline",
 					THICKOUTLINE = "Thick Outline",
