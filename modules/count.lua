@@ -1,5 +1,5 @@
-local bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
-local count = bollo:NewModule("Count")
+local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
+local count = Bollo:NewModule("Count")
 count.registry = {}
 
 function count:OnInitialize()
@@ -17,9 +17,9 @@ function count:OnInitialize()
 		}
 	}
 
-	self.db = bollo.db:RegisterNamespace("Count", defaults)
+	self.db = Bollo.db:RegisterNamespace("Count", defaults)
 
-	local conf = bollo:GetModule("Config")
+	local conf = Bollo:GetModule("Config")
 	local t = {
 		count = {
 			name = "Count",
@@ -36,7 +36,7 @@ function count:OnInitialize()
 end
 
 function count:OnEnable()
-	bollo.RegisterCallback(self, "PostUpdateIcon")
+	Bollo.RegisterCallback(self, "PostUpdateIcon")
 end
 
 function count:ButtonCreated(event, button)
@@ -45,6 +45,7 @@ function count:ButtonCreated(event, button)
 	f:SetShadowColor(0, 0, 0, 1)
 	f:SetShadowOffset(1, -1)
 	f:SetPoint("CENTER")
+
 	button.modules.count = f
 end
 
@@ -76,7 +77,7 @@ function count:Register(module, defaults)
 end
 
 function count:GenerateOptions(name)
-	local conf = bollo:GetModule("Config")
+	local conf = Bollo:GetModule("Config")
 
 	local set = function(info, val)
 		local k = info[# info]
@@ -134,4 +135,27 @@ function count:GenerateOptions(name)
 	}
 
 	conf.options.plugins.count.count.args[name] = t
+end
+
+function count:UpdateConfig(name)
+	if name then
+		for i, icon in ipairs(self.registry[name].icons) do
+			if icon.modules.count then
+				local c = icon.modules.count
+				db = self.db.profile[name]
+				local font, size, flag = db.font, db.size, db.flag
+				local x, y = db.x, db.y
+				local p, a, m = unpack(Bollo.Points[db.point])
+
+				c:ClearAllPoints()
+				c:SetPoint(p, buff, a, x, y * m)
+				c:SetFont(font, size, flag)
+			end
+		end
+	else
+		for name, module in pairs(self.registry) do
+			self:UpdateConfig(name)
+		end
+		return
+	end
 end
