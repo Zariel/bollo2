@@ -160,18 +160,9 @@ function Duration:UpdateConfig(name)
 	else
 		-- all
 		for name, module in pairs(self.registry) do
-			for index, buff in ipairs(module.icons) do
-				local d = buff.modules.duration
-				local db = self.db.profile[name]
-				local font, size, flag = db.font, db.size, db.flag
-				local x, y = db.x, db.y
-				local p, a, m = unpack(Bollo.Points[db.point])
-
-				d:ClearAllPoints()
-				d:SetPoint(p, buff, a, x, y * m)
-				d:SetFont(font, size, flag)
-			end
+			self:UpdateConfig(name)
 		end
+		return
 	end
 end
 
