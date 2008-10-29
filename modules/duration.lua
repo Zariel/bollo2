@@ -40,7 +40,8 @@ function Duration:PostCreateIcon(event, buff)
 
 	local t = buff:CreateFontString(nil, "OVERLAY")
 
-	local db = self.db.profile[buff.name]
+	local db = self.db.profile[buff.base]
+
 	local p, a, m = unpack(Bollo.Points[db.point])
 	local font, size, flag = db.font, db.size, db.flag
 	local x, y = db.x, db.y

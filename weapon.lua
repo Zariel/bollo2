@@ -64,7 +64,9 @@ function w:OnEnable()
 
 		NewIcon = function()
 			local icon = Bollo:NewIcon()
+			icon:Hide()
 			icon.modules = {}
+			icon.base = "TEMP"
 			icon:SetScript("OnEnter", OnEnter)
 			icon:SetScript("OnMouseUp", OnMouseUp)
 			icon.GetTimeleft = GetTimeleft

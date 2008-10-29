@@ -41,7 +41,8 @@ end
 
 function count:ButtonCreated(event, button)
 	local f = button:CreateFontString(nil, "OVERLAY")
-	f:SetFont(self.db.profile[button.name].font, self.db.profile[button.name].fontSize)
+	local db = self.db.profile[button.base]
+	f:SetFont(db.font, db.fontSize)
 	f:SetShadowColor(0, 0, 0, 1)
 	f:SetShadowOffset(1, -1)
 	f:SetPoint("CENTER")
