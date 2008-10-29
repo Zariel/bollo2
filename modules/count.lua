@@ -146,7 +146,7 @@ function count:UpdateConfig(name)
 			if icon.modules.count then
 				local c = icon.modules.count
 				db = self.db.profile[icon.base]
-				local font, size, flag = db.font, db.size, db.flag
+				local font, size, flag = db.font, db.fontSize, db.style
 				local x, y = db.x, db.y
 				local p, a, m = unpack(Bollo.Points[db.point])
 
