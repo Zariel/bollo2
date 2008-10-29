@@ -42,7 +42,7 @@ function prototype:SetID(id)
 end
 
 function prototype:GetCount()
-	return select(4, UnitAura("player", self.id, self.base))
+	return self.id ~= 0 and select(4, UnitAura("player", self.id, self.base)) or 3
 end
 
 function prototype:GetTimeleft()

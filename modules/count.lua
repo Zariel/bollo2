@@ -32,7 +32,7 @@ function count:OnInitialize()
 
 	conf.options.plugins.count = t
 
-	--self:SetEnabledState(self.db.profile.enabled)
+	self:SetEnabledState(self.db.profile.enabled)
 end
 
 function count:OnEnable()
@@ -41,7 +41,9 @@ end
 
 function count:ButtonCreated(event, button)
 	local f = button:CreateFontString(nil, "OVERLAY")
+
 	local db = self.db.profile[button.base]
+
 	f:SetFont(db.font, db.fontSize)
 	f:SetShadowColor(0, 0, 0, 1)
 	f:SetShadowOffset(1, -1)

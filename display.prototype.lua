@@ -134,11 +134,11 @@ function prototype:EnableSetupConfig()
 
 	for i = 1, self.db.profile.max do
 		local icon = self.icons[i] or Bollo:NewIcon()
+		icon.base = self.base
 		icon:Setup(self.db.profile)
 		icon:SetID(0)
 		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
 		icon:Show()
-		icon:SetBase(self.base)
 		self.icons[i] = icon
 	end
 

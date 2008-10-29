@@ -222,11 +222,9 @@ function Config:UpdateConfig(name)
 		end
 	else
 		for _, mod in ipairs(Bollo.registry) do
-			self:Print(mod, mod.UpdateConfig)
 			if mod.name == name then
 				if mod.UpdateConfig then
 					mod:UpdateConfig()
-					self:Print("Update", name)
 					break
 				end
 			end
