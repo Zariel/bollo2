@@ -82,7 +82,6 @@ end
 function count:GenerateOptions(name, base)
 	local conf = Bollo:GetModule("Config")
 
-	self:Print(self.db.profile[base])
 	local db = self.db.profile[base]
 
 	local set = function(info, val)
