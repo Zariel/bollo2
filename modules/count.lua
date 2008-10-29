@@ -44,7 +44,7 @@ function count:ButtonCreated(event, button)
 
 	local db = self.db.profile[button.base]
 
-	f:SetFont(db.font, db.fontSize)
+	f:SetFont(db.font, db.fontSize, db.style)
 	f:SetShadowColor(0, 0, 0, 1)
 	f:SetShadowOffset(1, -1)
 	f:SetPoint("CENTER")
@@ -145,7 +145,7 @@ function count:UpdateConfig(name)
 		for i, icon in ipairs(self.registry[name].icons) do
 			if icon.modules.count then
 				local c = icon.modules.count
-				db = self.db.profile[name]
+				db = self.db.profile[icon.base]
 				local font, size, flag = db.font, db.size, db.flag
 				local x, y = db.x, db.y
 				local p, a, m = unpack(Bollo.Points[db.point])
