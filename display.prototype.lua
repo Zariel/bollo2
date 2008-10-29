@@ -138,6 +138,7 @@ function prototype:EnableSetupConfig()
 		icon:SetID(0)
 		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
 		icon:Show()
+		icon:SetBase(self.base)
 		self.icons[i] = icon
 	end
 
