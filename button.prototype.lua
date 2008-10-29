@@ -16,6 +16,30 @@ function prototype:Setup(db)
 	self:SetHeight(size)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
+
+	if db.borderColor ~= nil then
+		self.Border:ClearAllPoints()
+		self.Border:SetPoint("TOP", 0, 2)
+		self.Border:SetPoint("RIGHT", 2, 0)
+		self.Border:SetPoint("BOTTOM", 0, -2)
+		self.Border:SetPoint("LEFT", -2, 0)
+
+		if db.borderColor then
+			local col = db.color
+			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+			self.Border:Show()
+			self.Border.col = col
+		else
+			-- Doesnt have an ID yet
+			local col = DebuffTypeColor["none"]
+			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
+			self.Border:Show()
+			self.Border.col = "dispell"
+		end
+	else
+		self.Border:Hide()
+		self.Border.col = nil
+	end
 end
 
 function prototype:SetID(id)
@@ -121,6 +145,7 @@ function Bollo:DelIcon(f)
 
 	f.id = 0
 	f.base = nil
+	f.name = nil
 
 	cache[f] = true
 end
