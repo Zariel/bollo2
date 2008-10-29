@@ -17,6 +17,7 @@ function prototype:Setup(db)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
 
+	--[[
 	if db.borderColor ~= nil then
 		self.Border:ClearAllPoints()
 		self.Border:SetPoint("TOP", 0, 2)
@@ -40,6 +41,7 @@ function prototype:Setup(db)
 		self.Border:Hide()
 		self.Border.col = nil
 	end
+	]]
 end
 
 function prototype:SetID(id)
@@ -74,7 +76,7 @@ function prototype:GetTimeleft()
 	if not UnitAura("player", self.id, self.base) then
 		return nil
 	else
-	        local _, _, _, _, _, _, expirationTime = UnitAura("player", self.id, self.base)
+		local _, _, _, _, _, _, expirationTime = UnitAura("player", self.id, self.base)
 		return expirationTime and expirationTime> 0 and math.floor(expirationTime - GetTime() + 0.5)
 	end
 end
@@ -146,6 +148,7 @@ function Bollo:DelIcon(f)
 
 	f.id = 0
 	f.base = nil
+	f.name = nil
 
 	cache[f] = true
 end
