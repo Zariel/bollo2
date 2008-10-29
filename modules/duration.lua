@@ -149,7 +149,7 @@ function Duration:UpdateConfig(name)
 	if name then
 		for index, buff in ipairs(self.registry[name].icons) do
 			local d = buff.modules.duration
-			local db = self.db.profile[name]
+			local db = self.db.profile[buff.base]
 			local font, size, flag = db.font, db.size, db.flag
 			local x, y = db.x, db.y
 			local p, a, m = unpack(Bollo.Points[db.point])
