@@ -149,10 +149,10 @@ function count:UpdateConfig(name)
 				local font, size, flag = db.font, db.fontSize, db.style
 				local x, y = db.x, db.y
 				local p, a, m = unpack(Bollo.Points[db.point])
+				c:SetFont(font, size, flag)
 
 				c:ClearAllPoints()
-				c:SetPoint(p, buff, a, x, y * m)
-				c:SetFont(font, size, flag)
+				c:SetPoint(p, icon, a, x, y * m)
 			end
 		end
 	else
