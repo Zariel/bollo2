@@ -176,6 +176,9 @@ function Duration:OnUpdate()
 					if timeleft and timeleft > 0 then
 						buff.modules.duration:SetFormattedText(Duration:FormatTime(timeleft))
 						buff.modules.duration:Show()
+					elseif module.config then
+						buff.modules.duration:SetFormattedText(Duration:FormatTime(666))
+						buff.modules.duration:Show()
 					else
 						buff.modules.duration:Hide()
 					end
