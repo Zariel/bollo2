@@ -101,7 +101,7 @@ function count:GenerateOptions(name, base)
 		set = set,
 		get = get,
 		args = {
-			font = conf:GetFont(db[base], name, self),
+			font = conf:GetFont(db, name, self),
 			point = {
 				type = "group",
 				name = "point",
