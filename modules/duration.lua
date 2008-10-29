@@ -55,17 +55,19 @@ function Duration:PostCreateIcon(event, buff)
 	buff.modules.duration = t
 end
 
-function Duration:GenerateOptions(name)
+function Duration:GenerateOptions(name, base)
 	local conf = Bollo:GetModule("Config")
+
+	local db = self.db.profile[base]
 
 	local set = function(info, val)
 		local k = info[# info]
-		self.db.profile[name][k] = val
+		db[k] = val
 		self:UpdateConfig(name)
 	end
 
 	local get = function(info)
-		return self.db.profile[name][info[# info]]
+		return db[info[# info]]
 	end
 
 	local t = {
@@ -74,7 +76,7 @@ function Duration:GenerateOptions(name)
 		set = set,
 		get = get,
 		args = {
-			font = conf:GetFont(self.db.profile[name], name, self),
+			font = conf:GetFont(db, name, self),
 			point = {
 				type = "group",
 				name = "point",
@@ -123,7 +125,7 @@ function Duration:Register(module, defaults)
 	self.registry[name] = module
 	module.modules.duration = true
 
-	self:GenerateOptions(name)
+	self:GenerateOptions(name, module.base)
 
 	for i, b in ipairs(module.icons) do
 		self:PostCreateIcon("init", b)
