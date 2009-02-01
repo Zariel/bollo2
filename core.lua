@@ -1,5 +1,4 @@
-local LCH = LibStub("CallbackHandler-1.0", true)
-assert(LCH, "Bollo requires CallbackHandler-1.0")
+local LCH = LibStub("CallbackHandler-1.0")
 
 local Bollo = LibStub("AceAddon-3.0"):NewAddon("Bollo2", "AceEvent-3.0")
 
@@ -15,6 +14,7 @@ do
 		ChatFrame1:AddMessage(str)
 	end
 
+	Bollo.Print = proto.Print
 	Bollo:SetDefaultModulePrototype(proto)
 end
 

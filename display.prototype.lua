@@ -1,6 +1,8 @@
 local Bollo = LibStub("AceAddon-3.0"):GetAddon("Bollo2")
 local prototype = {}
 
+local UnitAura = UnitAura
+
 Bollo.registry = setmetatable({}, {
 	__newindex = function(self, k, v)
 		rawset(self, k, v)
@@ -164,6 +166,7 @@ function Bollo:NewDisplay(name, base, defaults)
 			return name
 		end,
 	})
+
 	t.name = name
 	t.base = base
 	t.db = self.db:RegisterNamespace(name, defaults)

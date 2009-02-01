@@ -48,7 +48,9 @@ function prototype:SetID(id)
 
 	local _, _, icon, _, debuffType = UnitAura("player", self.id, base)
 	self:SetNormalTexture(icon)
-	self:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
+	if id ~= 0 then
+		self:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
+	end
 
 	if self.Border.col then
 		if type(self.Border.col) == "table" then
