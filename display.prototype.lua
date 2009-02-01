@@ -67,11 +67,32 @@ function prototype:Update()
 
 	for i = 1, self.db.profile.max do
 		if UnitAura("player", i, base) then
+			-- Attempt to move icons into their correct position
+			-- here to prevent moving later
 			local icon = self.icons[i] or Bollo:NewIcon()
 			icon:SetBase(base)
 			icon:SetID(i)
 			icon:Setup(self.db.profile)
-			self.icons[i] = icon
+			self.icons[i] = nil
+			local time = icon:GetTimeleft()
+			if not time then
+				table.insert(self.icons, 1, icon)
+			else
+				local pos = #self.icons + 1
+				for j = 1, (#self.icons) do
+					local next = self.icons[j]
+					if next then
+						local t = next:GetTimeleft()
+						if time > t then
+							pos = j
+							break
+						end
+					else
+						break
+					end
+				end
+				table.insert(self.icons, pos, icon)
+			end
 		elseif self.icons[i] then
 			while self.icons[i] do
 				Bollo:DelIcon(self.icons[i])
