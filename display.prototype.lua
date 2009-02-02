@@ -65,45 +65,77 @@ function prototype:Update()
 	if self.config then return end
 	local base = self.base
 
+	local old = self.icons
+	local bg = self.icons.bg
+	self.icons = { bg = bg }
+
 	for i = 1, self.db.profile.max do
-		if UnitAura("player", i, base) then
+		local name = UnitAura("player", i, base)
+		if name then
 			-- Attempt to move icons into their correct position
 			-- here to prevent moving later
-			local icon = self.icons[i] or Bollo:NewIcon()
+			-- Find the correct icon as now i ~= id of the buff in
+			-- that slot.
+			local id = i
+			if #old > 1 then
+				for j = 1, #old do
+					local icon = old[j]
+					if icon:GetName() == name then
+						id = j
+						break
+					end
+				end
+			end
+
+			local icon = old[id] and table.remove(old, id) or Bollo:NewIcon()
 			icon:SetBase(base)
 			icon:SetID(i)
 			icon:Setup(self.db.profile)
-			self.icons[i] = nil
+
 			local time = icon:GetTimeleft()
 			if not time then
-				table.insert(self.icons, 1, icon)
-			else
-				local pos = #self.icons + 1
-				for j = 1, (#self.icons) do
-					local next = self.icons[j]
-					if next then
-						local t = next:GetTimeleft()
-						if time > t then
+				local pos = 1
+				if #self.icons > 0 then
+					for j = 1, #self.icons do
+						pos = j + 1
+						if self.icons[j] and self.icons[j]:GetTimeleft() then
 							pos = j
 							break
 						end
-					else
-						break
+					end
+				end
+				table.insert(self.icons, pos, icon)
+			else
+				local pos = #self.icons + 1
+				if #self.icons >= 1 then
+					for j = 1, (#self.icons) do
+						local next = self.icons[j]
+						if next then
+							local t = next:GetTimeleft()
+							if t and time > t then
+								pos = j
+								break
+							end
+						else
+							break
+						end
 					end
 				end
 				table.insert(self.icons, pos, icon)
 			end
-		elseif self.icons[i] then
-			while self.icons[i] do
-				Bollo:DelIcon(self.icons[i])
-				self.icons[i] = nil
-				i = i + 1
-			end
-			break
 		else
 			break
 		end
 	end
+
+	local i = 1
+	while old[i] do
+		Bollo:DelIcon(old[i])
+		i = i + 1
+	end
+
+	old = nil
+	bg = nil
 
 	local i = self.db.profile.max + 1
 	while self.icons[i] do
