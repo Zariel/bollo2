@@ -192,7 +192,7 @@ function prototype:EnableSetupConfig()
 		icon.base = self.base
 		icon:Setup(self.db.profile)
 		icon:SetID(0)
-		icon:SetNormalTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
+		icon.Icon:SetTexture([[Interface\Icons\Spell_SHadow_DeathCoil]])
 		icon:Show()
 		self.icons[i] = icon
 	end

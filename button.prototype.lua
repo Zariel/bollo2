@@ -5,17 +5,38 @@ Bollo.IconPrototype = prototype
 local GetTime = GetTime
 local UnitAura = UnitAura
 
-local BASE = {
+local Base = {
 	HELPFUL = "Buff",
 	HARMFUL = "Debuff",
 	TEMP = "Weapon",
 }
+
+function prototype:GetName()
+	if not self.name then
+		self:SetName(true)
+	end
+
+	return self.name
+end
+
+function prototype:SetName(temp)
+	local name
+	if temp or not self.base then
+		name = "BolloBuff" .. 1
+	else
+		name = "Bollo" .. Base[self.base] .. self.id
+	end
+
+	self.name = name
+end
 
 function prototype:Setup(db)
 	local size = db.size
 	self:SetHeight(size)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
+	self.Border:ClearAllPoints()
+	self.Border:SetAllPoints(self.Icon)
 
 	if db.borderColor ~= nil then
 		self.Border:ClearAllPoints()
@@ -75,10 +96,6 @@ function prototype:SetID(id)
 	Bollo.events:Fire("PostUpdateIcon", self)
 end
 
-function prototype:GetName()
-	return self.name
-end
-
 function prototype:GetCount()
 	return self.id ~= 0 and select(4, UnitAura("player", self.id, self.base)) or 3
 end
@@ -134,11 +151,7 @@ function Bollo:NewIcon()
 
 		local b = f:CreateTexture(nil, "OVERLAY")
 		b:SetTexture([[Interface\Buttons\UI-Debuff-Overlays]])
-		b:SetPoint("TOP", 0, 2)
-		b:SetPoint("RIGHT", 2, 0)
-		b:SetPoint("BOTTOM", 0, -2)
-		b:SetPoint("LEFT", -2, 0)
-		b:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
+		b:SetAllPoints(f)
 		b:Hide()
 
 		f.Border = b
@@ -148,6 +161,9 @@ function Bollo:NewIcon()
 
 	f:Show()
 
+	f:SetNormalTexture("")
+
+	f:SetName(true)
 	Bollo.events:Fire("ButtonCreated", f)
 
 	return f
@@ -155,7 +171,6 @@ end
 
 function Bollo:DelIcon(f)
 	f:Hide()
-	f.Border:Hide()
 
 	f.id = 0
 	f.base = nil

@@ -86,7 +86,7 @@ function w:OnEnable()
 			if i == 1 and hasMainHandEnchant or i == 2 and hasOffHandEnchant then
 				local icon = self.icons[i] or NewIcon()
 				icon.id = index
-				icon:SetNormalTexture(GetInventoryItemTexture("player", icon.id))
+				icon.Icon:SetTexture(GetInventoryItemTexture("player", icon.id))
 				icon.base = "TEMP"
 				icon:Setup(self.db.profile)
 				icon:Show()

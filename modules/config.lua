@@ -207,6 +207,7 @@ end
 
 function Config:UpdateConfig(name)
 	-- This is flawed
+	Bollo.events:Fire("UpdateConfig", name)
 	if not name or name == "Bollo" then
 		Bollo:UpdateConfig()
 	elseif name == "all" then
