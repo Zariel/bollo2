@@ -32,6 +32,11 @@ function prototype:Setup(db)
 		else
 			-- Doesnt have an ID yet
 			local col = DebuffTypeColor["none"]
+			if self.id > 0 then
+				local dType = select(5, UnitAura("player", self.id, self.base))
+				col = DebuffTypeColor[dType or "none"]
+			end
+
 			self.Border:SetVertexColor(col.r, col.g, col.b, col.a)
 			self.Border:Show()
 			self.Border.col = "dispell"
@@ -46,7 +51,9 @@ function prototype:SetID(id)
 	local base = self.base or "HELPFUL"
 	self.id = id
 
-	local _, _, icon, _, debuffType = UnitAura("player", self.id, base)
+	local name, _, icon, _, debuffType = UnitAura("player", self.id, base)
+	self.name = name
+
 	self:SetNormalTexture(icon)
 	if id ~= 0 then
 		self:GetNormalTexture():SetTexCoord(0.07, 0.93, 0.07, 0.93)
@@ -66,6 +73,10 @@ function prototype:SetID(id)
 	end
 
 	Bollo.events:Fire("PostUpdateIcon", self)
+end
+
+function prototype:GetName()
+	return self.name
 end
 
 function prototype:GetCount()
