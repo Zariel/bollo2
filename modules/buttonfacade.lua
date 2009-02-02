@@ -11,13 +11,13 @@ function BF:OnInitialize()
 	}
 
 	self.db = Bollo.db:RegisterNamespace("ButtonFacade", defaults)
+	Bollo.RegisterCallback(self, "PostUpdateIcon")
 end
 
 function BF:OnEnable()
 	lib = lib or LibStub("LibButtonFacade")
 
 	lib:RegisterSkinCallback("Bollo2", self.UpdateSkin, self)
-	Bollo.RegisterCallback(self, "ButtonCreated")
 	Bollo.RegisterCallback(self, "UpdateConfig")
 end
 
@@ -39,33 +39,19 @@ function BF:UpdateConfig(event, name)
 
 	if icons then
 		for i, icon in ipairs(icons) do
-			local data = {
-				["Icon"] = icon.Icon,
-				["Border"] = icon.Border or nil,
-				["normalTexture"] = icon.Icon,
-				["Count"] = icon.modules.count or nil,
-			}
-
-			local G = lib:Group("Bollo2", icon.base)
-
-			if self.db.profile[icon.base] then
-				local db = self.db.profile[icon.base]
-				G:Skin(unpack(db))
-			end
+			self:PostUpdateIcon(event, icon)
 		end
 	end
 end
 
-function BF:ButtonCreated(event, icon)
-	self:Print(event, icon)
+function BF:PostUpdateIcon(event, icon)
 	local data = {
-		["Icon"] = icon.Icon,
-		["Border"] = icon.Border or nil,
-		["Count"] = icon.modules.count or nil,
+		["Icon"] = icon:GetNormalTexture(),
+		["Border"] = icon.Border,
+		["Count"] = icon.modules.count,
 	}
 
 	local G = lib:Group("Bollo2", icon.base)
-
 	G:AddButton(icon, data)
 
 	if self.db.profile[icon.base] then
@@ -74,13 +60,15 @@ function BF:ButtonCreated(event, icon)
 	end
 end
 
-function BF:UpdateSkin(SkinID, Gloss, Backdrop, Group, Button, Colors)
+function BF:UpdateSkin(skinID, gloss, backdrop, group, button, colors)
 	if Group then
-		self.db.profile[Group] = self.db.profile[Group] or {}
-		local db = self.db.profile[Group]
-		db[1] = SkinID
-		db[2] = Gloss
-		db[3] = Backdrop
-		db[4] = Colors
+		self.db.profile[group] = self.db.profile[group] or {}
+		local db = self.db.profile[group]
+		db[1] = skinID
+		db[2] = gloss
+		db[3] = backdrop
+		db[4] = colors
+		local G = lib:Group("Bollo2", group)
+		G:Skin(unpack(db))
 	end
 end

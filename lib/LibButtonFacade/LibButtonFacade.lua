@@ -9,7 +9,7 @@ Dependencies: LibStub
 License: LGPL v2.1
 ]]
 
-local MAJOR, MINOR = "LibButtonFacade", "1"
+local MAJOR, MINOR = "LibButtonFacade", "3"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then return end
@@ -323,9 +323,10 @@ local function SkinLayer(skin,button,btndata,layer,btnlayer,xscale,yscale,Color)
 		if skinlayer.ModelX or skinlayer.ModelY then
 			btnlayer:SetPosition(skinlayer.ModelX or 0, skinlayer.ModelY or 0,0)
 		end
-		if skinlayer.ModelScale then
-			btnlayer:SetModelScale(skinlayer.ModelScale)
-		end
+		-- HotFix-3.0.2: Disable ModelScale to fix AutoCast (It's not a model anymore).
+		-- if skinlayer.ModelScale then
+			-- btnlayer:SetModelScale(skinlayer.ModelScale)
+		-- end
 	end
 end
 
@@ -387,11 +388,6 @@ local function SkinNormalLayer(skin,button,btndata,xscale,yscale,Color)
 		if baselayer[button] then baselayer[button]:Hide() end
 	end
 	if not btnlayer then return end
-	if skinlayer.Hide or btndata.Normal == false then
-		btnlayer:SetTexture("")
-		btnlayer:Hide()
-		return
-	end
 	button.__bf_normaltexture = btnlayer
 	if btnlayer:GetTexture() == "Interface\\Buttons\\UI-Quickslot" or btnlayer.__bf_useEmpty then
 		btnlayer:SetTexture(skinlayer.EmptyTexture or skinlayer.Texture)
@@ -401,10 +397,16 @@ local function SkinNormalLayer(skin,button,btndata,xscale,yscale,Color)
 	-- the following catches when Blizzard changes the texture to the Empty texture.
 	if not normalhooked[button] then
 		hooksecurefunc(button,"SetNormalTexture",Catch_SetNormalTexture)
+    normalhooked[button] = true
 	end
 	button.__bf_skinlayer = skinlayer
 	btnlayer.__bf_skinlayer = skinlayer
 	btnlayer:Show()
+	if skinlayer.Hide or btndata.Normal == false then
+		btnlayer:SetTexture("")
+		btnlayer:Hide()
+		return
+	end
 	btnlayer:SetDrawLayer(DrawLayers.Normal)
 	btnlayer:SetWidth((skinlayer.Width or 36) * (skinlayer.Scale or 1) * xscale)
 	btnlayer:SetHeight((skinlayer.Height or 36) * (skinlayer.Scale or 1) * yscale)
@@ -582,13 +584,14 @@ local function ApplySkin(SkinID,Gloss,Backdrop,Color,button,btndata)
 	button.__bf_framelevel = button.__bf_framelevel or {}
 	button.__bf_framelevel[4] = button
 	btndata.Cooldown = btndata.Cooldown or _G[button:GetName().."Cooldown"]
-	btndata.AutoCast = btndata.AutoCast or _G[button:GetName().."AutoCast"]
+	-- HotFix-3.0.2: "AutoCast" is now "Shine".
+	btndata.AutoCast = btndata.AutoCast or _G[button:GetName().."Shine"]
 	if btndata.Cooldown then
 		button.__bf_framelevel[2] = btndata.Cooldown
 	end
 	if btndata.AutoCast then
 		button.__bf_framelevel[3] = btndata.AutoCast
-	else
+	elseif not button.__bf_framelevel[3] then
 		local frame3 = CreateFrame("Frame",nil,button)
 		frame3:SetAllPoints(button)
 		button.__bf_framelevel[3] = frame3

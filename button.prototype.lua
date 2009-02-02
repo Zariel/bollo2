@@ -35,8 +35,6 @@ function prototype:Setup(db)
 	self:SetHeight(size)
 	self:SetWidth(size)
 	self:SetScale(db.scale)
-	self.Icon:ClearAllPoints()
-	self.Icon:SetAllPoints(self)
 	self.Border:ClearAllPoints()
 	self.Border:SetAllPoints(self.Icon)
 
@@ -140,19 +138,8 @@ function Bollo:NewIcon()
 		f = setmetatable(CreateFrame("Button", nil, UIParent), {__index = prototype})
 		f.modules = {}
 
-		local i = f:CreateTexture(nil, "BACKGROUND")
-		i:SetAllPoints(f)
-		i:SetTexture("")
-
-		f.Icon = i
-
 		local b = f:CreateTexture(nil, "OVERLAY")
 		b:SetTexture([[Interface\Buttons\UI-Debuff-Overlays]])
-	--[[	b:SetPoint("TOP", 0, 2)
-		b:SetPoint("RIGHT", 2, 0)
-		b:SetPoint("BOTTOM", 0, -2)
-		b:SetPoint("LEFT", -2, 0)
-		b:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)]]
 		b:SetAllPoints(f)
 		b:Hide()
 
