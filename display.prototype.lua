@@ -91,6 +91,7 @@ function prototype:Update()
 			icon:SetBase(base)
 			icon:SetID(i)
 			icon:Setup(self.db.profile)
+			icon:Show()
 
 			local time = icon:GetTimeleft()
 			if not time then
@@ -171,14 +172,15 @@ function prototype:UpdatePosition()
 		end
 
 		-- Already in the correct place
-		if index == buff.currentPos then return end
-
-		buff:ClearAllPoints()
-		buff:SetPoint(point, self.icons.bg, point, ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
-		buff.currentPos = index
+		if index ~= buff.currentPos then
+			buff.currentPos = index
+			buff:ClearAllPoints()
+			buff:SetPoint(point, self.icons.bg, point, ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
+		end
 		offset = offset + 1
 	end
 
+	print("==")
 	self.lastUpdate = count
 end
 
