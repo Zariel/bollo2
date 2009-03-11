@@ -151,8 +151,6 @@ end
 function prototype:UpdatePosition()
 	local count = #self.icons
 
-	if count == self.lastUpdate then return end
-
 	Bollo.events:Fire("PrePositionIcons", self)
 
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
@@ -179,9 +177,6 @@ function prototype:UpdatePosition()
 		end
 		offset = offset + 1
 	end
-
-	print("==")
-	self.lastUpdate = count
 end
 
 function prototype:UpdateConfig()
@@ -237,7 +232,6 @@ function Bollo:NewDisplay(name, base, defaults)
 	t.db = self.db:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
 	t.modules = {}
-	t.lastUpdate = 0
 	Bollo:GetModule("Config"):GenerateOptions(name, t)
 
 	for k, v in Bollo:IterateModules() do
