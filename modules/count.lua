@@ -54,7 +54,7 @@ end
 
 function count:PostUpdateIcon(event, button)
 	local count = button:GetCount()
-	if count and count > 0 then
+	if count and count > 1 then
 		if not button.modules.count then
 			self:ButtonCreated(event, button)
 		end

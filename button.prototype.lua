@@ -159,6 +159,7 @@ function Bollo:NewIcon()
 		f:Init()
 	end
 
+	f.currentPos = 0
 	f:Show()
 
 	f:SetNormalTexture("")
