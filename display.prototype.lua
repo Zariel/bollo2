@@ -67,7 +67,7 @@ function prototype:Update()
 
 	local old = self.icons
 	local bg = self.icons.bg
-	self.icons = { bg = bg }
+	self.icons = { ["bg"] = bg }
 
 	for i = 1, self.db.profile.max do
 		local name = UnitAura("player", i, base)
@@ -148,6 +148,10 @@ function prototype:Update()
 end
 
 function prototype:UpdatePosition()
+	local count = #self.icons
+
+	if count == self.lastUpdate then return end
+
 	Bollo.events:Fire("PrePositionIcons", self)
 
 	local size, spacing, rowSpacing = self.db.profile.size, self.db.profile.spacing, self.db.profile.rowSpacing
@@ -166,10 +170,16 @@ function prototype:UpdatePosition()
 			offset = 0
 		end
 
+		-- Already in the correct place
+		if index == buff.currentPos then return end
+
 		buff:ClearAllPoints()
 		buff:SetPoint(point, self.icons.bg, point, ((buff:GetEffectiveScale() * size) + spacing) * offset * growthX, buff:GetEffectiveScale() * (size + rowSpacing) * rows * growthY)
+		buff.currentPos = index
 		offset = offset + 1
 	end
+
+	self.lastUpdate = count
 end
 
 function prototype:UpdateConfig()
@@ -225,6 +235,7 @@ function Bollo:NewDisplay(name, base, defaults)
 	t.db = self.db:RegisterNamespace(name, defaults)
 	t.icons = t:CreateBackground(name)
 	t.modules = {}
+	t.lastUpdate = 0
 	Bollo:GetModule("Config"):GenerateOptions(name, t)
 
 	for k, v in Bollo:IterateModules() do
